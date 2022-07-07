@@ -10,3 +10,19 @@ export class HttpException extends HttpError {
     this.message = message;
   }
 }
+
+export class BadRequestException extends HttpError {
+  public message: string;
+  constructor(message: string) {
+    super(400, message);
+    this.message = message;
+  }
+}
+
+export class InternalServerException extends HttpError {
+  public message: string;
+  constructor(message: string) {
+    super(500, message);
+    this.message = message;
+  }
+}

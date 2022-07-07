@@ -19,7 +19,7 @@ class AuthService {
 
     const hashedPassword = await hash(userData.password, 10);
     const createUserData: User = { id: this.users.length + 1, ...userData, password: hashedPassword };
-
+    this.users.push(createUserData);
     return createUserData;
   }
 
