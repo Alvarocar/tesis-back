@@ -1,6 +1,14 @@
 import { IsEmail, Length } from 'class-validator';
 import moment from 'moment';
 
+export class ApplicantDtoLogIn {
+  @IsEmail()
+  public email: string;
+
+  @Length(6)
+  public password: string;
+}
+
 export class ApplicantDtoSignUp {
   @Length(4, 60)
   public name: string;
