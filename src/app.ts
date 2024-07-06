@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { defaultMetadataStorage } from 'class-transformer';
+import { defaultMetadataStorage } from 'class-transformer/cjs/storage';
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
@@ -57,10 +57,7 @@ class App {
 
   private initializeRoutes(controllers: Function[]) {
     useExpressServer(this.app, {
-      cors: {
-        origin: ORIGIN,
-        credentials: CREDENTIALS,
-      },
+      cors: true,
       controllers: controllers,
       defaultErrorHandler: false,
       routePrefix: 'api',
