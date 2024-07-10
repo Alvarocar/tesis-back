@@ -14,12 +14,6 @@ export class Applicant {
   name: string;
 
   @Column({
-    type: 'text',
-    nullable: true,
-  })
-  about_me: string;
-
-  @Column({
     type: 'varchar',
     length: 60,
   })

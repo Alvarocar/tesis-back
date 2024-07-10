@@ -17,18 +17,6 @@ export class Recluter {
     type: 'varchar',
     length: 60,
   })
-  rol: string;
-
-  @Column({
-    type: 'text',
-    nullable: true,
-  })
-  about_me: string;
-
-  @Column({
-    type: 'varchar',
-    length: 60,
-  })
   email: string;
 
   @Column({
