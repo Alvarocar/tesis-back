@@ -3,6 +3,13 @@ import { DataSource } from 'typeorm';
 import { Applicant } from '@models/applicant.model';
 import { Recluter } from './models/recluter.model';
 import { ENV } from './constants';
+import { Education } from './models/education.model';
+import { Experience } from './models/experience.model';
+import { Language } from './models/language.model';
+import { ResumeToLanguage } from './models/resume_to_language.model';
+import { Resume } from './models/resume.model';
+import { Vacant } from './models/vacant.model';
+import { VacantToLanguage } from './models/vacant_to_language.model';
 
 export const AppDataSource = new DataSource({
   type: ENV.POSTGRESS.type,
@@ -13,5 +20,5 @@ export const AppDataSource = new DataSource({
   database: ENV.POSTGRESS.database,
   synchronize: true,
   logging: ENV.POSTGRESS.logging,
-  entities: [Applicant, Recluter],
+  entities: [Applicant, Recluter, Education, Experience, Language, Recluter, ResumeToLanguage, Resume, VacantToLanguage, Vacant],
 });

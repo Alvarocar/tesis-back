@@ -1,25 +1,23 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { ResumeToLenguage } from "./resume_to_lenguage.model";
-import { VacantToLenguage } from './vacant_to_lenguage.model';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ResumeToLanguage } from './resume_to_language.model';
+import { VacantToLanguage } from './vacant_to_language.model';
 
 @Entity()
 export class Language {
   @PrimaryGeneratedColumn({
     type: 'int',
   })
-  id: number
+  id: number;
 
   @Column({
     type: 'varchar',
     length: 60,
   })
-  name: string
-  
-  @OneToMany(()=> ResumeToLenguage, (resumeToLenguage)=>resumeToLenguage.resume)
-  resumeToLenguage: ResumeToLenguage
+  name: string;
 
-  @OneToMany(()=> VacantToLenguage, (vacantToLenguage)=>vacantToLenguage.vacant)
-  VacantToLenguage: VacantToLenguage
+  @OneToMany(() => ResumeToLanguage, resumeToLanguage => resumeToLanguage.resume)
+  resumeToLanguage: ResumeToLanguage;
 
-
+  @OneToMany(() => VacantToLanguage, vacantToLanguage => vacantToLanguage.vacant)
+  VacantToLanguage: VacantToLanguage;
 }

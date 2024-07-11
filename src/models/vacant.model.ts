@@ -1,47 +1,45 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { VacantToLenguage } from "./vacant_to_lenguage.model";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { VacantToLanguage } from './vacant_to_language.model';
 
 @Entity()
 export class Vacant {
   @PrimaryGeneratedColumn({
     type: 'int',
   })
-  id: number
+  id: number;
 
   @Column({
     type: 'varchar',
     length: 60,
   })
-  about: string
+  about: string;
 
   @Column({
-    type: 'smallint'
+    type: 'smallint',
   })
-  experience: number
+  experience: number;
 
   @Column({
     type: 'varchar',
     length: 60,
   })
-  language: string
+  language: string;
 
   @Column({
     type: 'date',
   })
-  creation: Date
+  creation: Date;
 
   @Column({
     type: 'date',
   })
-  modification: Date
+  modification: Date;
 
   @Column({
     type: 'int',
   })
-  salary_offer: number
+  salary_offer: number;
 
-  @OneToMany(()=> VacantToLenguage, (vacantToLenguage)=>vacantToLenguage.vacant)
-  VacantToLenguage: VacantToLenguage
-
-
+  @OneToMany(() => VacantToLanguage, vacantToLanguage => vacantToLanguage.vacant)
+  VacantToLanguage: VacantToLanguage;
 }

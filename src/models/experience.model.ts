@@ -1,45 +1,40 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Resume } from "./resume.model";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Resume } from './resume.model';
 
 @Entity()
 export class Experience {
   @PrimaryGeneratedColumn({
     type: 'int',
   })
-  id: number
+  id: number;
 
   @Column({
     type: 'varchar',
     length: 60,
   })
-  rol: string
+  rol: string;
 
   @Column({
     type: 'varchar',
     length: 60,
   })
-  company: string
+  company: string;
 
   @Column({
-    type: 'date'
+    type: 'date',
   })
-  start_date: Date
+  start_date: Date;
 
   @Column({
-    type: 'date'
+    type: 'date',
   })
-  end_date: Date
+  end_date: Date;
 
   @Column({
-    type: 'text'
+    type: 'text',
   })
-  descripcion: String
+  descripcion: String;
 
-  @Column({
-    type: 'int'
-  })
-  resume_id: number
-
-  @ManyToOne(()=> Resume, (resume)=>resume.experiences)
-  resume: Resume
+  @ManyToOne(() => Resume, resume => resume.experiences)
+  resume: Resume;
 }

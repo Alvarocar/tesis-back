@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Resume } from './resume.model';
 
 @Entity()
 export class Applicant {
@@ -40,4 +41,6 @@ export class Applicant {
     type: 'date',
   })
   modification_date: Date;
+  @OneToMany(() => Resume, resume => resume.applicant)
+  resumes: Resume[];
 }

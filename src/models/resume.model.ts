@@ -1,43 +1,41 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { ResumeToLenguage } from "./resume_to_lenguage.model";
-import { Education } from "./education.model";
-import { Experience } from "./experience.model";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { ResumeToLanguage } from './resume_to_language.model';
+import { Education } from './education.model';
+import { Experience } from './experience.model';
+import { Applicant } from './applicant.model';
 
 @Entity()
 export class Resume {
   @PrimaryGeneratedColumn({
     type: 'int',
   })
-  id: number
+  id: number;
 
   @Column({
     type: 'varchar',
     length: 60,
   })
-  knowledge: string
+  knowledge: string;
 
   @Column({
     type: 'varchar',
     length: 60,
   })
-  contact_info: string
-
-  @Column({
-    type: 'smallint',
-  })
-  language_level: number
+  contact_info: string;
 
   @Column({
     type: 'text',
   })
-  about_me: string
-  @OneToMany(()=> ResumeToLenguage, (resumeToLenguage)=>resumeToLenguage.resume)
-  resumeToLenguage: ResumeToLenguage
+  about_me: string;
+  @OneToMany(() => ResumeToLanguage, resumeToLanguage => resumeToLanguage.resume)
+  resumeToLanguage: ResumeToLanguage;
 
-  @OneToMany(()=> Education, (education)=>education.resume_id)
-  educations: Education[]
+  @OneToMany(() => Education, education => education.resume)
+  educations: Education[];
 
-  @OneToMany(()=> Experience, (experience)=>experience.resume_id)
-  experiences: Experience[]
-  
+  @OneToMany(() => Experience, experience => experience.resume)
+  experiences: Experience[];
+
+  @ManyToOne(() => Applicant, applicant => applicant.resumes)
+  applicant: Applicant;
 }
