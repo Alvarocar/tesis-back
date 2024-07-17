@@ -41,6 +41,29 @@ export class Applicant {
     type: 'date',
   })
   modification_date: Date;
+
+  @Column({
+    type: 'varchar',
+    length: 60,
+  })
+  direction: string;
+
+  @Column({
+    type: 'int',
+  })
+  identification: number;
+
+  @Column({
+    type: 'varchar',
+    length: 60,
+  })
+  phone_number: string;
+
+  @Column({
+    type: 'date',
+  })
+  birth_date: Date;
+
   @OneToMany(() => Resume, resume => resume.applicant)
   resumes: Resume[];
 }

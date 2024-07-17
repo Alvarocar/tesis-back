@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Resume } from './resume.model';
 
 @Entity()
-export class Education {
+export class PersonalReference {
   @PrimaryGeneratedColumn({
     type: 'int',
   })
@@ -12,31 +12,20 @@ export class Education {
     type: 'varchar',
     length: 60,
   })
-  institute: string;
+  name: string;
 
   @Column({
     type: 'varchar',
     length: 60,
   })
-  title: string;
+  number: string;
 
   @Column({
-    type: 'date',
+    type: 'varchar',
+    length: 60,
   })
-  start_date: Date;
+  relationship: string;
 
-  @Column({
-    type: 'date',
-    nullable: true,
-  })
-  end_date?: Date;
-
-  @Column({
-    type: 'boolean',
-    nullable: true,
-  })
-  keep_study?: boolean;
-
-  @ManyToOne(() => Resume, resume => resume.educations)
+  @ManyToOne(() => Resume, resume => resume.personal_references)
   resume: Resume;
 }

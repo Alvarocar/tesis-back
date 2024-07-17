@@ -12,6 +12,11 @@ export class Vacant {
     type: 'varchar',
     length: 60,
   })
+  title: string;
+
+  @Column({
+    type: 'text',
+  })
   about: string;
 
   @Column({

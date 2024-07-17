@@ -5,8 +5,9 @@ import { UsersController } from '@controllers/users.controller';
 import validateEnv from '@utils/validateEnv';
 import { ApplicantController } from './controllers/applicant.controller';
 import { RecluterController } from './controllers/recluter.controller';
+import { ResumeController } from './controllers/resume.controller';
 
 validateEnv();
 
-const app = new App([AuthController, IndexController, UsersController, ApplicantController, RecluterController]);
+const app = new App([AuthController, IndexController, UsersController, ApplicantController, RecluterController, ResumeController]);
 app.listen();
