@@ -1,9 +1,11 @@
 import { ApplicantDto, ApplicantDtoLogIn, ApplicantDtoSignUp } from '@/dtos/applicant.dto';
+import { RequestWithApplicant } from '@/interfaces/auth.interface';
+import authApplicantMiddleware from '@/middlewares/authApplicant.middleware';
 import { validationMiddleware } from '@/middlewares/validation.middleware';
 import { ApplicantService } from '@/services/applicant.service';
 import { responseWithToken } from '@/utils/response.util';
 import { createTokenRest } from '@/utils/security/token.util';
-import { Body, Controller, HttpCode, Post, Put, UseBefore } from 'routing-controllers';
+import { Body, Controller, Get, HttpCode, Post, Put, Req, UseBefore } from 'routing-controllers';
 
 @Controller('/v1/applicants')
 export class ApplicantController {
@@ -26,5 +28,12 @@ export class ApplicantController {
     const currentApplcant = await this.applicantService.logIn(applicant);
     const token = createTokenRest(currentApplcant);
     return responseWithToken(currentApplcant, token);
+  }
+
+  @Get()
+  @UseBefore(authApplicantMiddleware)
+  @HttpCode(200)
+  async getProfile(@Req() req: RequestWithApplicant) {
+    return this.applicantService.getProfile(req.user);
   }
 }

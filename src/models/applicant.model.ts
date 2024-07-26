@@ -43,6 +43,7 @@ export class Applicant {
   modification_date: Date;
 
   @Column({
+    nullable: true,
     type: 'varchar',
     length: 60,
   })
@@ -50,16 +51,19 @@ export class Applicant {
 
   @Column({
     type: 'int',
+    nullable: true,
   })
   identification: number;
 
   @Column({
+    nullable: true,
     type: 'varchar',
     length: 60,
   })
   phone_number: string;
 
   @Column({
+    nullable: true,
     type: 'date',
   })
   birth_date: Date;

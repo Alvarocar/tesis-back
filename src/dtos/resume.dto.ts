@@ -1,4 +1,4 @@
-import { IsInt, IsOptional, IsString, Max, Min, ValidateNested } from 'class-validator';
+import { IsInt, IsNumber, IsOptional, IsString, Max, MaxLength, Min, ValidateNested } from 'class-validator';
 
 export class ResumeDto {
   @IsString()
@@ -22,6 +22,18 @@ export class ResumeDto {
 
   @ValidateNested()
   language: LanguageDto[];
+}
+export class CreateAboutMeDto {
+  @IsNumber()
+  resume_id: number;
+  @IsString()
+  about_me: string;
+}
+
+export class CreateResumeDto {
+  @IsString()
+  @MaxLength(60)
+  title: string;
 }
 
 export class LanguageDto {

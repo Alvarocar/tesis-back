@@ -1,3 +1,4 @@
+import { Applicant } from '@/models/applicant.model';
 import { IsEmail, Length } from 'class-validator';
 import moment from 'moment';
 
@@ -21,13 +22,16 @@ export class ApplicantDtoSignUp {
 }
 
 export class ApplicantDto {
-  constructor({ name, email, creation_date, modification_date, about_me = '', id = -1 }) {
+  constructor({ name, email, creation_date, modification_date, phone_number, birth_date, direction, identification, id }: Applicant) {
     this.name = name;
-    this.about_me = about_me;
     this.email = email;
     this.creation_date = moment(creation_date).format('DD-MM-YYYY');
     this.modification_date = moment(modification_date).format('DD-MM-YYYY');
     this.id = id;
+    this.phone_number = phone_number;
+    this.birth_date = moment(birth_date).format('DD-MM-YYYY');
+    this.direction = direction;
+    this.identification = String(identification);
   }
 
   public name: string;
@@ -38,7 +42,13 @@ export class ApplicantDto {
 
   public modification_date: string;
 
-  public about_me: string;
-
   public id: number;
+
+  public phone_number: string;
+
+  public birth_date: string;
+
+  public direction: string;
+
+  public identification: string;
 }

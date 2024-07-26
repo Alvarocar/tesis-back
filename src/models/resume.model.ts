@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { ResumeToLanguage } from './resume_to_language.model';
 import { Education } from './education.model';
 import { Experience } from './experience.model';
@@ -39,6 +39,19 @@ export class Resume {
     type: 'date',
   })
   modification_date: Date;
+
+  @BeforeInsert()
+  updateDateCreation() {
+    const current = new Date();
+    this.create_date = current;
+    this.modification_date = current;
+  }
+
+  @BeforeUpdate()
+  updateDateOnUpdate() {
+    const current = new Date();
+    this.modification_date = current;
+  }
 
   @OneToMany(() => ResumeToLanguage, resumeToLanguage => resumeToLanguage.resume)
   resumeToLanguage: ResumeToLanguage[];
