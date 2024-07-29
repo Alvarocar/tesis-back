@@ -4,7 +4,6 @@ import { InternalServerException, BadRequestException } from '@/exceptions/HttpE
 import { Applicant } from '@/models/applicant.model';
 import { ApplicantRepository } from '@/repositories/applicant.repository';
 import { HttpError, NotFoundError } from 'routing-controllers';
-import { Repository } from 'typeorm';
 import { GenericService } from './generic.service';
 
 export class ApplicantService extends GenericService {
@@ -13,16 +12,11 @@ export class ApplicantService extends GenericService {
   }
 
   async signUp(applicant: ApplicantDtoSignUp) {
-    const now = new Date();
     try {
       const doppleganger = await ApplicantRepository.findOne({ where: { email: applicant.email } });
       if (doppleganger != null) throw new BadRequestException(EApplicant.ERROR_DUPLICATE_EMAIL);
-      const applicantEntity = ApplicantRepository.createSignup(applicant);
-      await ApplicantRepository.insert({
-        ...applicant,
-        creation_date: now,
-        modification_date: now,
-      });
+      const applicantEntity = await ApplicantRepository.createSignup(applicant);
+      await ApplicantRepository.insert(applicantEntity);
 
       return applicantEntity;
     } catch (e) {

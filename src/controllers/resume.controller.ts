@@ -2,9 +2,8 @@ import { CreateAboutMeDto, CreateResumeDto } from '@/dtos/resume.dto';
 import { RequestWithApplicant } from '@/interfaces/auth.interface';
 import authApplicantMiddleware from '@/middlewares/authApplicant.middleware';
 import { validationMiddleware } from '@/middlewares/validation.middleware';
-import { Applicant } from '@/models/applicant.model';
 import { ResumeService } from '@/services/resume.service';
-import { Body, Controller, HttpCode, Patch, Post, Put, Req, UseBefore } from 'routing-controllers';
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Req, UseBefore } from 'routing-controllers';
 
 @Controller('/v1/resume')
 export class ResumeController {
@@ -14,8 +13,8 @@ export class ResumeController {
   @UseBefore(authApplicantMiddleware)
   @HttpCode(201)
   async createResume(@Body() resume: CreateResumeDto, @Req() req: RequestWithApplicant) {
-    await this.resumeService.createResumeWithJustTitle(resume, req.user);
-    return { message: 'Hoja de vida creada.' };
+    const resp = await this.resumeService.createResumeWithJustTitle(resume, req.user);
+    return { id: resp.id };
   }
   //metodo descripcion//
   @Patch('/about_me')
@@ -25,5 +24,20 @@ export class ResumeController {
   async putDescription(@Body() about: CreateAboutMeDto) {
     await this.resumeService.PutAboutMe(about);
     return { message: 'se ingreso informacion del usuario de manera exitosa.' };
+  }
+  //metodo obtener una hoja de vida por el id//
+  @Get('/:id')
+  @UseBefore(authApplicantMiddleware)
+  @HttpCode(200)
+  getResumeById(@Param('id') id: number) {
+    return { message: 'ok' };
+  }
+
+  @Get('/')
+  @UseBefore(authApplicantMiddleware)
+  @HttpCode(200)
+  async getResumesByUser(@Req() req: RequestWithApplicant) {
+    const resumes = await this.resumeService.getResumes(req.user.id);
+    return resumes;
   }
 }

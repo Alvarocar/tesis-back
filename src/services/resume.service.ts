@@ -57,7 +57,7 @@ export class ResumeService extends GenericService {
 
   async createResumeWithJustTitle(resumeDto: CreateResumeDto, applicant: Applicant) {
     const actually_date = new Date(Date.now());
-    await ResumeRepository.insert({
+    const resume = ResumeRepository.create({
       title: resumeDto.title,
       experience_years: 0,
       about_me: '',
@@ -65,10 +65,18 @@ export class ResumeService extends GenericService {
       modification_date: actually_date,
       applicant,
     });
+    await ResumeRepository.insert(resume);
+
+    return resume;
   }
   async PutAboutMe(resumeDto: CreateAboutMeDto) {
     return await ResumeRepository.updateAboutme(resumeDto);
   }
-
-  async GetResume(resumeDto: )
+  async getResumes(applicantId: number) {
+    return await ResumeRepository.createQueryBuilder('rm')
+      .select(['rm.id', 'rm.title', 'rm.about_me'])
+      .where('rm.applicantId = :id', { id: applicantId })
+      .orderBy({ 'rm.modification_date': 'DESC' })
+      .getMany();
+  }
 }
