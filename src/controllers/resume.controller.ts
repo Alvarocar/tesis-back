@@ -29,8 +29,8 @@ export class ResumeController {
   @Get('/:id')
   @UseBefore(authApplicantMiddleware)
   @HttpCode(200)
-  getResumeById(@Param('id') id: number) {
-    return { message: 'ok' };
+  getResumeById(@Param('id') id: number, @Req() req: RequestWithApplicant) {
+    return this.resumeService.getResumeById(id, req.user);
   }
 
   @Get('/')

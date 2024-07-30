@@ -69,7 +69,7 @@ export class Resume {
   personal_references: PersonalReference[];
 
   @OneToMany(() => LaboralReference, laboral => laboral.resume)
-  laboral_references: PersonalReference[];
+  laboral_references: LaboralReference[];
 
   @OneToMany(() => Skill, skills => skills.resume)
   skills: Skill[];

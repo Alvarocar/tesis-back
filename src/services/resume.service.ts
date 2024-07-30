@@ -79,4 +79,33 @@ export class ResumeService extends GenericService {
       .orderBy({ 'rm.modification_date': 'DESC' })
       .getMany();
   }
+
+  async getResumeById(id: number, applicant: Applicant) {
+    try {
+      const resume = await ResumeRepository.createQueryBuilder("rs")
+      .select(["rs.id", "rs.title", "rs.about_me", "rs.modification_date"])
+      .addSelect(["ex.id", "ex.rol", "ex.company", "ex.start_date", "ex.end_date", "ex.keep_working", "ex.descripcion"])
+      .addSelect(["ed.id", "ed.institute", "ed.title", "ed.start_date", "ed.end_date", "ed.keep_study"])
+      .addSelect(["pr.id", "pr.name", "pr.number", "pr.relationship"])
+      .addSelect(["lr.id", "lr.name", "lr.number", "lr.rol"])
+      .addSelect(["rlan.id", "rlan.language_level"])
+      .addSelect("lang.name")
+      .addSelect("sk.id", "sk.name")
+      .leftJoin("rs.experiences", "ex")
+      .leftJoin("rs.educations", "ed")
+      .leftJoin("rs.personal_references", "pr")
+      .leftJoin("rs.laboral_references", "lr")
+      .leftJoin("rs.resumeToLanguage", "rlan")
+      .leftJoin("rlan.language", "lang")
+      .leftJoin("rs.skills", "sk")
+      .where("rs.id = :id", { id })
+      .getOneOrFail()
+
+      return resume
+    } catch(e) {
+      console.log(e)
+      throw new NotFoundError("La hoja de vida no fue encontrada")
+    }
+    
+  }
 }
