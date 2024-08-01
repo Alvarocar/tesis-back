@@ -99,7 +99,10 @@ export class ResumeService extends GenericService {
       .leftJoin("rlan.language", "lang")
       .leftJoin("rs.skills", "sk")
       .where("rs.id = :id", { id })
+      .andWhere("rs.applicantId = :applicantId", { applicantId: applicant.id })
       .getOneOrFail()
+
+      resume.applicant = applicant
 
       return resume
     } catch(e) {

@@ -13,7 +13,10 @@ const authApplicantMiddleware = async (req: RequestWithApplicant, res: Response,
       const secretKey: string = SECRET_KEY;
       const verificationResponse = (await verify(Authorization, secretKey)) as DataStoredInToken;
       const applicantId = verificationResponse.id;
-      const findUser = await ApplicantRepository.findOneBy({ id: applicantId });
+      const findUser = await ApplicantRepository.createQueryBuilder("ap").select([
+        "ap.id","ap.name", "ap.email", "ap.modification_date", "ap.direction", "ap.identification", "ap.phone_number", "ap.birth_date"])
+        .where("ap.id = :applicantId", { applicantId })
+        .getOneOrFail()
 
       if (findUser) {
         req.user = findUser;
@@ -22,7 +25,7 @@ const authApplicantMiddleware = async (req: RequestWithApplicant, res: Response,
         next(new HttpException(401, 'el usuario no existe en la base de datos'));
       }
     } else {
-      next(new HttpException(404, 'Authentication token missing'));
+      next(new HttpException(401, 'Authentication token missing'));
     }
   } catch (error) {
     next(new HttpException(401, 'Wrong authentication token'));
