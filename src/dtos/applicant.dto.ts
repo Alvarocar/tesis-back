@@ -1,5 +1,5 @@
 import { Applicant } from '@/models/applicant.model';
-import { IsEmail, Length } from 'class-validator';
+import { IsEmail, IsOptional, IsString, Length } from 'class-validator';
 import moment from 'moment';
 
 export class ApplicantDtoLogIn {
@@ -51,4 +51,25 @@ export class ApplicantDto {
   public direction: string;
 
   public identification: string;
+}
+
+export class ApplicantPersonalInfoDto {
+
+  @IsString()
+  name: string;
+
+  @IsString()
+  identification: string;
+
+  @IsOptional()
+  phone_number: string | null;
+
+  /**
+   * @format DD-MM-YYYY
+   */
+  @IsOptional()
+  birth_date: string | null;
+  
+  @IsOptional()
+  direction: string | null;
 }

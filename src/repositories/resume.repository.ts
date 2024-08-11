@@ -1,6 +1,8 @@
 import { AppDataSource } from '@/data-source';
 import { CreateAboutMeDto, ResumeDto } from '@/dtos/resume.dto';
+import { Applicant } from '@/models/applicant.model';
 import { Resume } from '@/models/resume.model';
+import { HttpError } from 'routing-controllers';
 
 const resumeRepository = AppDataSource.getRepository(Resume);
 
@@ -12,8 +14,21 @@ export const ResumeRepository = resumeRepository.extend({
       knowledge: dto.knowledge,
     });
   },
-  updateAboutme: (dto: CreateAboutMeDto) => {
-    return ResumeRepository.update({ id: dto.resume_id }, { about_me: dto.about_me });
-    //await dataSource.createQueryBuilder().update(User).set({ firstName: 'Timber', lastName: 'Saw' }).where('id = :id', { id: 1 }).execute();
+  updateAboutme: async (dto: CreateAboutMeDto, applicant: Applicant) => {
+    try {
+      await ResumeRepository.createQueryBuilder()
+      .update()
+      .set({
+        about_me: dto.about_me
+      })
+      .where('id = :id', { id: dto.resume_id })
+      .andWhere('applicantId = :applicantId', { applicantId: applicant.id })
+      .execute()
+
+      return await ResumeRepository.createQueryBuilder('rs').select(['rs.about_me']).where('rs.id = :id', { id: dto.resume_id }).getOneOrFail()
+    } catch(e) {
+      console.error(e)
+      throw new HttpError(500, 'hubo un error')
+    }
   },
 });

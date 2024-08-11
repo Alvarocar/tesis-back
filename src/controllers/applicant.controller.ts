@@ -1,11 +1,11 @@
-import { ApplicantDto, ApplicantDtoLogIn, ApplicantDtoSignUp } from '@/dtos/applicant.dto';
+import { ApplicantDto, ApplicantDtoLogIn, ApplicantDtoSignUp, ApplicantPersonalInfoDto } from '@/dtos/applicant.dto';
 import { RequestWithApplicant } from '@/interfaces/auth.interface';
 import authApplicantMiddleware from '@/middlewares/authApplicant.middleware';
 import { validationMiddleware } from '@/middlewares/validation.middleware';
 import { ApplicantService } from '@/services/applicant.service';
 import { responseWithToken } from '@/utils/response.util';
 import { createTokenRest } from '@/utils/security/token.util';
-import { Body, Controller, Get, HttpCode, Post, Put, Req, UseBefore } from 'routing-controllers';
+import { Body, Controller, Get, HttpCode, Patch, Post, Put, Req, UseBefore } from 'routing-controllers';
 
 @Controller('/v1/applicants')
 export class ApplicantController {
@@ -35,5 +35,13 @@ export class ApplicantController {
   @HttpCode(200)
   async getProfile(@Req() req: RequestWithApplicant) {
     return this.applicantService.getProfile(req.user);
+  }
+
+  @Patch('/personal-info')
+  @UseBefore(authApplicantMiddleware)
+  @UseBefore(validationMiddleware(ApplicantPersonalInfoDto, 'body'))
+  @HttpCode(200)
+  async updatePersonalInfo(@Body() personalInfo: ApplicantPersonalInfoDto, @Req() req: RequestWithApplicant) {
+    return this.applicantService.updatePersonalInfo(personalInfo, req.user)
   }
 }

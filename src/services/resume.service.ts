@@ -69,8 +69,8 @@ export class ResumeService extends GenericService {
 
     return resume;
   }
-  async PutAboutMe(resumeDto: CreateAboutMeDto) {
-    return await ResumeRepository.updateAboutme(resumeDto);
+  async PutAboutMe(resumeDto: CreateAboutMeDto, applicant: Applicant) {
+    return await ResumeRepository.updateAboutme(resumeDto, applicant);
   }
   async getResumes(applicantId: number) {
     return await ResumeRepository.createQueryBuilder('rm')
@@ -101,10 +101,14 @@ export class ResumeService extends GenericService {
       .where("rs.id = :id", { id })
       .andWhere("rs.applicantId = :applicantId", { applicantId: applicant.id })
       .getOneOrFail()
-
+      
       resume.applicant = applicant
 
-      return resume
+      return {
+        ...resume,
+        resumeToLanguage: undefined, 
+        languages: resume.resumeToLanguage.map(lan => ({ name: lan.language.name, level: lan.language_level }))
+      }
     } catch(e) {
       console.log(e)
       throw new NotFoundError("La hoja de vida no fue encontrada")

@@ -21,9 +21,9 @@ export class ResumeController {
   @UseBefore(authApplicantMiddleware)
   @UseBefore(validationMiddleware(CreateAboutMeDto, 'body'))
   @HttpCode(200)
-  async putDescription(@Body() about: CreateAboutMeDto) {
-    await this.resumeService.PutAboutMe(about);
-    return { message: 'se ingreso informacion del usuario de manera exitosa.' };
+  async putDescription(@Body() about: CreateAboutMeDto, @Req() req: RequestWithApplicant) {
+    const result = await this.resumeService.PutAboutMe(about, req.user);
+    return { about_me: result.about_me };
   }
   //metodo obtener una hoja de vida por el id//
   @Get('/:id')
