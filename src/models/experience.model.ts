@@ -40,7 +40,7 @@ export class Experience {
   @Column({
     type: 'text',
   })
-  descripcion: String;
+  description: String;
 
   @ManyToOne(() => Resume, resume => resume.experiences)
   resume: Resume;

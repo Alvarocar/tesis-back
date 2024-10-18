@@ -10,3 +10,17 @@ services:
       - POSTGRES_DB=tesis
     ports:
       - '5432:5432'
+  broker:
+    image: rabbitmq:4.0.2-management
+    container_name: broker
+    restart: always
+    tty: true
+    stdin_open: true
+    ports:
+      # HTTP DASHBOARD
+      - "15672:15672"
+      # AMQP PROTOCOL
+      - "5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=tesis
+      - RABBITMQ_DEFAULT_PASS=tesis

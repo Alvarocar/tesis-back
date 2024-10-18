@@ -13,6 +13,7 @@ import { VacantToLanguage } from './models/vacant_to_language.model';
 import { PersonalReference } from './models/personal_reference.model';
 import { LaboralReference } from './models/laboral_reference.model';
 import { Skill } from './models/skill.model';
+import { Application } from './models/application.model';
 
 export const AppDataSource = new DataSource({
   type: ENV.POSTGRESS.type,
@@ -37,5 +38,6 @@ export const AppDataSource = new DataSource({
     PersonalReference,
     LaboralReference,
     Skill,
+    Application,
   ],
 });

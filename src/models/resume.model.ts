@@ -73,4 +73,7 @@ export class Resume {
 
   @OneToMany(() => Skill, skills => skills.resume)
   skills: Skill[];
+
+  @OneToMany(() => Applicant, applicant => applicant.resumes)
+  applications: Applicant[];
 }

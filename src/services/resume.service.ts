@@ -82,37 +82,18 @@ export class ResumeService extends GenericService {
 
   async getResumeById(id: number, applicant: Applicant) {
     try {
-      const resume = await ResumeRepository.createQueryBuilder("rs")
-      .select(["rs.id", "rs.title", "rs.about_me", "rs.modification_date"])
-      .addSelect(["ex.id", "ex.rol", "ex.company", "ex.start_date", "ex.end_date", "ex.keep_working", "ex.descripcion"])
-      .addSelect(["ed.id", "ed.institute", "ed.title", "ed.start_date", "ed.end_date", "ed.keep_study"])
-      .addSelect(["pr.id", "pr.name", "pr.number", "pr.relationship"])
-      .addSelect(["lr.id", "lr.name", "lr.number", "lr.rol"])
-      .addSelect(["rlan.id", "rlan.language_level"])
-      .addSelect("lang.name")
-      .addSelect("sk.id", "sk.name")
-      .leftJoin("rs.experiences", "ex")
-      .leftJoin("rs.educations", "ed")
-      .leftJoin("rs.personal_references", "pr")
-      .leftJoin("rs.laboral_references", "lr")
-      .leftJoin("rs.resumeToLanguage", "rlan")
-      .leftJoin("rlan.language", "lang")
-      .leftJoin("rs.skills", "sk")
-      .where("rs.id = :id", { id })
-      .andWhere("rs.applicantId = :applicantId", { applicantId: applicant.id })
-      .getOneOrFail()
-      
-      resume.applicant = applicant
+      const resume = await ResumeRepository.getFullById(id, applicant);
+
+      resume.applicant = applicant;
 
       return {
         ...resume,
-        resumeToLanguage: undefined, 
-        languages: resume.resumeToLanguage.map(lan => ({ name: lan.language.name, level: lan.language_level }))
-      }
-    } catch(e) {
-      console.log(e)
-      throw new NotFoundError("La hoja de vida no fue encontrada")
+        resumeToLanguage: undefined,
+        languages: resume.resumeToLanguage.map(lan => ({ name: lan.language.name, level: lan.language_level, id: lan.id })),
+      };
+    } catch (e) {
+      console.log(e);
+      throw new NotFoundError('La hoja de vida no fue encontrada');
     }
-    
   }
 }

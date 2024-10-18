@@ -1,50 +1,65 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { VacantToLanguage } from './vacant_to_language.model';
+import { Application } from './application.model';
+import { VacantJobType } from '@/enums/vacant.enum';
 
 @Entity()
 export class Vacant {
   @PrimaryGeneratedColumn({
     type: 'int',
+    name: 'id',
   })
   id: number;
 
   @Column({
     type: 'varchar',
     length: 60,
+    name: 'title',
   })
   title: string;
 
   @Column({
     type: 'text',
+    name: 'description',
   })
-  about: string;
+  description: string;
 
   @Column({
-    type: 'smallint',
+    type: 'float',
+    name: 'experience_years',
+    nullable: true,
   })
-  experience: number;
-
-  @Column({
-    type: 'varchar',
-    length: 60,
-  })
-  language: string;
+  experienceYears: number;
 
   @Column({
     type: 'date',
+    name: 'creation_date',
   })
-  creation: Date;
+  creationDate: Date;
 
   @Column({
     type: 'date',
+    name: 'modification_date',
   })
-  modification: Date;
+  modificationDate: Date;
 
   @Column({
     type: 'int',
+    name: 'salary_offer',
+    nullable: true,
   })
-  salary_offer: number;
+  salaryOffer: number;
+
+  @Column({
+    type: 'enum',
+    enum: VacantJobType,
+    name: 'jobType',
+  })
+  jobType: VacantJobType;
 
   @OneToMany(() => VacantToLanguage, vacantToLanguage => vacantToLanguage.vacant)
-  VacantToLanguage: VacantToLanguage;
+  VacantToLanguage: VacantToLanguage[];
+
+  @OneToMany(() => Application, application => application.vacant)
+  applications: Application[];
 }

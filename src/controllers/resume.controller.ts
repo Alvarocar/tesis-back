@@ -1,13 +1,21 @@
-import { CreateAboutMeDto, CreateResumeDto } from '@/dtos/resume.dto';
+import { CreateAboutMeDto, CreateResumeDto, EducationDto, ExperienceDto, LanguageDto, SkillDto } from '@/dtos/resume.dto';
 import { RequestWithApplicant } from '@/interfaces/auth.interface';
 import authApplicantMiddleware from '@/middlewares/authApplicant.middleware';
 import { validationMiddleware } from '@/middlewares/validation.middleware';
+import { EducationService } from '@/services/education.service';
+import { ExperienceService } from '@/services/experience.service';
+import { LanguageService } from '@/services/language.service';
 import { ResumeService } from '@/services/resume.service';
-import { Body, Controller, Get, HttpCode, Param, Patch, Post, Req, UseBefore } from 'routing-controllers';
+import { SkillService } from '@/services/skill.service';
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, QueryParam, Req, UseBefore } from 'routing-controllers';
 
 @Controller('/v1/resume')
 export class ResumeController {
   resumeService = new ResumeService();
+  languageService = new LanguageService();
+  educationService = new EducationService();
+  experienceService = new ExperienceService();
+  skillService = new SkillService();
 
   @Post('/')
   @UseBefore(authApplicantMiddleware)
@@ -39,5 +47,34 @@ export class ResumeController {
   async getResumesByUser(@Req() req: RequestWithApplicant) {
     const resumes = await this.resumeService.getResumes(req.user.id);
     return resumes;
+  }
+
+  @Get('/language/search')
+  getLanguagesByTerm(@QueryParam('term') term: string) {
+    return this.languageService.getLanguageByTerm(term);
+  }
+
+  @Patch('/education/:resumeId')
+  @UseBefore(authApplicantMiddleware)
+  addOrEditEducation(@Body() education: EducationDto, @Param('resumeId') resumeId: number, @Req() req: RequestWithApplicant) {
+    return this.educationService.createOrUpdate(education, req.user, resumeId);
+  }
+
+  @Patch('/experience/:resumeId')
+  @UseBefore(authApplicantMiddleware)
+  addOrEditExperience(@Body() experience: ExperienceDto, @Param('resumeId') resumeId: number, @Req() req: RequestWithApplicant) {
+    return this.experienceService.addOrEdit(experience, req.user, resumeId);
+  }
+
+  @Patch('/language/:resumeId')
+  @UseBefore(authApplicantMiddleware)
+  updateLanguage(@Body() languages: LanguageDto[], @Param('resumeId') resumeId: number, @Req() req: RequestWithApplicant) {
+    return this.languageService.updateLanguages(languages, resumeId, req.user);
+  }
+
+  @Patch('/skill/:resumeId')
+  @UseBefore(authApplicantMiddleware)
+  updateSkills(@Body() skills: SkillDto[], @Param('resumeId') resumeId: number, @Req() req: RequestWithApplicant) {
+    return this.skillService.updateSkills(skills, resumeId, req.user);
   }
 }

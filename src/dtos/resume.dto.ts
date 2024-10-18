@@ -1,4 +1,4 @@
-import { IsInt, IsNumber, IsOptional, IsString, Max, MaxLength, Min, ValidateNested } from 'class-validator';
+import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, Max, MaxLength, Min, ValidateNested } from 'class-validator';
 
 export class ResumeDto {
   @IsString()
@@ -39,15 +39,23 @@ export class CreateResumeDto {
 export class LanguageDto {
   @IsInt()
   @Min(0)
-  id: number;
+  @IsOptional()
+  id?: number;
 
   @IsInt()
   @Min(1)
   @Max(5)
-  language_level: number;
+  level: number;
+
+  @IsString()
+  name: string;
 }
 
 export class ExperienceDto {
+  @IsNumber()
+  @IsOptional()
+  id: number;
+
   @IsString()
   rol: string;
 
@@ -58,13 +66,21 @@ export class ExperienceDto {
   start_date: string;
 
   @IsString()
+  @IsOptional()
   end_date: string;
 
   @IsString()
   description: string;
+
+  @IsBoolean()
+  keep_working: boolean;
 }
 
 export class EducationDto {
+  @IsNumber()
+  @IsOptional()
+  id: number;
+
   @IsString()
   institute: string;
 
@@ -77,4 +93,16 @@ export class EducationDto {
   @IsString()
   @IsOptional()
   end_date: string;
+
+  @IsBoolean()
+  keep_study: boolean;
+}
+
+export class SkillDto {
+  @IsInt()
+  @IsOptional()
+  id?: number;
+
+  @IsString()
+  name: string;
 }
