@@ -1,27 +1,29 @@
-import amqp from 'amqplib';
+import { Connection } from 'amqplib';
 import { BaseListener } from '../listeners/base.listener';
+import { RabbitAMQP } from './amqp.util';
 
 export class RabbitMQService {
-  private connection: any;
-  private channel: any;
   private listeners: BaseListener[] = [];
-
-  constructor(private url: string) {}
+  private connection: Connection | null = null;
 
   async connect() {
     try {
-      this.connection = await amqp.connect(this.url);
-      this.channel = await this.connection.createChannel();
-      console.log('Conectado a RabbitMQ');
+      this.connection = await RabbitAMQP.getConnection();
     } catch (error) {
       console.error('Error al conectar a RabbitMQ', error);
     }
   }
 
   async registerListener(listener: BaseListener) {
-    this.listeners.push(listener);
-    await this.channel.assertQueue(listener.topic, { durable: true });
+    if (this.connection) {
+      this.listeners.push(listener);
+    }
+    /*  await this.channel.assertQueue(listener.topic, { durable: true });
     listener.consume(this.channel);
-    console.log(`Listener registrado para el topic: ${listener.topic}`);
+    console.log(`Listener registrado para el topic: ${listener.topic}`) */
+  }
+
+  execute() {
+    return Promise.all(this.listeners.map(app => app.init()));
   }
 }

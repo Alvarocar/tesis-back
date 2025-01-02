@@ -1,7 +1,8 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Vacant } from './vacant.model';
 import { Resume } from './resume.model';
-import { ApplicationStatus } from '@/enums/application.enum';
+import { EApplicationStatus } from '@/enums/application.enum';
+import { AIModel } from './aiModel.model';
 
 @Entity()
 export class Application {
@@ -32,11 +33,11 @@ export class Application {
 
   @Column({
     type: 'enum',
-    enum: ApplicationStatus,
-    default: ApplicationStatus.APPLIED,
+    enum: EApplicationStatus,
+    default: EApplicationStatus.APPLIED,
     name: 'status',
   })
-  status: ApplicationStatus;
+  status: EApplicationStatus;
 
   @Column({
     type: 'date',
@@ -47,7 +48,11 @@ export class Application {
   @Column({
     type: 'integer',
     name: 'ia_time_taken',
+    nullable: true,
     comment: 'tiempo tomado por la IA para analizar la Hoja de vida en milisegundos',
   })
   iaTimeTaken: Date;
+
+  @ManyToOne(() => AIModel, aimodel => aimodel.id)
+  aiModel: AIModel;
 }

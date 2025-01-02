@@ -14,6 +14,7 @@ import { PersonalReference } from './models/personal_reference.model';
 import { LaboralReference } from './models/laboral_reference.model';
 import { Skill } from './models/skill.model';
 import { Application } from './models/application.model';
+import { AIModel } from './models/aiModel.model';
 
 export const AppDataSource = new DataSource({
   type: ENV.POSTGRESS.type,
@@ -39,5 +40,6 @@ export const AppDataSource = new DataSource({
     LaboralReference,
     Skill,
     Application,
+    AIModel,
   ],
 });

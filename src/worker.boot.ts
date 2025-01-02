@@ -1,15 +1,18 @@
-// src/index.ts
+import './config';
 import { RabbitMQService } from './utils/rabbit.util';
 import { ApplicationListener } from './listeners/application.listener';
-
-const RABBITMQ_URL = 'amqp://tesis:tesis@localhost:5672/';
+import { AppDataSource } from './data-source';
 
 async function start() {
-  const rabbitMQService = new RabbitMQService(RABBITMQ_URL);
+  console.log(process.env.RELATIONAL_DB_TYPE);
+  await AppDataSource.initialize();
+  const rabbitMQService = new RabbitMQService();
   await rabbitMQService.connect();
 
   const applicantApplyListener = new ApplicationListener();
-  await rabbitMQService.registerListener(applicantApplyListener);
+  rabbitMQService.registerListener(applicantApplyListener);
+
+  await rabbitMQService.execute();
 }
 
 start();

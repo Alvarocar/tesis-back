@@ -17,7 +17,7 @@ export class ApplicantController {
   async signUp(@Body() applicant: ApplicantDtoSignUp) {
     const result = await this.applicantService.signUp(applicant);
     const newApplicant = new ApplicantDto({ ...result });
-    const token = createTokenRest(newApplicant);
+    const token = createTokenRest(newApplicant, { userType: 'applicant' });
     return responseWithToken(newApplicant, token);
   }
 
@@ -26,7 +26,7 @@ export class ApplicantController {
   @UseBefore(validationMiddleware(ApplicantDtoLogIn, 'body'))
   async logIn(@Body() applicant: ApplicantDtoLogIn) {
     const currentApplcant = await this.applicantService.logIn(applicant);
-    const token = createTokenRest(currentApplcant);
+    const token = createTokenRest(currentApplcant, { userType: 'applicant' });
     return responseWithToken(currentApplcant, token);
   }
 
@@ -42,6 +42,6 @@ export class ApplicantController {
   @UseBefore(validationMiddleware(ApplicantPersonalInfoDto, 'body'))
   @HttpCode(200)
   async updatePersonalInfo(@Body() personalInfo: ApplicantPersonalInfoDto, @Req() req: RequestWithApplicant) {
-    return this.applicantService.updatePersonalInfo(personalInfo, req.user)
+    return this.applicantService.updatePersonalInfo(personalInfo, req.user);
   }
 }

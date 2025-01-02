@@ -14,7 +14,9 @@ import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
 import { AppDataSource } from '@/data-source';
-import cors from 'cors';
+
+const allowedOriginsRegex = new RegExp(ORIGIN, 'i');
+
 class App {
   public app: express.Application;
   public env: string;
@@ -58,7 +60,13 @@ class App {
   private initializeRoutes(controllers: Function[]) {
     useExpressServer(this.app, {
       cors: {
-        origin: ORIGIN,
+        origin: function (origin: string, callback: any) {
+          if (origin && allowedOriginsRegex.test(origin)) {
+            callback(null, true);
+          } else {
+            callback(new Error('Not allowed by CORS'));
+          }
+        },
       },
       controllers: controllers,
       defaultErrorHandler: false,

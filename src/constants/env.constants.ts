@@ -9,4 +9,10 @@ export const ENV = {
     synchronize: true,
     logging: process.env.RELATIONAL_DB_LOGGING === 'true',
   },
+  COMPANY: {
+    NAME: process.env.COMPANY_NAME ?? 'UMB',
+  },
+  AMQP: {
+    URL: process.env.AMQP_URL,
+  },
 };

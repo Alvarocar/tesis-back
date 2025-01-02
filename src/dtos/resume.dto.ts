@@ -1,3 +1,5 @@
+import { Resume } from '@/models/resume.model';
+import { purify, window } from '@/utils/dom.util';
 import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, Max, MaxLength, Min, ValidateNested } from 'class-validator';
 
 export class ResumeDto {
@@ -105,4 +107,58 @@ export class SkillDto {
 
   @IsString()
   name: string;
+}
+
+export class ResumeTemplateDto {
+  private resume: Resume;
+
+  constructor(resume: Resume) {
+    this.resume = resume;
+  }
+
+  private getExperiences() {
+    const experiences = this.resume.experiences
+      ?.map(exp => `\t\t- ${exp.rol} (${exp.start_date}-${exp.end_date ?? 'actual'}) ${exp.description}`)
+      ?.join('\n');
+    if (!experiences) return '';
+    return `\texperiencia:\n${experiences}`;
+  }
+
+  private getStudies() {
+    const education = this.resume.educations
+      ?.map(edu => `\t\t- ${edu.institute} (${edu.start_date}-${edu.end_date ?? 'actual'}) ${edu.title}`)
+      ?.join('\n');
+    if (!education) return '';
+    return `\teducación:\n${education}`;
+  }
+
+  private getLanguages() {
+    const languages = this.resume.resumeToLanguage?.map(ln => `\t\t- ${ln.language.name}: ${ln.language_level}`)?.join('\n');
+    if (!languages) return '';
+    return `\tidioma:\n${languages}`;
+  }
+
+  private getSkills() {
+    const skills = this.resume.skills?.map(skll => `\t\t- ${skll.name}`);
+    if (!skills) return '';
+    return `\tHabilidades o Conocimientos:\n${skills}`;
+  }
+
+  /*   getDescription() {
+    const rawDescription = purify.sanitize(this.resume.about_me);
+    const container = window.document.createElement('div');
+    container.innerHTML = rawDescription;
+    return container.textContent ?? '';
+  }
+ */
+  getTemplate() {
+    return `
+      descripción:
+      ${this.resume.about_me || 'no hay descripción'}
+      ${this.getStudies()}
+      ${this.getExperiences()}
+      ${this.getLanguages()}
+      ${this.getSkills()}
+    `;
+  }
 }

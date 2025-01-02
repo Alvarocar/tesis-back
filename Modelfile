@@ -3,140 +3,148 @@ FROM gemma2:2b
 # set the temperature to 1 [higher is more creative, lower is more coherent]
 PARAMETER temperature 0
 
-MESSAGE user """
-vacante:
-estamos en la búsqueda de un Arquitecto Técnico de Integración apasionado y experimentado para unirse a nuestro equipo. El candidato ideal deberá tener experiencia comprobada en el diseño e implementación de arquitecturas de microservicios para la integración de aplicaciones, conocimiento en servicios en la nube de Microsoft Azure y habilidades para la evaluación, diagnóstico y diseño de integraciones.
-
-Responsabilidades:
-
-Diseñar e implementar soluciones de integración de aplicaciones utilizando arquitecturas de microservicios.
-Trabajar con arquitecturas basadas en eventos para facilitar la integración y la comunicación entre servicios.
-Implementar mecanismos de autenticación y autorización basados en tokens para el acceso a las aplicaciones.
-Administrar e implementar soluciones utilizando los servicios de Azure relacionados con la integración de aplicaciones.
-Colaborar con equipos multidisciplinarios para entender los requisitos y proporcionar soluciones técnicas adecuadas.
-Análisis de casos de uso de integración: Identificar, documentar y analizar los diferentes casos de uso de integración, asegurando el cumplimiento de los requisitos funcionales y no funcionales.
-Definición de la especificación funcional: Redactar especificaciones funcionales detalladas para cada caso de uso, definiendo las interacciones entre sistemas, datos y flujos de trabajo.
-Definición de la especificación técnica: Desarrollar especificaciones técnicas para cada integración, abarcando aspectos como protocolos de comunicación, transformaciones de datos, y puntos de integración.
-Definición de la arquitectura de integración: Diseñar la arquitectura de integración considerando microservicios, gestión de APIs, mensajería y orquestación, asegurando escalabilidad, seguridad y resiliencia.
-Definición del plan de trabajo: Elaborar el plan de trabajo que incluye actividades, recursos, cronograma, y esfuerzo estimado para cada fase del proyecto.
- 
-Calificaciones:
-
-Experiencia comprobada en diseño e implementación de arquitecturas de integración basadas en microservicios.
-Conocimiento sólido en arquitecturas basadas en eventos, principalmente:
-Gestión de APIs.
-Procesamiento asíncrono y síncrono de eventos.
-Colas de mensajes y tópicos.
-Enrutamiento de eventos.
-Orquestación de eventos.
-Mapeo y transformación de datos.
-Lógica de reintentos y gestión de errores.
-Gestión de logs de aplicación.
-Monitoreo end-to-end.
-Base de datos NoSQL.
-Experiencia en definición y documentación de especificaciones funcionales y técnicas de integraciones.
-Conocimiento sólido en la implementación de mecanismos de autenticación y autorización basados en tokens, principalmente:
-OAuth.
-JWT.
-API Keys.
-Experiencia en administración e implementación de servicios Azure para integración de aplicaciones, principalmente:
-Azure API Management.
-Azure Functions.
-Azure Logic Apps.
-Azure Service Bus.
-Azure Event Grid.
-Azure Cosmos DB.
-Azure Blob Storage.
-Azure Monitor.
-Azure AD.
-Azure DevOps.
-Experiencia en la elaboración de planes de trabajo, estimación de recursos y cronogramas.
-(Deseable) Certificaciones Azure relacionadas con arquitectura y administración en la nube son un plus:
-Azure Integration and Security (AZ-101).
-Azure Solutions Architect Expert (AZ-305).
-Habilidades excepcionales de comunicación y trabajo en equipo.
-Capacidad para resolver problemas complejos y proporcionar soluciones efectivas.
-"""
-
-MESSAGE assistant Vacante recibida, envíame la hoja de vida con la cual quieres hacer la comparación.
 
 MESSAGE user """
-descripción:
-Soy un profesional apasionado por el aprendizaje autónomo y la
-búsqueda de soluciones innovadoras en el campo de la arquitectura
-y desarrollo de software. Con más de 4 años de experiencia en
-proyectos diversos, he desarrollado un sólido conocimiento en el
-manejo de arquitecturas, especialmente en el ámbito del backend y
-la nube.
-Mi especialidad radica en el diseño y desarrollo de soluciones
-eficientes y escalables, aprovechando las últimas tecnologías
-y prácticas recomendadas. He liderado equipos en diversos
-proyectos, demostrando habilidades de gestión y la capacidad de
-coordinar esfuerzos para lograr resultados exitosos.
-Me considero un colaborador valioso en los proyectos en los que
-trabajo, capaz de abordar desafíos difíciles con facilidad y eficiencia.
-Mi enfoque se basa en encontrar soluciones prácticas y efectivas
-que impulsen la excelencia técnica y la satisfacción del cliente.
-Mi trayectoria profesional refleja un compromiso constante con el
-aprendizaje y la mejora continua, lo que me permite mantenerme
-actualizado con las últimas tendencias y avances en el campo de
-la tecnología. Estoy entusiasmado por enfrentar nuevos desafíos y
-contribuir con mi experiencia y habilidades en entornos de trabajo
-dinámicos y orientados a resultados.
-educación:
-  -  Universidad Manuela Beltran (2018 - 2023): Ingenieria de software
-experiencia:
-  - Desarrollador de back-end en CODESA (2022 - actual): encargado de realizar soluciones de
-  arquitectura en java para aplicaciones distrubuidas y tiempo real.
-idioma:
-  - Español: nativo
-  - Ingles: intermedio
-Habilidades o Conocimientos:
-  - Java
-  - SQL
-  - Microservicios
-  - trabajo en equipo 
+Analiza la siguiente hoja de vida y la descripción de la vacante. Evalúa y devuelve los siguientes resultados:
+1. "affinity": una puntuación de 1 a 10 sobre la correspondencia entre las habilidades del candidato y los requisitos de la vacante.
+2. "feedback": un resumen constructivo sobre cómo el perfil del candidato se ajusta o podría mejorar para esta vacante específica.
+
+CV (comienzo):
+  descripción:
+  Soy un profesional apasionado por el aprendizaje autónomo y la
+  búsqueda de soluciones innovadoras en el campo de la arquitectura
+  y desarrollo de software. Con más de 4 años de experiencia en
+  proyectos diversos, he desarrollado un sólido conocimiento en el
+  manejo de arquitecturas, especialmente en el ámbito del backend y
+  la nube.
+  Mi especialidad radica en el diseño y desarrollo de soluciones
+  eficientes y escalables, aprovechando las últimas tecnologías
+  y prácticas recomendadas. He liderado equipos en diversos
+  proyectos, demostrando habilidades de gestión y la capacidad de
+  coordinar esfuerzos para lograr resultados exitosos.
+  Me considero un colaborador valioso en los proyectos en los que
+  trabajo, capaz de abordar desafíos difíciles con facilidad y eficiencia.
+  Mi enfoque se basa en encontrar soluciones prácticas y efectivas
+  que impulsen la excelencia técnica y la satisfacción del cliente.
+  Mi trayectoria profesional refleja un compromiso constante con el
+  aprendizaje y la mejora continua, lo que me permite mantenerme
+  actualizado con las últimas tendencias y avances en el campo de
+  la tecnología. Estoy entusiasmado por enfrentar nuevos desafíos y
+  contribuir con mi experiencia y habilidades en entornos de trabajo
+  dinámicos y orientados a resultados.
+  educación:
+    -  Universidad Manuela Beltran (2018 - 2023): Ingenieria de software
+  experiencia:
+    - Desarrollador de back-end en CODESA (2022 - actual): encargado de realizar soluciones de
+    arquitectura en java para aplicaciones distrubuidas y tiempo real.
+  idioma:
+    - Español: nativo
+    - Ingles: intermedio
+  Habilidades o Conocimientos:
+    - Java
+    - SQL
+    - Microservicios
+    - trabajo en equipo 
+CV (fin):
+Vacante (comienzo):
+  descripción:
+  estamos en la búsqueda de un Arquitecto Técnico de Integración apasionado y experimentado para unirse a nuestro equipo. El candidato ideal deberá tener experiencia comprobada en el diseño e implementación de arquitecturas de microservicios para la integración de aplicaciones, conocimiento en servicios en la nube de Microsoft Azure y habilidades para la evaluación, diagnóstico y diseño de integraciones.
+
+  Responsabilidades:
+
+  Diseñar e implementar soluciones de integración de aplicaciones utilizando arquitecturas de microservicios.
+  Trabajar con arquitecturas basadas en eventos para facilitar la integración y la comunicación entre servicios.
+  Implementar mecanismos de autenticación y autorización basados en tokens para el acceso a las aplicaciones.
+  Administrar e implementar soluciones utilizando los servicios de Azure relacionados con la integración de aplicaciones.
+  Colaborar con equipos multidisciplinarios para entender los requisitos y proporcionar soluciones técnicas adecuadas.
+  Análisis de casos de uso de integración: Identificar, documentar y analizar los diferentes casos de uso de integración, asegurando el cumplimiento de los requisitos funcionales y no funcionales.
+  Definición de la especificación funcional: Redactar especificaciones funcionales detalladas para cada caso de uso, definiendo las interacciones entre sistemas, datos y flujos de trabajo.
+  Definición de la especificación técnica: Desarrollar especificaciones técnicas para cada integración, abarcando aspectos como protocolos de comunicación, transformaciones de datos, y puntos de integración.
+  Definición de la arquitectura de integración: Diseñar la arquitectura de integración considerando microservicios, gestión de APIs, mensajería y orquestación, asegurando escalabilidad, seguridad y resiliencia.
+  Definición del plan de trabajo: Elaborar el plan de trabajo que incluye actividades, recursos, cronograma, y esfuerzo estimado para cada fase del proyecto.
+  
+  Calificaciones:
+
+  Experiencia comprobada en diseño e implementación de arquitecturas de integración basadas en microservicios.
+  Conocimiento sólido en arquitecturas basadas en eventos, principalmente:
+  Gestión de APIs.
+  Procesamiento asíncrono y síncrono de eventos.
+  Colas de mensajes y tópicos.
+  Enrutamiento de eventos.
+  Orquestación de eventos.
+  Mapeo y transformación de datos.
+  Lógica de reintentos y gestión de errores.
+  Gestión de logs de aplicación.
+  Monitoreo end-to-end.
+  Base de datos NoSQL.
+  Experiencia en definición y documentación de especificaciones funcionales y técnicas de integraciones.
+  Conocimiento sólido en la implementación de mecanismos de autenticación y autorización basados en tokens, principalmente:
+  OAuth.
+  JWT.
+  API Keys.
+  Experiencia en administración e implementación de servicios Azure para integración de aplicaciones, principalmente:
+  Azure API Management.
+  Azure Functions.
+  Azure Logic Apps.
+  Azure Service Bus.
+  Azure Event Grid.
+  Azure Cosmos DB.
+  Azure Blob Storage.
+  Azure Monitor.
+  Azure AD.
+  Azure DevOps.
+  Experiencia en la elaboración de planes de trabajo, estimación de recursos y cronogramas.
+  (Deseable) Certificaciones Azure relacionadas con arquitectura y administración en la nube son un plus:
+  Azure Integration and Security (AZ-101).
+  Azure Solutions Architect Expert (AZ-305).
+  Habilidades excepcionales de comunicación y trabajo en equipo.
+  Capacidad para resolver problemas complejos y proporcionar soluciones efectivas.
+Vacante (fin):
 """
 
 MESSAGE assistant {"affinity":0.4,"feedback":"El candidato tiene experiencia en microservicios y desarrollo backend, lo cual es relevante para la vacante. Sin embargo, su experiencia de 4 años y su enfoque actual en soluciones de arquitectura en Java no son suficientes para cumplir con todos los requisitos avanzados de diseño e implementación de arquitecturas de integración complejas y en la nube, específicamente en Azure. La falta de experiencia en servicios de Azure y la documentación de especificaciones técnicas son áreas críticas que no están cubiertas en su hoja de vida. Además, no se menciona experiencia en autenticación basada en tokens ni en arquitecturas basadas en eventos, lo que reduce aún más su compatibilidad con la vacante."}
 
 MESSAGE user """
-  vacante:
-  nos encontramos en búsqueda de personas para ocupar el cargo Desarrollador Frontend a nivel nacional.
-  Su responsabilidad será crear y modificar el código de una aplicación web para hacer que el diseño de dicha interfaz sea atractiva e intuitiva con el fin de ofrecer una experiencia de usuario agradable.
-  Optimizará la aplicación para obtener su mejor desempeño en términos de velocidad y escalabilidad.
-  Asegurará una fluida interacción con el back-end que garantice el correcto funcionamiento de la aplicación, garantizará la factibilidad técnica de los diseños propuestos
-  y desarrollará características visuales de la aplicación siguiendo lineamientos de excelencia técnica. Para participar, debes ser profesional en Ingeniería de Software, Sistemas o afines,
-  con mínimo dos años de experiencia en desarrollo de aplicaciones con Microfrontend React y Angular, Redux, Module Federation de Webpack y TypeScript, Bootstrap, mount y shared API. 
-  Además, se requiere experiencia en integración y consumo de servicios para el envío de información desde el Frontend hacia el Backend, así como en el uso de librerías para el envío y cifrado en tránsito de la información,
-  tanto entre Microfrontends como entre el Front y Backend. Es una oportunidad para firmar un contrato a término indefinido, con un rango salarial entre 4.200.000 y 4.500.000 + beneficios económicos extralegales. Modalidad remota.
-"""
-MESSAGE assistant Vacante recibida, envíame la hoja de vida con la cual quieres hacer la comparación.
+Analiza la siguiente hoja de vida y la descripción de la vacante. Evalúa y devuelve los siguientes resultados:
+1. "affinity": una puntuación de 1 a 10 sobre la correspondencia entre las habilidades del candidato y los requisitos de la vacante.
+2. "feedback": un resumen constructivo sobre cómo el perfil del candidato se ajusta o podría mejorar para esta vacante específica.
 
-MESSAGE user """
+CV (comienzo):
   descripcion:
-  Me llamo Alvaro y me especializo en el desarrollo web para
-  aportar soluciones tecnológicas a las empresas con el objetivo de
-  automatizar procesos y darse a conocer al mundo.
-  Soy estudiante de Ingeniería de Software de noveno semestre con
-  gran pasión por la tecnología enfocado en el trabajo colaborativo
-  adoptando metodologías de trabajo como SCRUM para dar solución
-  a problemáticas implementando soluciones web con herramientas
-  como React, Angular, Spring Boot y Node.
+    Me llamo Alvaro y me especializo en el desarrollo web para
+    aportar soluciones tecnológicas a las empresas con el objetivo de
+    automatizar procesos y darse a conocer al mundo.
+    Soy estudiante de Ingeniería de Software de noveno semestre con
+    gran pasión por la tecnología enfocado en el trabajo colaborativo
+    adoptando metodologías de trabajo como SCRUM para dar solución
+    a problemáticas implementando soluciones web con herramientas
+    como React, Angular, Spring Boot y Node.
   educación:
-    - Universidad Manuela Beltrán (2018 - 2022) Ingeniería de software· 
+      - Universidad Manuela Beltrán (2018 - 2022) Ingeniería de software· 
   experiencia:
-    - Desarrollador en Magneto  (2022 - actual): encargado de dar soluciones web usando react para
-    crear paginas spa interactivas. tambien use nextjs para aplicaciones con seo.
+      - Desarrollador en Magneto  (2022 - actual): encargado de dar soluciones web usando react para
+      crear paginas spa interactivas. tambien use nextjs para aplicaciones con seo.
   idioma:
-    - Español: nativo
-    - Ingles: intermedio
+      - Español: nativo
+      - Ingles: intermedio
   Habilidades o Conocimientos:
-    - Javascript
-    - React
-    - Microfront
-    - UI/UX
-    - Angular 
+      - Javascript
+      - React
+      - Microfront
+      - UI/UX
+      - Angular
+CV (fin):
+Vacante (comienzo):
+  descripción:
+    nos encontramos en búsqueda de personas para ocupar el cargo Desarrollador Frontend a nivel nacional.
+    Su responsabilidad será crear y modificar el código de una aplicación web para hacer que el diseño de dicha interfaz sea atractiva e intuitiva con el fin de ofrecer una experiencia de usuario agradable.
+    Optimizará la aplicación para obtener su mejor desempeño en términos de velocidad y escalabilidad.
+    Asegurará una fluida interacción con el back-end que garantice el correcto funcionamiento de la aplicación, garantizará la factibilidad técnica de los diseños propuestos
+    y desarrollará características visuales de la aplicación siguiendo lineamientos de excelencia técnica. Para participar, debes ser profesional en Ingeniería de Software, Sistemas o afines,
+    con mínimo dos años de experiencia en desarrollo de aplicaciones con Microfrontend React y Angular, Redux, Module Federation de Webpack y TypeScript, Bootstrap, mount y shared API. 
+    Además, se requiere experiencia en integración y consumo de servicios para el envío de información desde el Frontend hacia el Backend, así como en el uso de librerías para el envío y cifrado en tránsito de la información,
+    tanto entre Microfrontends como entre el Front y Backend. Es una oportunidad para firmar un contrato a término indefinido, con un rango salarial entre 4.200.000 y 4.500.000 + beneficios económicos extralegales. Modalidad remota.
+Vacante (fin):
 """
 
 MESSAGE assistant {"affinity":0.7,"feedback":"El candidato presenta una sólida formación en desarrollo web y tiene experiencia práctica en React y Angular, lo cual es fundamental para la vacante. Su experiencia en la creación de aplicaciones SPA y uso de Next.js es un plus. Sin embargo, no se menciona específicamente el uso de Microfrontends, Redux, TypeScript, ni la experiencia en optimización de aplicaciones para velocidad y escalabilidad. También falta información sobre su manejo de librerías para cifrado y consumo de servicios, que son requeridos en la vacante. En general, tiene un perfil relevante, pero necesitaría fortalecer su conocimiento en algunas tecnologías y prácticas específicas para ser un candidato ideal."}

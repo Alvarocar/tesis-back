@@ -2,6 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { VacantToLanguage } from './vacant_to_language.model';
 import { Application } from './application.model';
 import { VacantJobType } from '@/enums/vacant.enum';
+import { Recluter } from './recluter.model';
 
 @Entity()
 export class Vacant {
@@ -53,7 +54,7 @@ export class Vacant {
   @Column({
     type: 'enum',
     enum: VacantJobType,
-    name: 'jobType',
+    name: 'job_type',
   })
   jobType: VacantJobType;
 
@@ -62,4 +63,7 @@ export class Vacant {
 
   @OneToMany(() => Application, application => application.vacant)
   applications: Application[];
+
+  @OneToMany(() => Recluter, recluter => recluter.vacants)
+  recluter: Recluter;
 }

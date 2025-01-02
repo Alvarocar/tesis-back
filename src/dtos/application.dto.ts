@@ -1,5 +1,5 @@
 export class ApplicationDto {
-  vacant_id: number;
+  vacantId: number;
 
-  resume_id: number;
+  resumeId: number;
 }

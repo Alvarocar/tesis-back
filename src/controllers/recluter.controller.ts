@@ -18,7 +18,7 @@ export class RecluterController {
   async signUp(@Body() recluter: RecluterDtoSignUp, @Res() res: Response) {
     const result = await this.recluterService.signUp(recluter);
     const newRecluter = new RecluterDto({ ...result });
-    res.setHeader('Authorization', createTokenRest(newRecluter, {}));
+    res.setHeader('Authorization', createTokenRest(newRecluter, { userType: 'recruiter' }));
     return responseWithData(newRecluter, { message: ERecluter.SIGN_UP });
   }
 
@@ -26,7 +26,7 @@ export class RecluterController {
   @HttpCode(204)
   @UseBefore(validationMiddleware(RecluterDtoLogIn, 'body'))
   async logIn(@Body() recluter: RecluterDtoLogIn, @Res() res: Response) {
-    res.setHeader('Authorization', createTokenRest(await this.recluterService.logIn(recluter), {}));
+    res.setHeader('Authorization', createTokenRest(await this.recluterService.logIn(recluter), { userType: 'recruiter' }));
     return stubObject();
   }
 }

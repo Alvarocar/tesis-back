@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Vacant } from './vacant.model';
 
 @Entity()
 export class Recluter {
@@ -40,4 +41,7 @@ export class Recluter {
     type: 'date',
   })
   modification_date: Date;
+
+  @ManyToOne(() => Vacant, vacant => vacant.recluter)
+  vacants: Vacant[];
 }

@@ -1,4 +1,4 @@
-export enum ApplicationStatus {
+export enum EApplicationStatus {
   APPLIED = 'APPLIED',
   ANALYZED = 'ANALYZED',
 }

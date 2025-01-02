@@ -11,8 +11,11 @@ export class ApplicantDtoLogIn {
 }
 
 export class ApplicantDtoSignUp {
-  @Length(4, 60)
-  public name: string;
+  @Length(0, 60)
+  public firstName: string;
+
+  @Length(0, 60)
+  public lastName: string;
 
   @IsEmail()
   public email: string;
@@ -54,7 +57,6 @@ export class ApplicantDto {
 }
 
 export class ApplicantPersonalInfoDto {
-
   @IsString()
   name: string;
 
@@ -69,7 +71,7 @@ export class ApplicantPersonalInfoDto {
    */
   @IsOptional()
   birth_date: string | null;
-  
+
   @IsOptional()
   direction: string | null;
 }
