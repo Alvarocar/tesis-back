@@ -1,5 +1,5 @@
 import { Applicant } from '@/models/applicant.model';
-import { IsEmail, IsOptional, IsString, Length } from 'class-validator';
+import { IsEmail, IsNumber, IsOptional, IsString, Length } from 'class-validator';
 import moment from 'moment';
 
 export class ApplicantDtoLogIn {
@@ -25,8 +25,9 @@ export class ApplicantDtoSignUp {
 }
 
 export class ApplicantDto {
-  constructor({ name, email, creation_date, modification_date, phone_number, birth_date, direction, identification, id }: Applicant) {
-    this.name = name;
+  constructor({ firstName, lastName, email, creation_date, modification_date, phone_number, birth_date, direction, identification, id }: Applicant) {
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.email = email;
     this.creation_date = moment(creation_date).format('DD-MM-YYYY');
     this.modification_date = moment(modification_date).format('DD-MM-YYYY');
@@ -37,7 +38,9 @@ export class ApplicantDto {
     this.identification = String(identification);
   }
 
-  public name: string;
+  public firstName: string;
+
+  public lastName: string;
 
   public email: string;
 
@@ -58,10 +61,13 @@ export class ApplicantDto {
 
 export class ApplicantPersonalInfoDto {
   @IsString()
-  name: string;
+  firstName: string;
 
   @IsString()
-  identification: string;
+  lastName: string;
+
+  @IsNumber()
+  identification: number;
 
   @IsOptional()
   phone_number: string | null;

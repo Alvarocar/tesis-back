@@ -12,7 +12,7 @@ export const ApplicantRepository = AppDataSource.getRepository(Applicant).extend
       modification_date: now,
       email: data.email,
       password: hash_password,
-      name: data.firstName + ' ' + data.lastName,
+      firstName: data.firstName + ' ' + data.lastName,
     });
   },
 });

@@ -10,9 +10,18 @@ export class Applicant {
 
   @Column({
     type: 'varchar',
+    name: 'first_name',
     length: 60,
   })
-  name: string;
+  firstName: string;
+
+  @Column({
+    type: 'varchar',
+    name: 'last_name',
+    length: 60,
+    nullable: true,
+  })
+  lastName: string;
 
   @Column({
     type: 'varchar',

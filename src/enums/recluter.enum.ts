@@ -1,3 +1,3 @@
-export enum ERecluter {
+export enum ERecruiter {
   SIGN_UP = 'Reclutador creado',
 }

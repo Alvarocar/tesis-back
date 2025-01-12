@@ -1,7 +1,8 @@
+import { Recruiter } from '@/models/recluter.model';
 import { IsEmail, Length } from 'class-validator';
 import moment from 'moment';
 
-export class RecluterDtoLogIn {
+export class RecruiterDtoLogIn {
   @IsEmail()
   public email: string;
 
@@ -9,7 +10,7 @@ export class RecluterDtoLogIn {
   public password: string;
 }
 
-export class RecluterDtoSignUp {
+export class RecruiterDtoSignUp {
   @Length(4, 60)
   public name: string;
 
@@ -23,15 +24,13 @@ export class RecluterDtoSignUp {
   public password: string;
 }
 
-export class RecluterDto {
-  constructor({ name, email, creation_date, modification_date, about_me = '', id = -1, rol }) {
+export class RecruiterDto {
+  constructor({ name, email, creation_date, modification_date, id = -1 }: Recruiter) {
     this.name = name;
-    this.about_me = about_me;
     this.email = email;
     this.creation_date = moment(creation_date).format('DD-MM-YYYY');
     this.modification_date = moment(modification_date).format('DD-MM-YYYY');
     this.id = id;
-    this.rol = rol;
   }
 
   public name: string;
@@ -41,8 +40,6 @@ export class RecluterDto {
   public creation_date: string;
 
   public modification_date: string;
-
-  public about_me: string;
 
   public id: number;
 

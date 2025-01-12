@@ -1,8 +1,10 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Vacant } from './vacant.model';
 
-@Entity()
-export class Recluter {
+@Entity({
+  name: 'recluter',
+})
+export class Recruiter {
   @PrimaryGeneratedColumn({
     type: 'int',
   })

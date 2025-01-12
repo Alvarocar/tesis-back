@@ -44,31 +44,40 @@ export class ApplicantService extends GenericService {
   }
 
   async updatePersonalInfo(personalInfo: ApplicantPersonalInfoDto, applicant: Applicant) {
-    let currentApplicant: null | Applicant = null
+    let currentApplicant: null | Applicant = null;
     try {
-      await ApplicantRepository
-      .createQueryBuilder()
-      .update()
-      .set({
-        identification: Number(personalInfo.identification),
-        name: personalInfo.name,
-        phone_number: personalInfo.phone_number,
-        birth_date: personalInfo.birth_date ? stringToDate(personalInfo.birth_date) : null,
-        direction: personalInfo.direction,
-      })
-      .where('id = :id', { id: applicant.id })
-      .execute()
+      await ApplicantRepository.createQueryBuilder()
+        .update()
+        .set({
+          identification: Number(personalInfo.identification),
+          firstName: personalInfo.firstName,
+          lastName: personalInfo.lastName,
+          phone_number: personalInfo.phone_number,
+          birth_date: personalInfo.birth_date ? stringToDate(personalInfo.birth_date) : null,
+          direction: personalInfo.direction,
+        })
+        .where('id = :id', { id: applicant.id })
+        .execute();
 
       currentApplicant = await ApplicantRepository.createQueryBuilder('apl')
-      .select(['apl.id', 'apl.name', 'apl.email', 'apl.modification_date', 'apl.direction', 'apl.identification', 'apl.phone_number', 'birth_date'])
-      .where('apl.id = :id', {id: applicant.id})
-      .getOneOrFail()
-
-    } catch(e) {
-      console.error(e)
-      return { message: 'hubo un error' }
+        .select([
+          'apl.id',
+          'apl.firstName',
+          'apl.lastName',
+          'apl.email',
+          'apl.modification_date',
+          'apl.direction',
+          'apl.identification',
+          'apl.phone_number',
+          'birth_date',
+        ])
+        .where('apl.id = :id', { id: applicant.id })
+        .getOneOrFail();
+    } catch (e) {
+      console.error(e);
+      return { message: 'hubo un error' };
     }
-    
-    return currentApplicant
+
+    return currentApplicant;
   }
 }

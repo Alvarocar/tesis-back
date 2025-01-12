@@ -13,10 +13,20 @@ const authApplicantMiddleware = async (req: RequestWithApplicant, res: Response,
       const secretKey: string = SECRET_KEY;
       const verificationResponse = (await verify(Authorization, secretKey)) as DataStoredInToken;
       const applicantId = verificationResponse.id;
-      const findUser = await ApplicantRepository.createQueryBuilder("ap").select([
-        "ap.id","ap.name", "ap.email", "ap.modification_date", "ap.direction", "ap.identification", "ap.phone_number", "ap.birth_date"])
-        .where("ap.id = :applicantId", { applicantId })
-        .getOneOrFail()
+      const findUser = await ApplicantRepository.createQueryBuilder('ap')
+        .select([
+          'ap.id',
+          'ap.firstName',
+          'ap.lastName',
+          'ap.email',
+          'ap.modification_date',
+          'ap.direction',
+          'ap.identification',
+          'ap.phone_number',
+          'ap.birth_date',
+        ])
+        .where('ap.id = :applicantId', { applicantId })
+        .getOneOrFail();
 
       if (findUser) {
         req.user = findUser;

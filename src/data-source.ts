@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { Applicant } from '@models/applicant.model';
-import { Recluter } from './models/recluter.model';
+import { Recruiter } from './models/recluter.model';
 import { ENV } from './constants';
 import { Education } from './models/education.model';
 import { Experience } from './models/experience.model';
@@ -27,11 +27,11 @@ export const AppDataSource = new DataSource({
   logging: ENV.POSTGRESS.logging,
   entities: [
     Applicant,
-    Recluter,
+    Recruiter,
     Education,
     Experience,
     Language,
-    Recluter,
+    Recruiter,
     ResumeToLanguage,
     Resume,
     VacantToLanguage,

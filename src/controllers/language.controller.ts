@@ -9,4 +9,9 @@ export class LanguageController {
   getLanguagesByTerm(@Param('term') term = '') {
     return this.languageService.getLanguageByTerm(term);
   }
+
+  @Get('/')
+  getLanguages() {
+    return this.languageService.getAll();
+  }
 }

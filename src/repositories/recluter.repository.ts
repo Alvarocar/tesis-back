@@ -1,4 +1,4 @@
 import { AppDataSource } from '@/data-source';
-import { Recluter } from '@/models/recluter.model';
+import { Recruiter } from '@/models/recluter.model';
 
-export const RecluterRepository = AppDataSource.getRepository(Recluter);
+export const RecruiterRepository = AppDataSource.getRepository(Recruiter);

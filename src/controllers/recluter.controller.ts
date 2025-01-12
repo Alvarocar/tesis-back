@@ -1,32 +1,30 @@
+import { Body, Controller, HttpCode, Post, Put, UseBefore } from 'routing-controllers';
+import { authPasswordMiddleware } from '@/middlewares/authPassword.middleware';
+import { RecruiterDtoLogIn, RecruiterDtoSignUp } from '@/dtos/recluter.dto';
 import { validationMiddleware } from '@/middlewares/validation.middleware';
-import { responseWithData } from '@/utils/response.util';
+import { RecruiterService } from '@/services/recluter.service';
 import { createTokenRest } from '@/utils/security/token.util';
-import { Response } from 'express';
-import { Body, Controller, HttpCode, Post, Put, Res, UseBefore } from 'routing-controllers';
-import { stubObject } from 'lodash';
-import { RecluterService } from '@/services/recluter.service';
-import { RecluterDto, RecluterDtoLogIn, RecluterDtoSignUp } from '@/dtos/recluter.dto';
-import { ERecluter } from '@/enums/recluter.enum';
+import { responseWithToken } from '@/utils/response.util';
 
-@Controller('/v1/recluters')
-export class RecluterController {
-  private recluterService = new RecluterService();
+@Controller('/v1/recruiter')
+export class RecruiterController {
+  private recruiterService = new RecruiterService();
 
   @Post('/sign-up')
-  @UseBefore(validationMiddleware(RecluterDtoSignUp, 'body'))
+  @UseBefore(authPasswordMiddleware)
+  @UseBefore(validationMiddleware(RecruiterDtoSignUp, 'body'))
   @HttpCode(201)
-  async signUp(@Body() recluter: RecluterDtoSignUp, @Res() res: Response) {
-    const result = await this.recluterService.signUp(recluter);
-    const newRecluter = new RecluterDto({ ...result });
-    res.setHeader('Authorization', createTokenRest(newRecluter, { userType: 'recruiter' }));
-    return responseWithData(newRecluter, { message: ERecluter.SIGN_UP });
+  async signUp(@Body() recruiter: RecruiterDtoSignUp) {
+    const resp = await this.recruiterService.signUp(recruiter);
+    return { message: `Reclutador: ${resp.email} creado!` };
   }
 
   @Put('/sign-in')
   @HttpCode(204)
-  @UseBefore(validationMiddleware(RecluterDtoLogIn, 'body'))
-  async logIn(@Body() recluter: RecluterDtoLogIn, @Res() res: Response) {
-    res.setHeader('Authorization', createTokenRest(await this.recluterService.logIn(recluter), { userType: 'recruiter' }));
-    return stubObject();
+  @UseBefore(validationMiddleware(RecruiterDtoLogIn, 'body'))
+  async logIn(@Body() recruiter: RecruiterDtoLogIn) {
+    const resRecruiter = await this.recruiterService.logIn(recruiter);
+    const token = createTokenRest(resRecruiter, { userType: 'recruiter' });
+    return responseWithToken(resRecruiter, token);
   }
 }

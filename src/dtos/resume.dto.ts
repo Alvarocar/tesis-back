@@ -46,7 +46,7 @@ export class LanguageDto {
 
   @IsInt()
   @Min(1)
-  @Max(5)
+  @Max(4)
   level: number;
 
   @IsString()

@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { User } from '@interfaces/users.interface';
 import { Applicant } from '@/models/applicant.model';
-import { Recluter } from '@/models/recluter.model';
+import { Recruiter } from '@/models/recluter.model';
 
 export interface DataStoredInToken {
   id: number;
@@ -19,5 +19,5 @@ export interface RequestWithApplicant extends Request {
   user: Applicant;
 }
 export interface RequestWithRecluter extends Request {
-  user: Recluter;
+  user: Recruiter;
 }

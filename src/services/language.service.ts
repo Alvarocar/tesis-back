@@ -3,6 +3,7 @@ import { Applicant } from '@/models/applicant.model';
 import { LanguageRepository } from '@/repositories/language.repository';
 import { ResumeRepository } from '@/repositories/resume.repository';
 import { ResumeToLanguageRepository } from '@/repositories/resumeToLanguage.repository';
+import { level } from 'winston';
 
 export class LanguageService {
   getLanguageByTerm(term: string) {
@@ -16,6 +17,14 @@ export class LanguageService {
     }
   }
 
+  getAll() {
+    try {
+      return LanguageRepository.createQueryBuilder('lan').select(['lan.name', 'lan.id']).getMany();
+    } catch {
+      return [];
+    }
+  }
+
   async updateLanguages(languages: LanguageDto[], resumeId: number, applicant: Applicant) {
     const commingIds = languages.filter(lng => lng.id !== undefined).map(lng => lng.id);
     try {
@@ -24,9 +33,10 @@ export class LanguageService {
       const preparedLanguages = currentLanguages.reduce(
         (acc, current) => {
           if (commingIds.includes(current.id)) {
+            const { level } = languages.find(lng => lng.id === current.id) ?? current;
             return {
               ...acc,
-              toUpdate: [...acc.toUpdate, current],
+              toUpdate: [...acc.toUpdate, { ...current, level }],
             };
           }
 

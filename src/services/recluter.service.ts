@@ -1,29 +1,29 @@
-import { RecluterDto, RecluterDtoLogIn, RecluterDtoSignUp } from '@/dtos/recluter.dto';
-import { EApplicant } from '@/enums/applicant.enum';
-import { InternalServerException, BadRequestException } from '@/exceptions/HttpException';
-import { Recluter } from '@/models/recluter.model';
-import { RecluterRepository } from '@/repositories/recluter.repository';
 import moment from 'moment';
-import { HttpError, NotFoundError } from 'routing-controllers';
 import { Repository } from 'typeorm';
+import { HttpError, NotFoundError } from 'routing-controllers';
+import { RecruiterRepository } from '@/repositories/recluter.repository';
+import { InternalServerException, BadRequestException } from '@/exceptions/HttpException';
+import { RecruiterDto, RecruiterDtoLogIn, RecruiterDtoSignUp } from '@/dtos/recluter.dto';
+import { EApplicant } from '@/enums/applicant.enum';
+import { Recruiter } from '@/models/recluter.model';
 import { GenericService } from './generic.service';
 
-export class RecluterService extends GenericService {
-  private recluterRepo: Repository<Recluter>;
+export class RecruiterService extends GenericService {
+  private recruiterRepo: Repository<Recruiter>;
   constructor() {
     super();
-    this.recluterRepo = RecluterRepository;
+    this.recruiterRepo = RecruiterRepository;
   }
 
-  async signUp(recluter: RecluterDtoSignUp) {
+  async signUp(recruiter: RecruiterDtoSignUp) {
     const now = moment();
     try {
-      const doppleganger = await this.recluterRepo.findOne({ where: { email: recluter.email } });
-      if (doppleganger != null) throw new BadRequestException(EApplicant.ERROR_DUPLICATE_EMAIL);
-      const password = await this.encrypt(recluter.password);
-      recluter = { ...recluter, password };
-      return await this.recluterRepo.save({
-        ...recluter,
+      const doppelganger = await this.recruiterRepo.findOne({ where: { email: recruiter.email } });
+      if (doppelganger != null) throw new BadRequestException(EApplicant.ERROR_DUPLICATE_EMAIL);
+      const password = await this.encrypt(recruiter.password);
+      recruiter = { ...recruiter, password };
+      return await this.recruiterRepo.save({
+        ...recruiter,
         creation_date: now,
         modification_date: now,
       });
@@ -34,13 +34,13 @@ export class RecluterService extends GenericService {
     }
   }
 
-  async logIn(recluter: RecluterDtoLogIn) {
+  async logIn(recruiter: RecruiterDtoLogIn) {
     try {
-      const find = await this.recluterRepo.findOne({ where: { email: recluter.email } });
+      const find = await this.recruiterRepo.findOne({ where: { email: recruiter.email } });
       if (!find) throw new NotFoundError(EApplicant.ERROR_NOT_MATCH_ACCOUNT);
-      const areEquals = await this.compareHash(recluter.password, find.password);
+      const areEquals = await this.compareHash(recruiter.password, find.password);
       if (!areEquals) throw new NotFoundError(EApplicant.ERROR_NOT_MATCH_ACCOUNT);
-      return new RecluterDto({ ...find });
+      return new RecruiterDto({ ...find });
     } catch (e) {
       this.internalError(e, EApplicant.ERROR_GENERIC);
     }

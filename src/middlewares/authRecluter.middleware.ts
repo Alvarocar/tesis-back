@@ -3,7 +3,7 @@ import { verify } from 'jsonwebtoken';
 import { SECRET_KEY } from '@config';
 import { HttpException } from '@exceptions/HttpException';
 import { DataStoredInToken, RequestWithRecluter } from '@interfaces/auth.interface';
-import { RecluterRepository } from '@/repositories/recluter.repository';
+import { RecruiterRepository } from '@/repositories/recluter.repository';
 
 const authRecluterMiddleware = async (req: RequestWithRecluter, res: Response, next: NextFunction) => {
   try {
@@ -13,7 +13,7 @@ const authRecluterMiddleware = async (req: RequestWithRecluter, res: Response, n
       const secretKey: string = SECRET_KEY;
       const verificationResponse = (await verify(Authorization, secretKey)) as DataStoredInToken;
       const recluterId = verificationResponse.id;
-      const findUser = await RecluterRepository.findOneBy({ id: recluterId });
+      const findUser = await RecruiterRepository.findOneBy({ id: recluterId });
 
       if (findUser) {
         req.user = findUser;

@@ -15,4 +15,5 @@ export const ENV = {
   AMQP: {
     URL: process.env.AMQP_URL,
   },
+  AUTH_PASSWORD: process.env.AUTH_PASSWORD,
 };
