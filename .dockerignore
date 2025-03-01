@@ -1,6 +1,10 @@
 # compiled output
 .vscode
 /node_modules
+/dist
+/db
+/logs
+/rabbit
 
 # code formatter
 .eslintrc
@@ -9,6 +13,8 @@
 .huskyrc
 .lintstagedrc.json
 .prettierrc
+.env
+.env.development.local
 
 # test
 jest.config.js
@@ -16,3 +22,6 @@ jest.config.js
 # docker
 Dockerfile
 docker-compose.yml
+
+
+Modelfile

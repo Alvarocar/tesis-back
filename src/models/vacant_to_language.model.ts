@@ -18,5 +18,5 @@ export class VacantToLanguage {
   vacant: Vacant;
 
   @ManyToOne(() => Language, language => language.VacantToLanguage)
-  language: Language;
+  language: typeof Language;
 }

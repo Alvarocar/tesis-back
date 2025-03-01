@@ -44,6 +44,6 @@ export class Recruiter {
   })
   modification_date: Date;
 
-  @ManyToOne(() => Vacant, vacant => vacant.recluter)
+  @ManyToOne(() => Vacant, vacant => vacant.recruiter)
   vacants: Vacant[];
 }

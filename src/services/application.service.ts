@@ -2,7 +2,7 @@ import { AMQP_EVENTS } from '@/constants';
 import { AMQPService } from './amqp.service';
 import { Applicant } from '@/models/applicant.model';
 import { ApplicationDto } from '@/dtos/application.dto';
-import { VacantRepository } from '@/repositories/vacant.model';
+import { VacantRepository } from '@/repositories/vacant.repository';
 import { ApplicationRepository } from '@/repositories/application.repository';
 import { ResumeRepository } from '@/repositories/resume.repository';
 

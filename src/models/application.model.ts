@@ -11,11 +11,12 @@ export class Application {
   })
   id: number;
 
-  @ManyToOne(() => Vacant, vacant => vacant.applications)
-  vacant: Vacant;
+  // eslint-disable-next-line prettier/prettier
+  @ManyToOne(() => Vacant, (vacant) => vacant.applications)
+  vacant: typeof Vacant;
 
   @ManyToOne(() => Resume, resume => resume.applications)
-  resume: Resume;
+  resume: typeof Resume;
 
   @Column({
     type: 'text',
@@ -46,7 +47,7 @@ export class Application {
   createApplicationDate: Date;
 
   @Column({
-    type: 'integer',
+    type: 'float',
     name: 'ia_time_taken',
     nullable: true,
     comment: 'tiempo tomado por la IA para analizar la Hoja de vida en milisegundos',
@@ -54,5 +55,5 @@ export class Application {
   iaTimeTaken: Date;
 
   @ManyToOne(() => AIModel, aimodel => aimodel.id)
-  aiModel: AIModel;
+  aiModel: typeof AIModel;
 }

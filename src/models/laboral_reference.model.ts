@@ -33,5 +33,5 @@ export class LaboralReference {
   company: string;
 
   @ManyToOne(() => Resume, resume => resume.laboral_references)
-  resume: Resume;
+  resume: typeof Resume;
 }

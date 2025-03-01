@@ -38,5 +38,5 @@ export class Education {
   keep_study?: boolean;
 
   @ManyToOne(() => Resume, resume => resume.educations)
-  resume: Resume;
+  resume: typeof Resume;
 }

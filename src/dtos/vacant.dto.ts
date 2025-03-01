@@ -1,5 +1,8 @@
+import { Transform } from 'class-transformer';
+import { IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString } from 'class-validator';
 import { Vacant } from '@/models/vacant.model';
 import { purify, window } from '@/utils/dom.util';
+import { VacantJobType } from '@/enums/vacant.enum';
 
 export class VacantTemplateDto {
   private vacant: Vacant;
@@ -26,3 +29,32 @@ export class VacantTemplateDto {
     `;
   }
 }
+
+export class VacantDto {
+  @IsString()
+  @IsNotEmpty()
+  title: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @Transform(({ value }) => purify.sanitize(value))
+  description: string;
+
+  @IsNumber()
+  @IsPositive()
+  salary: number;
+
+  @IsEnum(VacantJobType)
+  jobType: VacantJobType;
+}
+
+export const VacantFactory = {
+  toDto: (vacant: Vacant): VacantDto => {
+    return {
+      title: vacant.title,
+      description: vacant.description,
+      jobType: vacant.jobType,
+      salary: vacant.salaryOffer,
+    };
+  },
+};

@@ -9,6 +9,7 @@ import { ResumeController } from './controllers/resume.controller';
 import { JobController } from './controllers/job.controller';
 import { ApplicantionController } from './controllers/application.controller';
 import { LanguageController } from './controllers/language.controller';
+import { VacantController } from './controllers/vacant.controller';
 
 validateEnv();
 
@@ -22,5 +23,6 @@ const app = new App([
   ApplicantionController,
   LanguageController,
   RecruiterController,
+  VacantController,
 ]);
 app.listen();

@@ -1,24 +1,40 @@
-# Common build stage
-FROM node:14.14.0-alpine3.12 as common-build-stage
+# Imagen base con Node.js
+FROM node:20-alpine AS builder
 
-COPY . ./app
+# Establecer el directorio de trabajo
+WORKDIR /app
+
+# Copiar los archivos del proyecto
+COPY pnpm-lock.yaml package.json ./
+
+# Instalar pnpm globalmente
+RUN npm install -g pnpm
+
+# Instalar las dependencias
+RUN pnpm install --frozen-lockfile
+
+# Copiar el resto del código fuente
+COPY . .
+
+# Construir la aplicación
+RUN pnpm build
+
+# Imagen final para producción
+FROM node:20-alpine
 
 WORKDIR /app
 
-RUN npm install
+# Instalar solo las dependencias de producción
+COPY --from=builder /app/pnpm-lock.yaml /app/package.json ./
+# Instalar pnpm globalmente
+RUN npm install -g pnpm
+RUN pnpm install --prod --frozen-lockfile
 
+# Copiar la carpeta de distribución
+COPY --from=builder /app/dist ./dist
+
+# Exponer el puerto del servidor
 EXPOSE 3000
 
-# Development build stage
-FROM common-build-stage as development-build-stage
-
-ENV NODE_ENV development
-
-CMD ["yarn", "run", "dev"]
-
-# Production build stage
-FROM common-build-stage as production-build-stage
-
-ENV NODE_ENV production
-
-CMD ["yarn", "run", "start"]
+# Comando de inicio
+CMD ["npm", "run", "start:raw"]

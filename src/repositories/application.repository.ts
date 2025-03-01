@@ -3,6 +3,9 @@ import { Vacant } from '@/models/vacant.model';
 import { Resume } from '@/models/resume.model';
 import { Application } from '@/models/application.model';
 import { EApplicationStatus } from '@/enums/application.enum';
+import { OllamaResponse } from '@/interfaces/ollama.interface';
+import { nanosecondsToSeconds } from '@/utils/number.util';
+import { fromStringToJson } from '@/utils/json.util';
 
 export const ApplicationRepository = AppDataSource.getRepository(Application).extend({
   startApply: async (resume: Resume, vacant: Vacant) => {
@@ -12,6 +15,19 @@ export const ApplicationRepository = AppDataSource.getRepository(Application).ex
       vacant,
       status: EApplicationStatus.APPLIED,
     });
+  },
+
+  endApply: async (id: number, resp: OllamaResponse) => {
+    const iaResp = fromStringToJson(resp.response) as { affinity: number; feedback: string };
+    return ApplicationRepository.update(
+      { id },
+      {
+        iaTimeTaken: nanosecondsToSeconds(resp.total_duration),
+        affinity: iaResp.affinity,
+        feedBack: iaResp.feedback,
+        status: EApplicationStatus.ANALYZED,
+      },
+    );
   },
 
   findByVacantAndResume(vacant: Vacant, resume: Resume) {

@@ -15,5 +15,5 @@ export class Skill {
   name: string;
 
   @ManyToOne(() => Resume, resume => resume.skills)
-  resume: Resume;
+  resume: typeof Resume;
 }

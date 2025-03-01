@@ -54,26 +54,26 @@ export class Resume {
   }
 
   @OneToMany(() => ResumeToLanguage, resumeToLanguage => resumeToLanguage.resume)
-  resumeToLanguage: ResumeToLanguage[];
+  resumeToLanguage: (typeof ResumeToLanguage)[];
 
   @OneToMany(() => Education, education => education.resume)
-  educations: Education[];
+  educations: (typeof Education)[];
 
   @OneToMany(() => Experience, experience => experience.resume)
-  experiences: Experience[];
+  experiences: (typeof Experience)[];
 
   @ManyToOne(() => Applicant, applicant => applicant.resumes)
-  applicant: Applicant;
+  applicant: typeof Applicant;
 
   @OneToMany(() => PersonalReference, personal => personal.resume)
-  personal_references: PersonalReference[];
+  personal_references: (typeof PersonalReference)[];
 
   @OneToMany(() => LaboralReference, laboral => laboral.resume)
-  laboral_references: LaboralReference[];
+  laboral_references: (typeof LaboralReference)[];
 
   @OneToMany(() => Skill, skills => skills.resume)
-  skills: Skill[];
+  skills: (typeof Skill)[];
 
   @OneToMany(() => Applicant, applicant => applicant.resumes)
-  applications: Applicant[];
+  applications: (typeof Applicant)[];
 }

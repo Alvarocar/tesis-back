@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import { OllamaResponse } from '@/interfaces/ollama.interface';
 
 export class RecluterIA {
   private axios: AxiosInstance;
@@ -16,7 +17,7 @@ export class RecluterIA {
   }
 
   generate(prompt: string, stream = false) {
-    return this.axios.post('/api/generate', {
+    return this.axios.post<OllamaResponse>('/api/generate', {
       model: this.model,
       prompt,
       stream,

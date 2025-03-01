@@ -14,9 +14,6 @@ export class RecruiterDtoSignUp {
   @Length(4, 60)
   public name: string;
 
-  @Length(4, 60)
-  public rol: string;
-
   @IsEmail()
   public email: string;
 

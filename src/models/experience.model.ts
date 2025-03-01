@@ -43,5 +43,5 @@ export class Experience {
   description: String;
 
   @ManyToOne(() => Resume, resume => resume.experiences)
-  resume: Resume;
+  resume: typeof Resume;
 }

@@ -102,7 +102,10 @@ Vacante (comienzo):
 Vacante (fin):
 """
 
-MESSAGE assistant {"affinity":0.4,"feedback":"El candidato tiene experiencia en microservicios y desarrollo backend, lo cual es relevante para la vacante. Sin embargo, su experiencia de 4 años y su enfoque actual en soluciones de arquitectura en Java no son suficientes para cumplir con todos los requisitos avanzados de diseño e implementación de arquitecturas de integración complejas y en la nube, específicamente en Azure. La falta de experiencia en servicios de Azure y la documentación de especificaciones técnicas son áreas críticas que no están cubiertas en su hoja de vida. Además, no se menciona experiencia en autenticación basada en tokens ni en arquitecturas basadas en eventos, lo que reduce aún más su compatibilidad con la vacante."}
+MESSAGE assistant """
+affinity: 0.4
+feedback
+""""feedback":"El candidato tiene experiencia en microservicios y desarrollo backend, lo cual es relevante para la vacante. Sin embargo, su experiencia de 4 años y su enfoque actual en soluciones de arquitectura en Java no son suficientes para cumplir con todos los requisitos avanzados de diseño e implementación de arquitecturas de integración complejas y en la nube, específicamente en Azure. La falta de experiencia en servicios de Azure y la documentación de especificaciones técnicas son áreas críticas que no están cubiertas en su hoja de vida. Además, no se menciona experiencia en autenticación basada en tokens ni en arquitecturas basadas en eventos, lo que reduce aún más su compatibilidad con la vacante."}
 
 MESSAGE user """
 Analiza la siguiente hoja de vida y la descripción de la vacante. Evalúa y devuelve los siguientes resultados:

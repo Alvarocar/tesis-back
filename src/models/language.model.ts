@@ -16,8 +16,8 @@ export class Language {
   name: string;
 
   @OneToMany(() => ResumeToLanguage, resumeToLanguage => resumeToLanguage.resume)
-  resumeToLanguage: ResumeToLanguage;
+  resumeToLanguage: typeof ResumeToLanguage;
 
   @OneToMany(() => VacantToLanguage, vacantToLanguage => vacantToLanguage.vacant)
-  VacantToLanguage: VacantToLanguage;
+  VacantToLanguage: typeof VacantToLanguage;
 }

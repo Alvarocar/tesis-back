@@ -61,9 +61,10 @@ export class Vacant {
   @OneToMany(() => VacantToLanguage, vacantToLanguage => vacantToLanguage.vacant)
   VacantToLanguage: VacantToLanguage[];
 
-  @OneToMany(() => Application, application => application.vacant)
+  // eslint-disable-next-line prettier/prettier
+  @OneToMany(() => Application, (application) => application.vacant)
   applications: Application[];
 
-  @OneToMany(() => Recruiter, recluter => recluter.vacants)
-  recluter: Recruiter;
+  @OneToMany(() => Recruiter, recruiter => recruiter.vacants)
+  recruiter: Recruiter;
 }

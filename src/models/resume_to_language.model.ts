@@ -15,8 +15,8 @@ export class ResumeToLanguage {
   language_level: number;
 
   @ManyToOne(() => Resume, resume => resume.resumeToLanguage)
-  resume: Resume;
+  resume: typeof Resume;
 
   @ManyToOne(() => Language, language => language.resumeToLanguage)
-  language: Language;
+  language: typeof Language;
 }

@@ -78,5 +78,5 @@ export class Applicant {
   birth_date: Date;
 
   @OneToMany(() => Resume, resume => resume.applicant)
-  resumes: Resume[];
+  resumes: (typeof Resume)[];
 }

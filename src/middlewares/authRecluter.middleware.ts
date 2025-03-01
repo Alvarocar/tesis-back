@@ -2,10 +2,10 @@ import { NextFunction, Response } from 'express';
 import { verify } from 'jsonwebtoken';
 import { SECRET_KEY } from '@config';
 import { HttpException } from '@exceptions/HttpException';
-import { DataStoredInToken, RequestWithRecluter } from '@interfaces/auth.interface';
+import { DataStoredInToken, RequestWithRecruiter } from '@interfaces/auth.interface';
 import { RecruiterRepository } from '@/repositories/recluter.repository';
 
-const authRecluterMiddleware = async (req: RequestWithRecluter, res: Response, next: NextFunction) => {
+const authRecruiterMiddleware = async (req: RequestWithRecruiter, res: Response, next: NextFunction) => {
   try {
     const Authorization = req.cookies['Authorization'] || (req.header('Authorization') ? req.header('Authorization').split('Bearer ')[1] : null);
 
@@ -29,4 +29,4 @@ const authRecluterMiddleware = async (req: RequestWithRecluter, res: Response, n
   }
 };
 
-export default authRecluterMiddleware;
+export default authRecruiterMiddleware;

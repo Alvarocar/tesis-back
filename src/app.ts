@@ -1,15 +1,16 @@
 import 'reflect-metadata';
-import { defaultMetadataStorage } from 'class-transformer/cjs/storage';
-import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
+import hpp from 'hpp';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import express from 'express';
+import { resolve } from 'path';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import express from 'express';
-import helmet from 'helmet';
-import hpp from 'hpp';
-import morgan from 'morgan';
-import { useExpressServer, getMetadataArgsStorage } from 'routing-controllers';
-import { routingControllersToSpec } from 'routing-controllers-openapi';
 import swaggerUi from 'swagger-ui-express';
+import { defaultMetadataStorage } from 'class-transformer/cjs/storage';
+import { routingControllersToSpec } from 'routing-controllers-openapi';
+import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
+import { useExpressServer, getMetadataArgsStorage } from 'routing-controllers';
 import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config';
 import errorMiddleware from '@middlewares/error.middleware';
 import { logger, stream } from '@utils/logger';
@@ -64,11 +65,12 @@ class App {
           if (origin && allowedOriginsRegex.test(origin)) {
             callback(null, true);
           } else {
-            callback(new Error('Not allowed by CORS'));
+            callback(null, true);
+            //callback(new Error('Not allowed by CORS'));
           }
         },
       },
-      controllers: controllers,
+      controllers: [resolve(__dirname, './controllers/**/*.ts')],
       defaultErrorHandler: false,
       routePrefix: 'api',
     });

@@ -27,5 +27,5 @@ export class PersonalReference {
   relationship: string;
 
   @ManyToOne(() => Resume, resume => resume.personal_references)
-  resume: Resume;
+  resume: typeof Resume;
 }

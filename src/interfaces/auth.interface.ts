@@ -18,6 +18,6 @@ export interface RequestWithUser extends Request {
 export interface RequestWithApplicant extends Request {
   user: Applicant;
 }
-export interface RequestWithRecluter extends Request {
+export interface RequestWithRecruiter extends Request {
   user: Recruiter;
 }

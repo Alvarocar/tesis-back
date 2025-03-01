@@ -54,7 +54,6 @@ export class ApplicationListener extends BaseListener {
     });
 
     const response = await this.iaService.generate(prompt);
-
-    console.log(response);
+    await ApplicationRepository.endApply(application.id, response.data);
   }
 }
