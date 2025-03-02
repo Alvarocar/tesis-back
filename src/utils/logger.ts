@@ -50,22 +50,17 @@ const logger = winston.createLogger({
   ],
 });
 
-logger.add(
+/* logger.add(
   new winston.transports.Console({
     format: winston.format.combine(winston.format.splat(), winston.format.colorize()),
   }),
-);
+); */
 
 logger.add(
   new winston.transports.Console({
-    level: 'error', // Asegura que solo los errores se impriman en consola
-    format: winston.format.combine(
-      winston.format.timestamp({
-        format: 'YYYY-MM-DD HH:mm:ss',
-      }),
-      winston.format.colorize(), // Colorea los logs en consola
-      logFormat,
-    ),
+    level: 'debug',
+    handleExceptions: true, // Captura excepciones no manejadas
+    format: winston.format.combine(winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), winston.format.colorize(), logFormat),
   }),
 );
 
