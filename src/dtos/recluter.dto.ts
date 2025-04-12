@@ -1,5 +1,5 @@
 import { Recruiter } from '@/models/recluter.model';
-import { IsEmail, Length } from 'class-validator';
+import { IsEmail, IsString, Length } from 'class-validator';
 import moment from 'moment';
 
 export class RecruiterDtoLogIn {
@@ -41,4 +41,14 @@ export class RecruiterDto {
   public id: number;
 
   public rol: string;
+}
+
+export class RecruiterDtoUpdate {
+  @IsString()
+  @Length(4, 60)
+  firstName: string;
+
+  @IsString()
+  @Length(4, 60)
+  lastName: string;
 }

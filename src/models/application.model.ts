@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Vacant } from './vacant.model';
 import { Resume } from './resume.model';
 import { EApplicationStatus } from '@/enums/application.enum';
@@ -13,6 +13,7 @@ export class Application {
 
   // eslint-disable-next-line prettier/prettier
   @ManyToOne(() => Vacant, (vacant) => vacant.applications)
+  @JoinColumn({ name: 'vacancy_id' })
   vacant: typeof Vacant;
 
   @ManyToOne(() => Resume, resume => resume.applications)

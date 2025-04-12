@@ -2,7 +2,7 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Vacant } from './vacant.model';
 
 @Entity({
-  name: 'recluter',
+  name: 'employee',
 })
 export class Recruiter {
   @PrimaryGeneratedColumn({
@@ -12,9 +12,18 @@ export class Recruiter {
 
   @Column({
     type: 'varchar',
+    name: 'first_name',
     length: 60,
   })
-  name: string;
+  firstName: string;
+
+  @Column({
+    type: 'varchar',
+    name: 'last_name',
+    length: 60,
+    nullable: true,
+  })
+  lastName: string;
 
   @Column({
     type: 'varchar',
@@ -44,6 +53,6 @@ export class Recruiter {
   })
   modification_date: Date;
 
-  @ManyToOne(() => Vacant, vacant => vacant.recruiter)
+  @ManyToOne(() => Vacant, vacant => vacant.recruiters)
   vacants: Vacant[];
 }

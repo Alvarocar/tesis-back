@@ -1,4 +1,4 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import { ResumeToLanguage } from './resume_to_language.model';
 import { Education } from './education.model';
 import { Experience } from './experience.model';
@@ -53,27 +53,27 @@ export class Resume {
     this.modification_date = current;
   }
 
-  @OneToMany(() => ResumeToLanguage, resumeToLanguage => resumeToLanguage.resume)
-  resumeToLanguage: (typeof ResumeToLanguage)[];
+  @OneToMany(() => ResumeToLanguage, resumeToLanguage => resumeToLanguage.resume, { onDelete: 'CASCADE' })
+  resumeToLanguage: Relation<ResumeToLanguage>[];
 
-  @OneToMany(() => Education, education => education.resume)
-  educations: (typeof Education)[];
+  @OneToMany(() => Education, education => education.resume, { onDelete: 'CASCADE' })
+  educations: Relation<Education>[];
 
-  @OneToMany(() => Experience, experience => experience.resume)
-  experiences: (typeof Experience)[];
+  @OneToMany(() => Experience, experience => experience.resume, { onDelete: 'CASCADE' })
+  experiences: Relation<Experience>[];
 
-  @ManyToOne(() => Applicant, applicant => applicant.resumes)
-  applicant: typeof Applicant;
+  @ManyToOne(() => Applicant, applicant => applicant.resumes, { onDelete: 'CASCADE' })
+  applicant: Relation<Applicant>;
 
-  @OneToMany(() => PersonalReference, personal => personal.resume)
-  personal_references: (typeof PersonalReference)[];
+  @OneToMany(() => PersonalReference, personal => personal.resume, { onDelete: 'CASCADE' })
+  personal_references: Relation<PersonalReference>[];
 
-  @OneToMany(() => LaboralReference, laboral => laboral.resume)
-  laboral_references: (typeof LaboralReference)[];
+  @OneToMany(() => LaboralReference, laboral => laboral.resume, { onDelete: 'CASCADE' })
+  laboral_references: Relation<LaboralReference>[];
 
-  @OneToMany(() => Skill, skills => skills.resume)
-  skills: (typeof Skill)[];
+  @OneToMany(() => Skill, skills => skills.resume, { onDelete: 'CASCADE' })
+  skills: Relation<Skill>[];
 
-  @OneToMany(() => Applicant, applicant => applicant.resumes)
-  applications: (typeof Applicant)[];
+  @OneToMany(() => Applicant, applicant => applicant.resumes, { onDelete: 'CASCADE' })
+  applications: Relation<Applicant>[];
 }

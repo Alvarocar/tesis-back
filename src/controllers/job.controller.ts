@@ -4,6 +4,7 @@ import { RequestWithApplicant } from '@/interfaces/auth.interface';
 import { VacantRepository } from '@/repositories/vacant.repository';
 import { JobService } from '@/services/job.service';
 import { ENV } from '@/constants';
+import { Like } from 'typeorm';
 
 @Controller('/v1/job')
 export class JobController {
@@ -14,11 +15,14 @@ export class JobController {
   }
 
   @Get('/')
-  async getJobs(@QueryParam('page') page = 1, @QueryParam('pageSize') pageSize = 10) {
+  async getJobs(@QueryParam('page') page = 1, @QueryParam('pageSize') pageSize = 10, @QueryParam('q') query: string) {
     const size = pageSize < 0 ? 10 : pageSize > 20 ? 20 : pageSize;
     const pageNumber = page <= 0 ? 1 : page;
     const [jobs, total] = await VacantRepository.findAndCount({
       select: ['id', 'title', 'salaryOffer', 'jobType'],
+      where: {
+        title: Like(`%${query}%`),
+      },
       skip: (pageNumber - 1) * size,
       take: size,
     });

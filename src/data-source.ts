@@ -15,6 +15,9 @@ import { LaboralReference } from './models/laboral_reference.model';
 import { Skill } from './models/skill.model';
 import { Application } from './models/application.model';
 import { AIModel } from './models/aiModel.model';
+import { Position } from './models/position.model';
+import { Contract } from './models/contract.model';
+import { VacancySkill } from './models/vacancySkill.model';
 
 export const AppDataSource = new DataSource({
   type: ENV.POSTGRESS.type,
@@ -41,5 +44,8 @@ export const AppDataSource = new DataSource({
     Skill,
     Application,
     AIModel,
+    Position,
+    Contract,
+    VacancySkill,
   ],
 });

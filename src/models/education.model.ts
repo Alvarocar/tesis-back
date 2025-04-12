@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import { Resume } from './resume.model';
 
 @Entity()
@@ -38,5 +38,5 @@ export class Education {
   keep_study?: boolean;
 
   @ManyToOne(() => Resume, resume => resume.educations)
-  resume: typeof Resume;
+  resume: Relation<Resume>;
 }

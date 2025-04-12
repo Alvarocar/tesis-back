@@ -16,7 +16,7 @@ export class VacantService {
         salaryOffer: vacant.salary,
         creationDate: now,
         modificationDate: now,
-        recruiter,
+        recruiters: recruiter,
       });
 
       return { id: result.identifiers[0]?.id };

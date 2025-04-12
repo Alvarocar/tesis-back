@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import { Resume } from './resume.model';
 
 @Entity()
@@ -43,5 +43,5 @@ export class Experience {
   description: String;
 
   @ManyToOne(() => Resume, resume => resume.experiences)
-  resume: typeof Resume;
+  resume: Relation<Resume>;
 }

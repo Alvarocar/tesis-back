@@ -96,4 +96,14 @@ export class ResumeService extends GenericService {
       throw new NotFoundError('La hoja de vida no fue encontrada');
     }
   }
+
+  async deleteResume(applicant: Applicant, resumeId: number) {
+    try {
+      await ResumeRepository.delete({ id: resumeId, applicant: applicant });
+      return true;
+    } catch (e) {
+      console.log(e);
+      throw new NotFoundError('La hoja de vida no fue encontrada');
+    }
+  }
 }

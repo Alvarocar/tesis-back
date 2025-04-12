@@ -7,7 +7,7 @@ import { ExperienceService } from '@/services/experience.service';
 import { LanguageService } from '@/services/language.service';
 import { ResumeService } from '@/services/resume.service';
 import { SkillService } from '@/services/skill.service';
-import { Body, Controller, Get, HttpCode, Param, Patch, Post, QueryParam, Req, UseBefore } from 'routing-controllers';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, QueryParam, Req, UseBefore } from 'routing-controllers';
 
 @Controller('/v1/resume')
 export class ResumeController {
@@ -76,5 +76,12 @@ export class ResumeController {
   @UseBefore(authApplicantMiddleware)
   updateSkills(@Body() skills: SkillDto[], @Param('resumeId') resumeId: number, @Req() req: RequestWithApplicant) {
     return this.skillService.updateSkills(skills, resumeId, req.user);
+  }
+
+  @Delete('/:id')
+  @HttpCode(204)
+  @UseBefore(authApplicantMiddleware)
+  deleteResume(@Req() req: RequestWithApplicant, @Param('id') id: number) {
+    return this.resumeService.deleteResume(req.user, id);
   }
 }

@@ -1,10 +1,15 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { VacantToLanguage } from './vacant_to_language.model';
 import { Application } from './application.model';
 import { VacantJobType } from '@/enums/vacant.enum';
 import { Recruiter } from './recluter.model';
+import { Contract } from './contract.model';
+import { Position } from './position.model';
+import { VacancySkill } from './vacancySkill.model';
 
-@Entity()
+@Entity({
+  name: 'vacancy',
+})
 export class Vacant {
   @PrimaryGeneratedColumn({
     type: 'int',
@@ -58,6 +63,18 @@ export class Vacant {
   })
   jobType: VacantJobType;
 
+  @ManyToOne(() => Contract, contract => contract.vacancies)
+  @JoinColumn({ name: 'contract_id', referencedColumnName: 'id' })
+  contract: typeof Contract;
+
+  @ManyToOne(() => Position, position => position.vacancies)
+  @JoinColumn({ name: 'position_id', referencedColumnName: 'id' })
+  position: typeof Position;
+
+  @OneToMany(() => VacancySkill, skill => skill.vacancy)
+  @JoinColumn({ name: 'vacancy_skill_id', referencedColumnName: 'id' })
+  skills: (typeof VacancySkill)[];
+
   @OneToMany(() => VacantToLanguage, vacantToLanguage => vacantToLanguage.vacant)
   VacantToLanguage: VacantToLanguage[];
 
@@ -66,5 +83,5 @@ export class Vacant {
   applications: Application[];
 
   @OneToMany(() => Recruiter, recruiter => recruiter.vacants)
-  recruiter: Recruiter;
+  recruiters: Recruiter[];
 }

@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import { HttpError, NotFoundError } from 'routing-controllers';
 import { RecruiterRepository } from '@/repositories/recluter.repository';
 import { InternalServerException, BadRequestException } from '@/exceptions/HttpException';
-import { RecruiterDto, RecruiterDtoLogIn, RecruiterDtoSignUp } from '@/dtos/recluter.dto';
+import { RecruiterDto, RecruiterDtoLogIn, RecruiterDtoSignUp, RecruiterDtoUpdate } from '@/dtos/recluter.dto';
 import { EApplicant } from '@/enums/applicant.enum';
 import { Recruiter } from '@/models/recluter.model';
 import { GenericService } from './generic.service';
@@ -41,6 +41,14 @@ export class RecruiterService extends GenericService {
       const areEquals = await this.compareHash(recruiter.password, find.password);
       if (!areEquals) throw new NotFoundError(EApplicant.ERROR_NOT_MATCH_ACCOUNT);
       return new RecruiterDto({ ...find });
+    } catch (e) {
+      this.internalError(e, EApplicant.ERROR_GENERIC);
+    }
+  }
+
+  async update(dto: RecruiterDtoUpdate, recruiter: Recruiter) {
+    try {
+      await this.recruiterRepo.update({ id: recruiter.id }, { ...dto });
     } catch (e) {
       this.internalError(e, EApplicant.ERROR_GENERIC);
     }
