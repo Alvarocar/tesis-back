@@ -7,7 +7,7 @@ import { Education } from '@/models/education.model';
 import { Experience } from '@/models/experience.model';
 import { ResumeRepository } from '@/repositories/resume.repository';
 import { NotFoundError } from 'routing-controllers';
-import { ResumeToLanguage } from '@/models/resume_to_language.model';
+import { ResumeLanguage } from '@/models/resume_to_language.model';
 import { ExperienceRepository } from '@/repositories/experience.repository';
 import { EducationRepository } from '@/repositories/education.respository';
 import { ResumeToLanguageRepository } from '@/repositories/resumeToLanguage.repository';
@@ -35,7 +35,7 @@ export class ResumeService extends GenericService {
 
       const languages = resumeDto.language.map(ResumeToLanguageRepository.createFromDto).map(lang => ({ ...lang, resume: resume }));
 
-      await Promise.all(languages.map(lang => manager.createQueryBuilder().insert().into(ResumeToLanguage).values(lang).execute()));
+      await Promise.all(languages.map(lang => manager.createQueryBuilder().insert().into(ResumeLanguage).values(lang).execute()));
 
       const experiences = resumeDto.experiences.map(exp => {
         const currentExp = ExperienceRepository.createFromDto(exp);
@@ -61,8 +61,8 @@ export class ResumeService extends GenericService {
       title: resumeDto.title,
       experience_years: 0,
       about_me: '',
-      create_date: actually_date,
-      modification_date: actually_date,
+      createDate: actually_date,
+      modificationDate: actually_date,
       applicant,
     });
     await ResumeRepository.insert(resume);
@@ -89,7 +89,7 @@ export class ResumeService extends GenericService {
       return {
         ...resume,
         resumeToLanguage: undefined,
-        languages: resume.resumeToLanguage.map(lan => ({ name: lan.language.name, level: lan.language_level, id: lan.id })),
+        languages: resume.resumeLanguage.map(lan => ({ name: lan.language.name, level: lan.languageLevel, id: lan.id })),
       };
     } catch (e) {
       console.log(e);

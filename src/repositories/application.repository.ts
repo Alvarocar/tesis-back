@@ -10,7 +10,7 @@ import { fromStringToJson } from '@/utils/json.util';
 export const ApplicationRepository = AppDataSource.getRepository(Application).extend({
   startApply: async (resume: Resume, vacant: Vacant) => {
     return ApplicationRepository.insert({
-      createApplicationDate: new Date(),
+      creationDate: new Date(),
       resume,
       vacant,
       status: EApplicationStatus.APPLIED,

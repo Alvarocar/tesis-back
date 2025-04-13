@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import { Vacant } from './vacant.model';
 
 @Entity({
@@ -17,6 +17,7 @@ export class VacancySkill {
   })
   name: string;
 
-  @ManyToOne(() => Vacant, vacant => vacant.position)
+  @ManyToOne(() => Vacant, vacant => vacant.skills)
+  @JoinColumn({ name: 'vacant_id' })
   vacancy: Relation<Vacant>;
 }

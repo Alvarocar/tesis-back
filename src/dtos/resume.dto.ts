@@ -118,7 +118,7 @@ export class ResumeTemplateDto {
 
   private getExperiences() {
     const experiences = this.resume.experiences
-      ?.map(exp => `\t\t- ${exp.rol} (${exp.start_date}-${exp.end_date ?? 'actual'}) ${exp.description}`)
+      ?.map(exp => `\t\t- ${exp.rol} (${exp.startDate}-${exp.endDate ?? 'actual'}) ${exp.description}`)
       ?.join('\n');
     if (!experiences) return '';
     return `\texperiencia:\n${experiences}`;
@@ -126,14 +126,14 @@ export class ResumeTemplateDto {
 
   private getStudies() {
     const education = this.resume.educations
-      ?.map(edu => `\t\t- ${edu.institute} (${edu.start_date}-${edu.end_date ?? 'actual'}) ${edu.title}`)
+      ?.map(edu => `\t\t- ${edu.institute} (${edu.startDate}-${edu.endDate ?? 'actual'}) ${edu.title}`)
       ?.join('\n');
     if (!education) return '';
     return `\teducación:\n${education}`;
   }
 
   private getLanguages() {
-    const languages = this.resume.resumeToLanguage?.map(ln => `\t\t- ${ln.language.name}: ${ln.language_level}`)?.join('\n');
+    const languages = this.resume.resumeLanguage?.map(ln => `\t\t- ${ln.language.name}: ${ln.languageLevel}`)?.join('\n');
     if (!languages) return '';
     return `\tidioma:\n${languages}`;
   }

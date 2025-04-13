@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import { Resume } from './resume.model';
 
 @Entity()
@@ -11,37 +11,44 @@ export class Experience {
   @Column({
     type: 'varchar',
     length: 60,
+    name: 'rol',
   })
   rol: string;
 
   @Column({
     type: 'varchar',
     length: 60,
+    name: 'company',
   })
   company: string;
 
   @Column({
     type: 'date',
+    name: 'start_date',
   })
-  start_date: Date;
+  startDate: Date;
 
   @Column({
     type: 'date',
+    name: 'end_date',
     nullable: true,
   })
-  end_date?: Date;
+  endDate?: Date;
 
   @Column({
     type: 'boolean',
+    name: 'keep_working',
     nullable: true,
   })
-  keep_working?: boolean;
+  keepWorking?: boolean;
 
   @Column({
     type: 'text',
+    name: 'description',
   })
   description: String;
 
   @ManyToOne(() => Resume, resume => resume.experiences)
+  @JoinColumn({ name: 'resume_id' })
   resume: Relation<Resume>;
 }

@@ -1,5 +1,7 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import { Vacant } from './vacant.model';
+import { Position } from './position.model';
+import { Contract } from './contract.model';
 
 @Entity({
   name: 'employee',
@@ -27,32 +29,45 @@ export class Recruiter {
 
   @Column({
     type: 'varchar',
+    name: 'email',
     length: 60,
   })
   email: string;
 
   @Column({
     type: 'varchar',
+    name: 'password',
     length: 60,
   })
   password: string;
 
   @Column({
     type: 'boolean',
+    name: 'is_active',
     default: true,
   })
-  is_active: boolean;
+  isActive: boolean;
 
   @Column({
     type: 'date',
+    name: 'creation_date',
   })
-  creation_date: Date;
+  creationDate: Date;
 
   @Column({
     type: 'date',
+    name: 'modification_date',
   })
-  modification_date: Date;
+  modificationDate: Date;
 
-  @ManyToOne(() => Vacant, vacant => vacant.recruiters)
-  vacants: Vacant[];
+  @ManyToOne(() => Position, position => position.recruiters)
+  @JoinColumn({ name: 'position_id', referencedColumnName: 'id' })
+  position: Relation<Position>;
+
+  @ManyToOne(() => Contract, contract => contract.recruiters)
+  @JoinColumn({ name: 'contract_id', referencedColumnName: 'id' })
+  contract: Relation<Contract>;
+
+  @OneToMany(() => Vacant, vacant => vacant.recruiter)
+  vacancies: Relation<Vacant>[];
 }

@@ -9,10 +9,10 @@ export const ExperienceRepository = AppDataSource.getRepository(Experience).exte
   createFromDto: (experienceDto: ExperienceDto) => {
     return ExperienceRepository.create({
       company: experienceDto.company,
-      descripcion: experienceDto.description,
-      end_date: stringToDate(experienceDto.end_date),
+      description: experienceDto.description,
+      endDate: stringToDate(experienceDto.end_date),
       rol: experienceDto.rol,
-      start_date: stringToDate(experienceDto.start_date),
+      startDate: stringToDate(experienceDto.start_date),
     });
   },
 
@@ -22,8 +22,8 @@ export const ExperienceRepository = AppDataSource.getRepository(Experience).exte
         .update()
         .set({
           ...omit(experienceDto, ['id']),
-          start_date: stringToDate(experienceDto.start_date),
-          end_date: experienceDto.end_date ? stringToDate(experienceDto.end_date) : null,
+          startDate: stringToDate(experienceDto.start_date),
+          endDate: experienceDto.end_date ? stringToDate(experienceDto.end_date) : null,
           resume,
         })
         .where('id = :id', { id: experienceDto.id })
@@ -35,8 +35,8 @@ export const ExperienceRepository = AppDataSource.getRepository(Experience).exte
       .values([
         {
           ...experienceDto,
-          start_date: stringToDate(experienceDto.start_date),
-          end_date: experienceDto.end_date ? stringToDate(experienceDto.end_date) : null,
+          startDate: stringToDate(experienceDto.start_date),
+          endDate: experienceDto.end_date ? stringToDate(experienceDto.end_date) : null,
           resume,
         },
       ])

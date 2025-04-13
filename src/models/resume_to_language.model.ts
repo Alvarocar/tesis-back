@@ -2,8 +2,8 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Relation } from 'typ
 import { Resume } from './resume.model';
 import { Language } from './language.model';
 
-@Entity()
-export class ResumeToLanguage {
+@Entity('resume_language')
+export class ResumeLanguage {
   @PrimaryGeneratedColumn({
     type: 'int',
   })
@@ -11,12 +11,13 @@ export class ResumeToLanguage {
 
   @Column({
     type: 'smallint',
+    name: 'language_level',
   })
-  language_level: number;
+  languageLevel: number;
 
-  @ManyToOne(() => Resume, resume => resume.resumeToLanguage)
+  @ManyToOne(() => Resume, resume => resume.resumeLanguage)
   resume: Relation<Resume>;
 
-  @ManyToOne(() => Language, language => language.resumeToLanguage)
+  @ManyToOne(() => Language, language => language.resumeLanguage)
   language: Relation<Language>;
 }

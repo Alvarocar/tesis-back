@@ -1,5 +1,5 @@
 import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
-import { ResumeToLanguage } from './resume_to_language.model';
+import { ResumeLanguage } from './resume_to_language.model';
 import { Education } from './education.model';
 import { Experience } from './experience.model';
 import { Applicant } from './applicant.model';
@@ -27,34 +27,37 @@ export class Resume {
 
   @Column({
     type: 'text',
+    name: 'description',
   })
   about_me: string;
 
   @Column({
     type: 'date',
+    name: 'create_date',
   })
-  create_date: Date;
+  createDate: Date;
 
   @Column({
     type: 'date',
+    name: 'modification_date',
   })
-  modification_date: Date;
+  modificationDate: Date;
 
   @BeforeInsert()
   updateDateCreation() {
     const current = new Date();
-    this.create_date = current;
-    this.modification_date = current;
+    this.createDate = current;
+    this.modificationDate = current;
   }
 
   @BeforeUpdate()
   updateDateOnUpdate() {
     const current = new Date();
-    this.modification_date = current;
+    this.modificationDate = current;
   }
 
-  @OneToMany(() => ResumeToLanguage, resumeToLanguage => resumeToLanguage.resume, { onDelete: 'CASCADE' })
-  resumeToLanguage: Relation<ResumeToLanguage>[];
+  @OneToMany(() => ResumeLanguage, resumeToLanguage => resumeToLanguage.resume, { onDelete: 'CASCADE' })
+  resumeLanguage: Relation<ResumeLanguage>[];
 
   @OneToMany(() => Education, education => education.resume, { onDelete: 'CASCADE' })
   educations: Relation<Education>[];

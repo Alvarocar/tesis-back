@@ -6,7 +6,7 @@ import { ENV } from './constants';
 import { Education } from './models/education.model';
 import { Experience } from './models/experience.model';
 import { Language } from './models/language.model';
-import { ResumeToLanguage } from './models/resume_to_language.model';
+import { ResumeLanguage } from './models/resume_to_language.model';
 import { Resume } from './models/resume.model';
 import { Vacant } from './models/vacant.model';
 import { VacantToLanguage } from './models/vacant_to_language.model';
@@ -35,7 +35,7 @@ export const AppDataSource = new DataSource({
     Experience,
     Language,
     Recruiter,
-    ResumeToLanguage,
+    ResumeLanguage,
     Resume,
     VacantToLanguage,
     Vacant,

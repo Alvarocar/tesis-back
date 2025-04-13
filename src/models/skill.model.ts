@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import { Resume } from './resume.model';
 
 @Entity()
@@ -15,5 +15,6 @@ export class Skill {
   name: string;
 
   @ManyToOne(() => Resume, resume => resume.skills)
+  @JoinColumn({ name: 'resume_id' })
   resume: Relation<Resume>;
 }

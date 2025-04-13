@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import { Resume } from './resume.model';
 
 @Entity()
@@ -17,21 +17,25 @@ export class LaboralReference {
   @Column({
     type: 'varchar',
     length: 60,
+    name: 'phone_number',
   })
-  number: string;
+  phoneNumber: string;
 
   @Column({
     type: 'varchar',
     length: 60,
+    name: 'rol',
   })
   rol: string;
 
   @Column({
     type: 'varchar',
     length: 60,
+    name: 'company',
   })
   company: string;
 
   @ManyToOne(() => Resume, resume => resume.laboral_references)
+  @JoinColumn({ name: 'resume_id' })
   resume: Relation<Resume>;
 }

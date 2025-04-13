@@ -22,21 +22,24 @@ export class RecruiterDtoSignUp {
 }
 
 export class RecruiterDto {
-  constructor({ name, email, creation_date, modification_date, id = -1 }: Recruiter) {
-    this.name = name;
+  constructor({ firstName, lastName, email, creationDate, modificationDate, id = -1 }: Recruiter) {
+    this.firstName = firstName;
+    this.lastName = lastName;
     this.email = email;
-    this.creation_date = moment(creation_date).format('DD-MM-YYYY');
-    this.modification_date = moment(modification_date).format('DD-MM-YYYY');
+    this.creationDate = moment(creationDate).format('DD-MM-YYYY');
+    this.modificationDate = moment(modificationDate).format('DD-MM-YYYY');
     this.id = id;
   }
 
-  public name: string;
+  public firstName: string;
+
+  public lastName: string;
 
   public email: string;
 
-  public creation_date: string;
+  public creationDate: string;
 
-  public modification_date: string;
+  public modificationDate: string;
 
   public id: number;
 

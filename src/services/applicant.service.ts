@@ -49,11 +49,11 @@ export class ApplicantService extends GenericService {
       await ApplicantRepository.createQueryBuilder()
         .update()
         .set({
-          identification: Number(personalInfo.identification),
+          identification: personalInfo.identification,
           firstName: personalInfo.firstName,
           lastName: personalInfo.lastName,
-          phone_number: personalInfo.phone_number,
-          birth_date: personalInfo.birth_date ? stringToDate(personalInfo.birth_date) : null,
+          phoneNumber: personalInfo.phoneNumber,
+          birthDate: personalInfo.birthDate ? stringToDate(personalInfo.birthDate) : null,
           direction: personalInfo.direction,
         })
         .where('id = :id', { id: applicant.id })

@@ -8,8 +8,8 @@ export const ApplicantRepository = AppDataSource.getRepository(Applicant).extend
     const now = new Date();
     const hash_password = await encrypt(data.password);
     return ApplicantRepository.create({
-      creation_date: now,
-      modification_date: now,
+      creationDate: now,
+      modificationDate: now,
       email: data.email,
       password: hash_password,
       firstName: data.firstName + ' ' + data.lastName,

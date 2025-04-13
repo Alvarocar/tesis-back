@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
-import { Vacant } from './vacant.model';
+import { Recruiter } from './recluter.model';
 
 @Entity({
   name: 'position',
@@ -17,6 +17,6 @@ export class Position {
   })
   name: string;
 
-  @OneToMany(() => Vacant, vacant => vacant.position)
-  vacancies: Relation<Vacant>[];
+  @OneToMany(() => Recruiter, recruiter => recruiter.position)
+  recruiters: Relation<Recruiter>[];
 }

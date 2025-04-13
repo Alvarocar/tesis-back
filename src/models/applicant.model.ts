@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import { Resume } from './resume.model';
+import { EIdentificationType } from '@/enums/applicant.enum';
 
 @Entity()
 export class Applicant {
@@ -25,57 +26,75 @@ export class Applicant {
 
   @Column({
     type: 'varchar',
+    name: 'email',
     length: 60,
   })
   email: string;
 
   @Column({
     type: 'varchar',
+    name: 'password',
     length: 60,
   })
   password: string;
 
   @Column({
     type: 'boolean',
+    name: 'is_active',
     default: true,
   })
-  is_active: boolean;
+  isActive: boolean;
 
   @Column({
     type: 'date',
+    name: 'creation_date',
   })
-  creation_date: Date;
+  creationDate: Date;
 
   @Column({
     type: 'date',
+    name: 'modification_date',
   })
-  modification_date: Date;
+  modificationDate: Date;
 
   @Column({
     nullable: true,
     type: 'varchar',
+    name: 'direction',
     length: 60,
   })
   direction: string;
 
   @Column({
-    type: 'int',
+    type: 'varchar',
+    name: 'identification',
+    length: 60,
     nullable: true,
   })
-  identification: number;
+  identification: string;
+
+  @Column({
+    nullable: true,
+    type: 'enum',
+    name: 'identification_type',
+    enum: EIdentificationType,
+  })
+  identificationType: EIdentificationType;
 
   @Column({
     nullable: true,
     type: 'varchar',
+    name: 'phone_number',
     length: 60,
   })
-  phone_number: string;
+  phoneNumber: string;
 
   @Column({
     nullable: true,
     type: 'date',
+    name: 'birth_date',
   })
-  birth_date: Date;
+  birthDate: Date;
 
   @OneToMany(() => Resume, resume => resume.applicant)
   resumes: Relation<Resume>[];

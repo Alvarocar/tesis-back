@@ -17,6 +17,7 @@ export class Application {
   vacant: Relation<Vacant>;
 
   @ManyToOne(() => Resume, resume => resume.applications)
+  @JoinColumn({ name: 'resume_id' })
   resume: Relation<Resume>;
 
   @Column({
@@ -43,9 +44,9 @@ export class Application {
 
   @Column({
     type: 'date',
-    name: 'create_applicantion_date',
+    name: 'creation_date',
   })
-  createApplicationDate: Date;
+  creationDate: Date;
 
   @Column({
     type: 'float',
@@ -56,5 +57,6 @@ export class Application {
   iaTimeTaken: Date;
 
   @ManyToOne(() => AIModel, aimodel => aimodel.id)
+  @JoinColumn({ name: 'ai_model_id' })
   aiModel: Relation<AIModel>;
 }

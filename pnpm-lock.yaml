@@ -89,6 +89,9 @@ importers:
       swagger-ui-express:
         specifier: ^4.1.6
         version: 4.6.3(express@4.21.2)
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
@@ -126,9 +129,6 @@ importers:
       '@types/cors':
         specifier: ^2.8.11
         version: 2.8.17
-      '@types/dompurify':
-        specifier: ^3.2.0
-        version: 3.2.0
       '@types/express':
         specifier: ^4.17.13
         version: 4.17.21
@@ -770,10 +770,6 @@ packages:
 
   '@types/cors@2.8.17':
     resolution: {integrity: sha512-8CGDvrBj1zgo2qE+oS3pOCyYNqCPryMWY2bGfwA0dcfopWGgxs+78df0Rs3rc9THP4JkOhLsAa+15VdpAqkcUA==}
-
-  '@types/dompurify@3.2.0':
-    resolution: {integrity: sha512-Fgg31wv9QbLDA0SpTOXO3MaxySc4DKGLi8sna4/Utjo4r3ZRPdCt4UQee8BWr+Q5z21yifghREPJGYaEOEIACg==}
-    deprecated: This is a stub types definition. dompurify provides its own type definitions, so you do not need this installed.
 
   '@types/express-serve-static-core@4.19.6':
     resolution: {integrity: sha512-N4LZ2xG7DatVqhCZzOGb1Yi5lMbXSZcmdLDe9EzSndPV2HpWYWzRbaerl2n27irrm94EPpprqa8KpskPT085+A==}
@@ -5622,10 +5618,6 @@ snapshots:
   '@types/cors@2.8.17':
     dependencies:
       '@types/node': 18.19.76
-
-  '@types/dompurify@3.2.0':
-    dependencies:
-      dompurify: 3.2.4
 
   '@types/express-serve-static-core@4.19.6':
     dependencies:

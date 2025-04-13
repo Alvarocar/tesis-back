@@ -1,5 +1,5 @@
 import { Applicant } from '@/models/applicant.model';
-import { IsEmail, IsNumber, IsOptional, IsString, Length } from 'class-validator';
+import { IsEmail, IsNumber, IsNumberString, IsOptional, IsString, Length } from 'class-validator';
 import moment from 'moment';
 
 export class ApplicantDtoLogIn {
@@ -25,15 +25,15 @@ export class ApplicantDtoSignUp {
 }
 
 export class ApplicantDto {
-  constructor({ firstName, lastName, email, creation_date, modification_date, phone_number, birth_date, direction, identification, id }: Applicant) {
+  constructor({ firstName, lastName, email, creationDate, modificationDate, phoneNumber, birthDate, direction, identification, id }: Applicant) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
-    this.creation_date = moment(creation_date).format('DD-MM-YYYY');
-    this.modification_date = moment(modification_date).format('DD-MM-YYYY');
+    this.creationDate = moment(creationDate).format('DD-MM-YYYY');
+    this.modificationDate = moment(modificationDate).format('DD-MM-YYYY');
     this.id = id;
-    this.phone_number = phone_number;
-    this.birth_date = moment(birth_date).format('DD-MM-YYYY');
+    this.phoneNumber = phoneNumber;
+    this.birthDate = moment(birthDate).format('DD-MM-YYYY');
     this.direction = direction;
     this.identification = String(identification);
   }
@@ -44,15 +44,15 @@ export class ApplicantDto {
 
   public email: string;
 
-  public creation_date: string;
+  public creationDate: string;
 
-  public modification_date: string;
+  public modificationDate: string;
 
   public id: number;
 
-  public phone_number: string;
+  public phoneNumber: string;
 
-  public birth_date: string;
+  public birthDate: string;
 
   public direction: string;
 
@@ -66,17 +66,18 @@ export class ApplicantPersonalInfoDto {
   @IsString()
   lastName: string;
 
-  @IsNumber()
-  identification: number;
+  @IsString()
+  @IsNumberString()
+  identification: string;
 
   @IsOptional()
-  phone_number: string | null;
+  phoneNumber: string | null;
 
   /**
    * @format DD-MM-YYYY
    */
   @IsOptional()
-  birth_date: string | null;
+  birthDate: string | null;
 
   @IsOptional()
   direction: string | null;

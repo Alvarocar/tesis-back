@@ -10,9 +10,9 @@ export const EducationRepository = AppDataSource.getRepository(Education).extend
     return EducationRepository.create({
       institute: educationDto.institute,
       title: educationDto.title,
-      end_date: educationDto.end_date ? stringToDate(educationDto.end_date) : null,
-      start_date: stringToDate(educationDto.start_date),
-      keep_study: educationDto.keep_study,
+      endDate: educationDto.end_date ? stringToDate(educationDto.end_date) : null,
+      startDate: stringToDate(educationDto.start_date),
+      keepStudy: educationDto.keep_study,
     });
   },
   createOrEditFromDto(educationDto: EducationDto, resume: Resume) {
@@ -21,8 +21,8 @@ export const EducationRepository = AppDataSource.getRepository(Education).extend
         .update()
         .set({
           ...omit(educationDto, ['id']),
-          start_date: stringToDate(educationDto.start_date),
-          end_date: educationDto.end_date ? stringToDate(educationDto.end_date) : null,
+          startDate: stringToDate(educationDto.start_date),
+          endDate: educationDto.end_date ? stringToDate(educationDto.end_date) : null,
           resume,
         })
         .where('id = :id', { id: educationDto.id })
@@ -34,8 +34,8 @@ export const EducationRepository = AppDataSource.getRepository(Education).extend
       .values([
         {
           ...educationDto,
-          start_date: stringToDate(educationDto.start_date),
-          end_date: educationDto.end_date ? stringToDate(educationDto.end_date) : null,
+          startDate: stringToDate(educationDto.start_date),
+          endDate: educationDto.end_date ? stringToDate(educationDto.end_date) : null,
           resume,
         },
       ])

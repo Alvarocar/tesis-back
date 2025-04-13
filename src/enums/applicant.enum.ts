@@ -6,3 +6,9 @@ export enum EApplicant {
   ERROR_NOT_MATCH_ACCOUNT = 'El email o contraseña son incorrectos',
   ERROR_GENERIC = 'Hubo un error en la solicitud',
 }
+
+export enum EIdentificationType {
+  DNI = 'DNI',
+  CEDULA = 'Cédula',
+  TARJETA_DE_IDENTIDAD = 'Tarjeta de identidad',
+}

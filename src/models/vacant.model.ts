@@ -63,14 +63,6 @@ export class Vacant {
   })
   jobType: VacantJobType;
 
-  @ManyToOne(() => Contract, contract => contract.vacancies)
-  @JoinColumn({ name: 'contract_id', referencedColumnName: 'id' })
-  contract: Relation<Contract>;
-
-  @ManyToOne(() => Position, position => position.vacancies)
-  @JoinColumn({ name: 'position_id', referencedColumnName: 'id' })
-  position: Relation<Position>;
-
   @OneToMany(() => VacancySkill, skill => skill.vacancy)
   @JoinColumn({ name: 'vacancy_skill_id', referencedColumnName: 'id' })
   skills: Relation<VacancySkill>[];
@@ -81,6 +73,6 @@ export class Vacant {
   @OneToMany(() => Application, application => application.vacant)
   applications: Relation<Application>[];
 
-  @OneToMany(() => Recruiter, recruiter => recruiter.vacants)
-  recruiters: Relation<Recruiter>[];
+  @ManyToOne(() => Recruiter, recruiter => recruiter.vacancies)
+  recruiter: Relation<Recruiter>;
 }

@@ -5,7 +5,7 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "start": "npm run build && cross-env NODE_ENV=production node dist/server.js",
+    "start": "cross-env NODE_ENV=production node dist/server.js",
     "dev": "cross-env NODE_ENV=development nodemon",
     "build": "swc src -d dist --source-maps --copy-files",
     "build:tsc": "tsc && tsc-alias",
@@ -13,7 +13,6 @@
     "lint": "eslint --ignore-path .gitignore --ext .ts src/",
     "lint:fix": "npm run lint -- --fix",
     "deploy:prod": "npm run build && pm2 start ecosystem.config.js --only prod",
-    "start:raw": "node dist/server.js",
     "deploy:dev": "pm2 start ecosystem.config.js --only dev",
     "start:workers": "ts-node --files src/worker.boot.ts",
     "dev:workers": "cross-env NODE_ENV=development nodemon --exec ts-node --files -r tsconfig-paths/register src/worker.boot.ts"
@@ -46,6 +45,7 @@
     "routing-controllers": "^0.8.1",
     "routing-controllers-openapi": "^2.2.0",
     "swagger-ui-express": "^4.1.6",
+    "tslib": "^2.8.1",
     "typedi": "^0.10.0",
     "typeorm": "^0.3.7",
     "winston": "^3.3.3",
@@ -60,7 +60,6 @@
     "@types/compression": "^1.7.1",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.11",
-    "@types/dompurify": "^3.2.0",
     "@types/express": "^4.17.13",
     "@types/hpp": "^0.2.1",
     "@types/jest": "27.4.x",
