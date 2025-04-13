@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import { Resume } from './resume.model';
 
 @Entity()
@@ -33,5 +33,5 @@ export class LaboralReference {
   company: string;
 
   @ManyToOne(() => Resume, resume => resume.laboral_references)
-  resume: typeof Resume;
+  resume: Relation<Resume>;
 }

@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import { Resume } from './resume.model';
 
 @Entity()
@@ -78,5 +78,5 @@ export class Applicant {
   birth_date: Date;
 
   @OneToMany(() => Resume, resume => resume.applicant)
-  resumes: (typeof Resume)[];
+  resumes: Relation<Resume>[];
 }

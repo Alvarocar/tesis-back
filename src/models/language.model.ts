@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import { ResumeToLanguage } from './resume_to_language.model';
 import { VacantToLanguage } from './vacant_to_language.model';
 
@@ -16,8 +16,8 @@ export class Language {
   name: string;
 
   @OneToMany(() => ResumeToLanguage, resumeToLanguage => resumeToLanguage.resume)
-  resumeToLanguage: typeof ResumeToLanguage;
+  resumeToLanguage: Relation<ResumeToLanguage>;
 
   @OneToMany(() => VacantToLanguage, vacantToLanguage => vacantToLanguage.vacant)
-  VacantToLanguage: typeof VacantToLanguage;
+  VacantToLanguage: Relation<VacantToLanguage>;
 }

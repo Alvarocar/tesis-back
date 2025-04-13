@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import { Application } from './application.model';
 
 @Entity({
@@ -25,5 +25,5 @@ export class AIModel {
   version: string;
 
   @OneToMany(() => Application, application => application.aiModel)
-  applications: Application[];
+  applications: Relation<Application>[];
 }

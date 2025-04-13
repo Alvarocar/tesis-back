@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import { VacantToLanguage } from './vacant_to_language.model';
 import { Application } from './application.model';
 import { VacantJobType } from '@/enums/vacant.enum';
@@ -65,23 +65,22 @@ export class Vacant {
 
   @ManyToOne(() => Contract, contract => contract.vacancies)
   @JoinColumn({ name: 'contract_id', referencedColumnName: 'id' })
-  contract: typeof Contract;
+  contract: Relation<Contract>;
 
   @ManyToOne(() => Position, position => position.vacancies)
   @JoinColumn({ name: 'position_id', referencedColumnName: 'id' })
-  position: typeof Position;
+  position: Relation<Position>;
 
   @OneToMany(() => VacancySkill, skill => skill.vacancy)
   @JoinColumn({ name: 'vacancy_skill_id', referencedColumnName: 'id' })
-  skills: (typeof VacancySkill)[];
+  skills: Relation<VacancySkill>[];
 
   @OneToMany(() => VacantToLanguage, vacantToLanguage => vacantToLanguage.vacant)
-  VacantToLanguage: VacantToLanguage[];
+  VacantToLanguage: Relation<VacantToLanguage>[];
 
-  // eslint-disable-next-line prettier/prettier
-  @OneToMany(() => Application, (application) => application.vacant)
-  applications: Application[];
+  @OneToMany(() => Application, application => application.vacant)
+  applications: Relation<Application>[];
 
   @OneToMany(() => Recruiter, recruiter => recruiter.vacants)
-  recruiters: Recruiter[];
+  recruiters: Relation<Recruiter>[];
 }

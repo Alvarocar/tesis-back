@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import { Vacant } from './vacant.model';
 
 @Entity({
@@ -18,5 +18,5 @@ export class Position {
   name: string;
 
   @OneToMany(() => Vacant, vacant => vacant.position)
-  vacancies: (typeof Vacant)[];
+  vacancies: Relation<Vacant>[];
 }

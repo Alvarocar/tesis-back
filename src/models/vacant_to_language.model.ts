@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import { Language } from './language.model';
 import { Vacant } from './vacant.model';
 
@@ -15,8 +15,8 @@ export class VacantToLanguage {
   laguage_level: number;
 
   @ManyToOne(() => Vacant, vacant => vacant.VacantToLanguage)
-  vacant: Vacant;
+  vacant: Relation<Vacant>;
 
   @ManyToOne(() => Language, language => language.VacantToLanguage)
-  language: typeof Language;
+  language: Relation<Language>;
 }
