@@ -26,9 +26,6 @@ WORKDIR /app
 
 # Instalar solo las dependencias de producción
 COPY --from=builder /app/pnpm-lock.yaml /app/package.json ./
-# Instalar pnpm globalmente
-RUN npm install -g pnpm
-RUN pnpm install --prod --frozen-lockfile
 
 # Copiar la carpeta de distribución
 COPY --from=builder /app/dist ./dist
