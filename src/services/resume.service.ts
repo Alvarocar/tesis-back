@@ -34,7 +34,7 @@ export class ResumeService extends GenericService {
 
       await manager.createQueryBuilder().insert().into(Resume).values(resume).execute();
 
-      const languages = resumeDto.language.map(ResumeToLanguageRepository.createFromDto).map(lang => ({ ...lang, resume: resume }));
+      const languages = resumeDto.languages.map(ResumeToLanguageRepository.createFromDto).map(lang => ({ ...lang, resume: resume }));
 
       await Promise.all(languages.map(lang => manager.createQueryBuilder().insert().into(ResumeLanguage).values(lang).execute()));
 

@@ -10,12 +10,13 @@ import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, Max, MaxLength, Min, 
 export class ResumeDto {
   constructor(resume: ResumeDto | undefined) {
     if (!resume) return;
-    const { aboutMe, applicantId, educations, experiences, language } = resume;
+    const { aboutMe, applicantId, educations, experiences, languages: language, skills } = resume;
     this.aboutMe = aboutMe;
     this.applicantId = applicantId;
     this.educations = educations;
     this.experiences = experiences;
-    this.language = language;
+    this.languages = language;
+    this.skills = skills;
   }
 
   @IsString()
@@ -32,7 +33,10 @@ export class ResumeDto {
   experiences: ExperienceDto[];
 
   @ValidateNested()
-  language: LanguageDto[];
+  languages: LanguageDto[];
+
+  @ValidateNested()
+  skills: SkillDto[];
 
   public static createFromEntity(entity: Resume) {
     return new ResumeDto({
@@ -40,7 +44,8 @@ export class ResumeDto {
       applicantId: entity.applicant.id,
       educations: entity.educations.map(edu => EducationDto.createFromEntity(edu)),
       experiences: entity.experiences.map(exp => ExperienceDto.createFromEntity(exp)),
-      language: entity.resumeLanguage.map(ln => LanguageDto.createFromEntity(ln)),
+      languages: entity.resumeLanguage.map(ln => LanguageDto.createFromEntity(ln)),
+      skills: entity.skills.map(skll => SkillDto.createFromEntity(skll)),
     });
   }
 }

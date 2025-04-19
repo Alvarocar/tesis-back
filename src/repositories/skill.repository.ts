@@ -5,7 +5,7 @@ import { Skill } from '@/models/skill.model';
 
 export const SkillRepository = AppDataSource.getRepository(Skill).extend({
   getByResume: (resume: Resume) => {
-    return SkillRepository.createQueryBuilder('sll').select(['sll.id', 'sll.name']).where('sll.resumeId = :id', { id: resume.id }).getMany();
+    return SkillRepository.createQueryBuilder('sll').select(['sll.id', 'sll.name']).where('sll.resume_id = :id', { id: resume.id }).getMany();
   },
   deleteFromList: (skills: SkillDto[]) => {
     return Promise.all(skills.map(skill => SkillRepository.createQueryBuilder().delete().where('id = :id', { id: skill.id }).execute()));
