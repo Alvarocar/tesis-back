@@ -2,7 +2,7 @@
 version: '3.8'
 services:
   db:
-    image: postgres:14.1-alpine
+    image: postgres:17.4-alpine3.21
     restart: always
     environment:
       - POSTGRES_USER=postgres
@@ -11,7 +11,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-     - "./db:/var/lib/postgresql/data"
+     - "pgdata:/var/lib/postgresql/data"
   broker:
     image: rabbitmq:4.0.2-management
     container_name: broker
@@ -27,5 +27,10 @@ services:
       - RABBITMQ_DEFAULT_USER=tesis
       - RABBITMQ_DEFAULT_PASS=tesis
     volumes:
-      - "./rabbit:/var/lib/rabbitmq"
-      
+      - "rabbitdata:/var/lib/rabbitmq"
+
+volumes:
+  pgdata:
+  rabbitdata:
+
+

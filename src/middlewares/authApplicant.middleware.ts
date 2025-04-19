@@ -19,11 +19,11 @@ const authApplicantMiddleware = async (req: RequestWithApplicant, res: Response,
           'ap.firstName',
           'ap.lastName',
           'ap.email',
-          'ap.modification_date',
+          'ap.modificationDate',
           'ap.direction',
           'ap.identification',
-          'ap.phone_number',
-          'ap.birth_date',
+          'ap.phoneNumber',
+          'ap.birthDate',
         ])
         .where('ap.id = :applicantId', { applicantId })
         .getOneOrFail();

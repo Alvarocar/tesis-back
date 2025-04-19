@@ -3,8 +3,6 @@ import { VacantToLanguage } from './vacant_to_language.model';
 import { Application } from './application.model';
 import { VacantJobType } from '@/enums/vacant.enum';
 import { Recruiter } from './recluter.model';
-import { Contract } from './contract.model';
-import { Position } from './position.model';
 import { VacancySkill } from './vacancySkill.model';
 
 @Entity({
@@ -74,5 +72,6 @@ export class Vacant {
   applications: Relation<Application>[];
 
   @ManyToOne(() => Recruiter, recruiter => recruiter.vacancies)
+  @JoinColumn({ name: 'employee_id', referencedColumnName: 'id' })
   recruiter: Relation<Recruiter>;
 }

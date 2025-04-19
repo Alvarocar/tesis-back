@@ -31,7 +31,7 @@ export class ResumeController {
   @HttpCode(200)
   async putDescription(@Body() about: CreateAboutMeDto, @Req() req: RequestWithApplicant) {
     const result = await this.resumeService.PutAboutMe(about, req.user);
-    return { about_me: result.about_me };
+    return { aboutMe: result.aboutMe };
   }
   //metodo obtener una hoja de vida por el id//
   @Get('/:id')
@@ -83,5 +83,13 @@ export class ResumeController {
   @UseBefore(authApplicantMiddleware)
   deleteResume(@Req() req: RequestWithApplicant, @Param('id') id: number) {
     return this.resumeService.deleteResume(req.user, id);
+  }
+
+  @Delete('/education/:resumeId/:id')
+  @HttpCode(204)
+  @UseBefore(authApplicantMiddleware)
+  async deleteEducation(@Req() req: RequestWithApplicant, @Param('resumeId') resumeId: number, @Param('id') id: number) {
+    await this.educationService.deleteEducation(req.user, resumeId, id);
+    return { message: 'ok' };
   }
 }

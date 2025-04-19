@@ -1,4 +1,4 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
 import { ResumeLanguage } from './resume_to_language.model';
 import { Education } from './education.model';
 import { Experience } from './experience.model';
@@ -29,7 +29,7 @@ export class Resume {
     type: 'text',
     name: 'description',
   })
-  about_me: string;
+  aboutMe: string;
 
   @Column({
     type: 'date',
@@ -66,6 +66,10 @@ export class Resume {
   experiences: Relation<Experience>[];
 
   @ManyToOne(() => Applicant, applicant => applicant.resumes, { onDelete: 'CASCADE' })
+  @JoinColumn({
+    name: 'applicant_id',
+    referencedColumnName: 'id',
+  })
   applicant: Relation<Applicant>;
 
   @OneToMany(() => PersonalReference, personal => personal.resume, { onDelete: 'CASCADE' })

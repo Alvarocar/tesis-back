@@ -16,4 +16,18 @@ export class EducationService {
       throw new HttpError(400, 'hubo un error');
     }
   }
+
+  async deleteEducation(applicant: Applicant, resumeId: number, id: number) {
+    try {
+      const resume = await ResumeRepository.getBasicInfoById(resumeId, applicant);
+      await EducationRepository.createQueryBuilder()
+        .delete()
+        .where('resume_id = :resumeId', { resumeId: resume.id })
+        .andWhere('id = :id', { id })
+        .execute();
+    } catch (error) {
+      console.error(error.message);
+      throw new HttpError(400, 'hubo un error');
+    }
+  }
 }

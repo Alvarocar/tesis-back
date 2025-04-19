@@ -10,9 +10,9 @@ export const EducationRepository = AppDataSource.getRepository(Education).extend
     return EducationRepository.create({
       institute: educationDto.institute,
       title: educationDto.title,
-      endDate: educationDto.end_date ? stringToDate(educationDto.end_date) : null,
-      startDate: stringToDate(educationDto.start_date),
-      keepStudy: educationDto.keep_study,
+      endDate: educationDto.endDate ? stringToDate(educationDto.endDate) : null,
+      startDate: stringToDate(educationDto.startDate),
+      keepStudy: educationDto.keepStudy,
     });
   },
   createOrEditFromDto(educationDto: EducationDto, resume: Resume) {
@@ -21,8 +21,8 @@ export const EducationRepository = AppDataSource.getRepository(Education).extend
         .update()
         .set({
           ...omit(educationDto, ['id']),
-          startDate: stringToDate(educationDto.start_date),
-          endDate: educationDto.end_date ? stringToDate(educationDto.end_date) : null,
+          startDate: stringToDate(educationDto.startDate),
+          endDate: educationDto.endDate ? stringToDate(educationDto.endDate) : null,
           resume,
         })
         .where('id = :id', { id: educationDto.id })
@@ -34,8 +34,8 @@ export const EducationRepository = AppDataSource.getRepository(Education).extend
       .values([
         {
           ...educationDto,
-          startDate: stringToDate(educationDto.start_date),
-          endDate: educationDto.end_date ? stringToDate(educationDto.end_date) : null,
+          startDate: stringToDate(educationDto.startDate),
+          endDate: educationDto.endDate ? stringToDate(educationDto.endDate) : null,
           resume,
         },
       ])
@@ -45,7 +45,7 @@ export const EducationRepository = AppDataSource.getRepository(Education).extend
   getByResume(resume: Resume) {
     return EducationRepository.createQueryBuilder('ed')
       .select(['ed.id', 'ed.institute', 'ed.title', 'ed.start_date', 'ed.end_date', 'ed.keep_study'])
-      .where('ed.resumeId = :id', { id: resume.id })
+      .where('ed.resume_id = :id', { id: resume.id })
       .getMany();
   },
 });

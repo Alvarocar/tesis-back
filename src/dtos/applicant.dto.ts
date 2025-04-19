@@ -1,4 +1,5 @@
 import { Applicant } from '@/models/applicant.model';
+import { dateToString } from '@/utils/date.util';
 import { IsEmail, IsNumber, IsNumberString, IsOptional, IsString, Length } from 'class-validator';
 import moment from 'moment';
 
@@ -29,11 +30,11 @@ export class ApplicantDto {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
-    this.creationDate = moment(creationDate).format('DD-MM-YYYY');
-    this.modificationDate = moment(modificationDate).format('DD-MM-YYYY');
+    this.creationDate = dateToString(creationDate);
+    this.modificationDate = dateToString(modificationDate);
     this.id = id;
     this.phoneNumber = phoneNumber;
-    this.birthDate = moment(birthDate).format('DD-MM-YYYY');
+    this.birthDate = dateToString(birthDate);
     this.direction = direction;
     this.identification = String(identification);
   }

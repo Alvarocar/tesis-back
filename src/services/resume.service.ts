@@ -11,6 +11,7 @@ import { ResumeLanguage } from '@/models/resume_to_language.model';
 import { ExperienceRepository } from '@/repositories/experience.repository';
 import { EducationRepository } from '@/repositories/education.respository';
 import { ResumeToLanguageRepository } from '@/repositories/resumeToLanguage.repository';
+import { ResumeOverviewDto } from '@/dtos/resume_overview.dto';
 
 export class ResumeService extends GenericService {
   async createResume(resumeDto: ResumeDto) {
@@ -20,7 +21,7 @@ export class ResumeService extends GenericService {
         currentApplicant = await manager
           .getRepository(Applicant)
           .createQueryBuilder('ap')
-          .where('ap.id = :id', { id: resumeDto.applicant_id })
+          .where('ap.id = :id', { id: resumeDto.applicantId })
           .getOneOrFail();
       } catch (error) {
         console.error(error);
@@ -60,7 +61,7 @@ export class ResumeService extends GenericService {
     const resume = ResumeRepository.create({
       title: resumeDto.title,
       experience_years: 0,
-      about_me: '',
+      aboutMe: '',
       createDate: actually_date,
       modificationDate: actually_date,
       applicant,
@@ -73,11 +74,12 @@ export class ResumeService extends GenericService {
     return await ResumeRepository.updateAboutme(resumeDto, applicant);
   }
   async getResumes(applicantId: number) {
-    return await ResumeRepository.createQueryBuilder('rm')
-      .select(['rm.id', 'rm.title', 'rm.about_me'])
-      .where('rm.applicantId = :id', { id: applicantId })
+    const entities = await ResumeRepository.createQueryBuilder('rm')
+      .select(['rm.id', 'rm.title', 'rm.aboutMe'])
+      .where('rm.applicant_id = :id', { id: applicantId })
       .orderBy({ 'rm.modification_date': 'DESC' })
       .getMany();
+    return entities.map(entity => new ResumeOverviewDto(entity));
   }
 
   async getResumeById(id: number, applicant: Applicant) {
@@ -85,12 +87,7 @@ export class ResumeService extends GenericService {
       const resume = await ResumeRepository.getFullById(id, applicant);
 
       resume.applicant = applicant;
-
-      return {
-        ...resume,
-        resumeToLanguage: undefined,
-        languages: resume.resumeLanguage.map(lan => ({ name: lan.language.name, level: lan.languageLevel, id: lan.id })),
-      };
+      return ResumeDto.createFromEntity(resume);
     } catch (e) {
       console.log(e);
       throw new NotFoundError('La hoja de vida no fue encontrada');

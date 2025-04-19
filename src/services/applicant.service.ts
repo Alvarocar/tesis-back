@@ -40,7 +40,7 @@ export class ApplicantService extends GenericService {
   }
 
   async getProfile(applicant: Applicant) {
-    return applicant;
+    return new ApplicantDto({ ...applicant });
   }
 
   async updatePersonalInfo(personalInfo: ApplicantPersonalInfoDto, applicant: Applicant) {

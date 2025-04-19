@@ -1,4 +1,5 @@
 export enum VacantJobType {
-  FULL_TIME = 'Tiempo Completo',
-  PRACTICE = 'Prácticas',
+  REMOTE = 'Remoto',
+  HYBRID = 'Hibrido',
+  ON_SITE = 'Presencial',
 }

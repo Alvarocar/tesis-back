@@ -20,9 +20,7 @@ export class JobController {
     const pageNumber = page <= 0 ? 1 : page;
     const [jobs, total] = await VacantRepository.findAndCount({
       select: ['id', 'title', 'salaryOffer', 'jobType'],
-      where: {
-        title: Like(`%${query}%`),
-      },
+
       skip: (pageNumber - 1) * size,
       take: size,
     });

@@ -46,7 +46,7 @@ export class Experience {
     type: 'text',
     name: 'description',
   })
-  description: String;
+  description: string;
 
   @ManyToOne(() => Resume, resume => resume.experiences)
   @JoinColumn({ name: 'resume_id' })
