@@ -92,4 +92,12 @@ export class ResumeController {
     await this.educationService.deleteEducation(req.user, resumeId, id);
     return { message: 'ok' };
   }
+
+  @Delete('/experience/:resumeId/:id')
+  @HttpCode(204)
+  @UseBefore(authApplicantMiddleware)
+  async deleteExperience(@Req() req: RequestWithApplicant, @Param('resumeId') resumeId: number, @Param('id') id: number) {
+    await this.experienceService.deleteExperience(req.user, resumeId, id);
+    return { message: 'ok' };
+  }
 }

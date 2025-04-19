@@ -15,4 +15,18 @@ export class ExperienceService {
       throw new HttpError(400, 'hubo un error');
     }
   }
+
+  async deleteExperience(applicant: Applicant, resumeId: number, experienceId: number) {
+    try {
+      const resume = await ResumeRepository.getBasicInfoById(resumeId, applicant);
+      await ExperienceRepository.createQueryBuilder()
+        .delete()
+        .where('resume_id = :resumeId', { resumeId: resume.id })
+        .andWhere('id = :id', { id: experienceId })
+        .execute();
+    } catch (error) {
+      console.error(error.message);
+      throw new HttpError(400, 'hubo un error');
+    }
+  }
 }

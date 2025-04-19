@@ -45,8 +45,8 @@ export const ExperienceRepository = AppDataSource.getRepository(Experience).exte
 
   getByResume(resume: Resume) {
     return ExperienceRepository.createQueryBuilder('ex')
-      .select(['ex.id', 'ex.rol', 'ex.company', 'ex.start_date', 'ex.end_date', 'ex.keep_working', 'ex.description'])
-      .where('ex.resumeId = :id', { id: resume.id })
+      .select(['ex.id', 'ex.rol', 'ex.company', 'ex.startDate', 'ex.endDate', 'ex.keepWorking', 'ex.description'])
+      .where('ex.resume_id = :id', { id: resume.id })
       .getMany();
   },
 });
