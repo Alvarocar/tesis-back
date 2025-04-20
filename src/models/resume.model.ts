@@ -1,4 +1,4 @@
-import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Relation, UpdateDateColumn } from 'typeorm';
 import { ResumeLanguage } from './resume_to_language.model';
 import { Education } from './education.model';
 import { Experience } from './experience.model';
@@ -31,30 +31,17 @@ export class Resume {
   })
   aboutMe: string;
 
-  @Column({
+  @CreateDateColumn({
     type: 'date',
     name: 'create_date',
   })
   createDate: Date;
 
-  @Column({
+  @UpdateDateColumn({
     type: 'date',
     name: 'modification_date',
   })
   modificationDate: Date;
-
-  @BeforeInsert()
-  updateDateCreation() {
-    const current = new Date();
-    this.createDate = current;
-    this.modificationDate = current;
-  }
-
-  @BeforeUpdate()
-  updateDateOnUpdate() {
-    const current = new Date();
-    this.modificationDate = current;
-  }
 
   @OneToMany(() => ResumeLanguage, resumeToLanguage => resumeToLanguage.resume, { onDelete: 'CASCADE' })
   resumeLanguage: Relation<ResumeLanguage>[];
@@ -65,7 +52,7 @@ export class Resume {
   @OneToMany(() => Experience, experience => experience.resume, { onDelete: 'CASCADE' })
   experiences: Relation<Experience>[];
 
-  @ManyToOne(() => Applicant, applicant => applicant.resumes, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Applicant, applicant => applicant.resumes)
   @JoinColumn({
     name: 'applicant_id',
     referencedColumnName: 'id',
@@ -83,4 +70,7 @@ export class Resume {
 
   @OneToMany(() => Applicant, applicant => applicant.resumes, { onDelete: 'CASCADE' })
   applications: Relation<Applicant>[];
+
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  public deletedAt?: Date;
 }

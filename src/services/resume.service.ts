@@ -96,7 +96,8 @@ export class ResumeService extends GenericService {
 
   async deleteResume(applicant: Applicant, resumeId: number) {
     try {
-      await ResumeRepository.delete({ id: resumeId, applicant: applicant });
+      const resume = await ResumeRepository.getBasicInfoById(resumeId, applicant);
+      await ResumeRepository.softDelete({ id: resume.id });
       return true;
     } catch (e) {
       console.log(e);
