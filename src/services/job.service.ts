@@ -29,7 +29,7 @@ export class JobService {
   }
 
   async getJobs(page: number, size?: number, query = '') {
-    const builder = GetJobsBuilder.createBuilder({ fields: { title: true, salaryOffer: true, jobType: true } }).addPage(page, size);
+    const builder = GetJobsBuilder.createBuilder({ fields: { title: true, salaryOffer: true, jobType: true, id: true } }).addPage(page, size);
 
     if (query.trim().length > 0) {
       builder.addSearch(query);

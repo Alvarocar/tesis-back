@@ -28,6 +28,9 @@ export const AppDataSource = new DataSource({
   database: ENV.POSTGRESS.database,
   synchronize: true,
   logging: ENV.POSTGRESS.logging,
+  ssl: {
+    rejectUnauthorized: false,
+  },
   entities: [
     Applicant,
     Recruiter,
