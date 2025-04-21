@@ -1,6 +1,7 @@
 import { In } from 'typeorm';
 import { HttpError } from 'routing-controllers';
 import { Applicant } from '@/models/applicant.model';
+import { GetJobsBuilder } from '@/builder/get-jobs.builder';
 import { Singleton } from '@/decorator/singleton.decorator';
 import { ApplicationRepository } from '@/repositories/application.repository';
 import { ResumeRepository } from '@/repositories/resume.repository';
@@ -25,5 +26,15 @@ export class JobService {
       if (e instanceof HttpError) throw e;
       throw new HttpError(400, 'Hubo un error en la solicitud');
     }
+  }
+
+  async getJobs(page: number, size?: number, query = '') {
+    const builder = GetJobsBuilder.createBuilder({ fields: { title: true, salaryOffer: true, jobType: true } }).addPage(page, size);
+
+    if (query.trim().length > 0) {
+      builder.addSearch(query);
+    }
+
+    return builder.build();
   }
 }

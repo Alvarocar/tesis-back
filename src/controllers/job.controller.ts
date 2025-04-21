@@ -16,28 +16,7 @@ export class JobController {
 
   @Get('/')
   async getJobs(@QueryParam('page') page = 1, @QueryParam('pageSize') pageSize = 10, @QueryParam('q') query: string) {
-    const size = pageSize < 0 ? 10 : pageSize > 20 ? 20 : pageSize;
-    const pageNumber = page <= 0 ? 1 : page;
-    const [jobs, total] = await VacantRepository.findAndCount({
-      select: ['id', 'title', 'salaryOffer', 'jobType'],
-
-      skip: (pageNumber - 1) * size,
-      take: size,
-    });
-
-    return {
-      result: jobs.map(job => ({
-        company: ENV.COMPANY.NAME,
-        id: job.id,
-        title: job.title,
-        salary: job.salaryOffer,
-        type: job.jobType,
-        salaryOffer: job.salaryOffer,
-        jobType: job.jobType,
-      })),
-      totalPages: Math.ceil(total / pageSize),
-      currentPage: pageNumber,
-    };
+    return this.jobService.getJobs(page, pageSize, query);
   }
 
   @Get('/:id')
