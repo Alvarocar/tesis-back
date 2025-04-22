@@ -26,7 +26,7 @@ export const AppDataSource = new DataSource({
   username: ENV.POSTGRESS.username,
   password: ENV.POSTGRESS.password,
   database: ENV.POSTGRESS.database,
-  synchronize: true,
+  synchronize: ENV.POSTGRESS.synchronize,
   logging: ENV.POSTGRESS.logging,
   ssl: {
     rejectUnauthorized: false,
