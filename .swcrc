@@ -10,7 +10,7 @@
       "legacyDecorator": true,
       "decoratorMetadata": true
     },
-    "target": "es2017",
+    "target": "es2020",
     "externalHelpers": false,
     "keepClassNames": true,
     "loose": false,
@@ -33,6 +33,10 @@
     }
   },
   "module": {
-    "type": "commonjs"
+    "type": "commonjs",
+    "strict": true,
+    "strictMode": true,
+    "lazy": false,
+    "noInterop": false
   }
 }

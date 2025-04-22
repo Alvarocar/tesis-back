@@ -70,7 +70,7 @@ class App {
           }
         },
       },
-      controllers: [resolve(__dirname, './controllers/**/*.ts')],
+      controllers: controllers,
       defaultErrorHandler: false,
       routePrefix: 'api',
     });

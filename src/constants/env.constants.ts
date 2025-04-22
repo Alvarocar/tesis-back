@@ -6,7 +6,7 @@ export const ENV = {
     username: process.env.RELATIONAL_DB_USERNAME,
     password: process.env.RELATIONAL_DB_PASSWORD,
     database: process.env.RELATIONAL_DB_DATABASE,
-    synchronize: true,
+    synchronize: process.env.RELATIONAL_DB_SYNCHRONIZE === 'true',
     logging: process.env.RELATIONAL_DB_LOGGING === 'true',
   },
   COMPANY: {

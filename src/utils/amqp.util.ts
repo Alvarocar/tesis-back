@@ -1,9 +1,9 @@
 import { ENV } from '../constants/env.constants';
-import amqp, { Connection } from 'amqplib';
+import amqp, { ChannelModel } from 'amqplib';
 
 class CustomAMQP {
   private static instance: CustomAMQP;
-  private connection: Connection | null = null;
+  private connection: ChannelModel | null = null;
   private readonly amqpUrl: string;
 
   private constructor(amqpUrl: string) {
@@ -17,7 +17,7 @@ class CustomAMQP {
     return CustomAMQP.instance;
   }
 
-  private async createConnection(): Promise<Connection> {
+  private async createConnection(): Promise<ChannelModel> {
     if (this.connection) return this.connection;
 
     try {
@@ -45,7 +45,7 @@ class CustomAMQP {
     }
   }
 
-  public async getConnection(): Promise<Connection> {
+  public async getConnection(): Promise<ChannelModel> {
     if (!this.connection) {
       return this.createConnection();
     }

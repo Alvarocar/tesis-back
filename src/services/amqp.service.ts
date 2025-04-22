@@ -1,9 +1,9 @@
-import { Channel, Connection } from 'amqplib';
+import { Channel, ChannelModel } from 'amqplib';
 import { RabbitAMQP } from '@/utils/amqp.util';
 
 export class AMQPService {
   private channel: Channel | null = null;
-  private connection: Connection | null = null;
+  private connection: ChannelModel | null = null;
   private queueExists = false;
   private readonly queueName: string;
 

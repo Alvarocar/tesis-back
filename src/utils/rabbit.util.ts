@@ -1,10 +1,10 @@
-import { Connection } from 'amqplib';
+import { ChannelModel } from 'amqplib';
 import { BaseListener } from '../listeners/base.listener';
 import { RabbitAMQP } from './amqp.util';
 
 export class RabbitMQService {
   private listeners: BaseListener[] = [];
-  private connection: Connection | null = null;
+  private connection: ChannelModel | null = null;
 
   async connect() {
     try {
