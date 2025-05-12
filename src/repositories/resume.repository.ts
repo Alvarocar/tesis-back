@@ -41,7 +41,7 @@ export const ResumeRepository = resumeRepository.extend({
         .andWhere('applicant_id = :applicantId', { applicantId: applicant.id })
         .execute();
 
-      return await ResumeRepository.createQueryBuilder('rs').select(['rs.about_me']).where('rs.id = :id', { id: dto.resumeId }).getOneOrFail();
+      return await ResumeRepository.createQueryBuilder('rs').select(['rs.aboutMe']).where('rs.id = :id', { id: dto.resumeId }).getOneOrFail();
     } catch (e) {
       console.error(e);
       throw new HttpError(500, 'hubo un error');

@@ -48,7 +48,7 @@ export class ApplicationDetailDto {
 
   resume: ResumeDto;
 
-  vacant: VacantDto;
+  vacancy: VacantDto;
 
   constructor({ id, creationDate, affinity, feedBack, resume, vacant }: Application) {
     this.id = id;
@@ -56,7 +56,7 @@ export class ApplicationDetailDto {
     this.affinity = affinity;
     this.feedBack = feedBack;
     this.resume = ResumeDto.createFromEntity(resume);
-    this.vacant = VacantDto.createFromEntity(vacant);
+    this.vacancy = VacantDto.createFromEntity(vacant);
   }
 
   public static fromApplication(application: Application): ApplicationDetailDto {
