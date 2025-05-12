@@ -1,66 +1,44 @@
-import { Channel, ChannelModel } from 'amqplib';
-import { RabbitAMQP } from '@/utils/amqp.util';
+import { Channel, ConsumeMessage } from 'amqplib';
+import { Singleton } from '@/decorator/singleton.decorator';
+import { connectRabbitMQ } from '@/utils/amqp.util';
+import { IAmqpEvents } from '@/types/amqp';
+import { logger } from '@/utils/logger';
 
-export class AMQPService {
-  private channel: Channel | null = null;
-  private connection: ChannelModel | null = null;
-  private queueExists = false;
-  private readonly queueName: string;
-
-  constructor(queueName: string) {
-    this.queueName = queueName;
+@Singleton
+export class AmqpService {
+  private async init(): Promise<Channel> {
+    return await connectRabbitMQ();
   }
 
-  public async init(): Promise<void> {
-    try {
-      this.connection = await RabbitAMQP.getConnection();
-      this.channel = await this.connection.createChannel();
-
-      await this.channel.assertQueue(this.queueName, { durable: true });
-      this.queueExists = true;
-
-      console.log(`[AMQPService] Initialized for queue: ${this.queueName}`);
-    } catch (error) {
-      console.error(`[AMQPService] Initialization error: ${error.message}`);
-      this.cleanup();
-      throw error;
-    }
+  async publish<K extends keyof IAmqpEvents>(event: K, payload: IAmqpEvents[K]['input']): Promise<void> {
+    const channel = await this.init();
+    await channel.assertQueue(event as string, { durable: true });
+    channel.sendToQueue(event as string, Buffer.from(JSON.stringify(payload)), {
+      persistent: true,
+    });
   }
 
-  public publish(payload: object): boolean {
-    if (this.queueExists && this.channel) {
+  async subscribe<K extends keyof IAmqpEvents>(
+    event: K,
+    handler: (data: IAmqpEvents[K]['input']) => Promise<IAmqpEvents[K]['output']> | IAmqpEvents[K]['output'],
+  ): Promise<void> {
+    const channel = await this.init();
+    await channel.assertQueue(event as string, { durable: true });
+
+    channel.consume(event as string, async (msg: ConsumeMessage | null) => {
+      if (!msg) return;
+
       try {
-        this.channel.sendToQueue(this.queueName, Buffer.from(JSON.stringify(payload)));
-        return true;
+        const payload = JSON.parse(msg.content.toString()) as IAmqpEvents[K]['input'];
+        await handler(payload);
+
+        logger.info(`Event ${String(event)}: processed successfully`);
+
+        channel.ack(msg);
       } catch (error) {
-        console.error(`[AMQPService] Publish error: ${error.message}`);
-        return false;
+        logger.error(`Error processing ${String(event)}:`, error);
+        channel.nack(msg, false, true);
       }
-    }
-
-    console.warn(`[AMQPService] Queue not initialized or channel unavailable.`);
-    return false;
-  }
-
-  public getChannel() {
-    return this.channel;
-  }
-
-  public async close(): Promise<void> {
-    try {
-      if (this.channel) {
-        await this.channel.close();
-        console.log(`[AMQPService] Channel closed for queue: ${this.queueName}`);
-      }
-    } catch (error) {
-      console.error(`[AMQPService] Error closing channel: ${error.message}`);
-    } finally {
-      this.channel = null;
-    }
-  }
-
-  private cleanup() {
-    this.channel = null;
-    this.queueExists = false;
+    });
   }
 }

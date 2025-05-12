@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString } from 'class-validator';
+import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, ValidateNested } from 'class-validator';
 import { Vacant } from '@/models/vacant.model';
 import { purify, window } from '@/utils/dom.util';
 import { VacantJobType } from '@/enums/vacant.enum';
@@ -46,6 +46,40 @@ export class VacantDto {
 
   @IsEnum(VacantJobType)
   jobType: VacantJobType;
+
+  @IsNumber()
+  @IsOptional()
+  experienceYears: number;
+
+  constructor(vacant: VacantDto | undefined) {
+    if (!vacant) return;
+    const { title, description, jobType, salary, experienceYears } = vacant;
+    this.title = title;
+    this.description = description;
+    this.jobType = jobType;
+    this.salary = salary;
+    this.experienceYears = experienceYears;
+  }
+
+  public static createFromEntity(entity: Vacant) {
+    return new VacantDto({
+      title: entity.title,
+      description: entity.description,
+      jobType: entity.jobType,
+      salary: entity.salaryOffer,
+      experienceYears: entity.experienceYears,
+    });
+  }
+}
+
+export class VacancySkillDto {
+  @IsNumber()
+  @IsNotEmpty()
+  id: number;
+
+  @IsString()
+  @IsNotEmpty()
+  name: string;
 }
 
 export const VacantFactory = {
@@ -55,6 +89,7 @@ export const VacantFactory = {
       description: vacant.description,
       jobType: vacant.jobType,
       salary: vacant.salaryOffer,
+      experienceYears: vacant.experienceYears,
     };
   },
 };

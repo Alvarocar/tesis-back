@@ -4,7 +4,7 @@
   "description": "TypeScript + Routing Controllers + Express API Server",
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@8.15.4",
+  "packageManager": "pnpm@10.10.0",
   "scripts": {
     "start": "cross-env NODE_ENV=production node dist/server.js",
     "dev": "cross-env NODE_ENV=development nodemon",
@@ -19,7 +19,9 @@
     "dev:workers": "cross-env NODE_ENV=development nodemon --exec ts-node --files -r tsconfig-paths/register src/worker.boot.ts"
   },
   "dependencies": {
+    "@ai-sdk/openai-compatible": "^0.2.13",
     "@langchain/core": "^0.3.18",
+    "ai": "^4.3.13",
     "amqplib": "^0.10.4",
     "axios": "^1.7.7",
     "bcrypt": "^5.0.1",
@@ -37,7 +39,6 @@
     "hpp": "^0.2.3",
     "jsdom": "^25.0.1",
     "jsonwebtoken": "^8.5.1",
-    "langchain": "^0.3.6",
     "lodash": "^4.17.21",
     "moment": "^2.29.3",
     "morgan": "^1.10.0",

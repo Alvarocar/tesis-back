@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Relation, UpdateDateColumn } from 'typeorm';
 import { VacantToLanguage } from './vacant_to_language.model';
 import { Application } from './application.model';
 import { VacantJobType } from '@/enums/vacant.enum';
@@ -35,13 +35,13 @@ export class Vacant {
   })
   experienceYears: number;
 
-  @Column({
+  @CreateDateColumn({
     type: 'date',
     name: 'creation_date',
   })
   creationDate: Date;
 
-  @Column({
+  @UpdateDateColumn({
     type: 'date',
     name: 'modification_date',
   })

@@ -1,25 +1,24 @@
-import amqp from 'amqplib';
+import { AmqpService } from '@/services/amqp.service';
+import { IAmqpEvents } from '@/types/amqp';
 
-export abstract class BaseListener {
-  abstract topic: string;
+export abstract class BaseListener<Topic extends keyof IAmqpEvents> {
+  protected amqpService: AmqpService;
+
+  constructor() {
+    this.amqpService = new AmqpService();
+  }
+
+  abstract topic: Topic;
 
   abstract init(): void;
 
-  abstract handleMessage(msg: string): void;
+  abstract handleMessage<K extends Topic>(msg: IAmqpEvents[K]['input']): void;
 
-  consume(channel: amqp.Channel) {
+  consume<K extends keyof IAmqpEvents>(topic: K) {
     console.log('se ha comenzado ha consumir', this.topic);
-    channel.consume(this.topic, msg => {
+    this.amqpService.subscribe(topic, msg => {
       console.log('mensaje recibido...');
-      if (msg !== null) {
-        const messageContent = msg.content.toString();
-        try {
-          this.handleMessage(messageContent);
-          channel.ack(msg);
-        } catch {
-          console.error('[BaseListener] Mensaje no procesado', messageContent);
-        }
-      }
+      this.handleMessage(msg);
     });
   }
 }

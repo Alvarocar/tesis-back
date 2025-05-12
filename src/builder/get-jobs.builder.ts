@@ -24,6 +24,16 @@ export class GetJobsBuilder {
     return this;
   }
 
+  addFilter<Key extends keyof FindOptionsWhere<Vacant>>(key: Key, value: FindOptionsWhere<Vacant>[Key]) {
+    this.where = [
+      ...this.where,
+      {
+        [key]: value,
+      },
+    ];
+    return this;
+  }
+
   addSearch(query: string) {
     this.where = [
       ...this.where,

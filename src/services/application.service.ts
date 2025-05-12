@@ -1,17 +1,18 @@
-import { AMQP_EVENTS } from '@/constants';
-import { AMQPService } from './amqp.service';
+import { AmqpService } from './amqp.service';
 import { Applicant } from '@/models/applicant.model';
-import { ApplicationDto } from '@/dtos/application.dto';
+import { ApplicationDetailDto, ApplicationDto, ApplicationVacantDto } from '@/dtos/application.dto';
 import { VacantRepository } from '@/repositories/vacant.repository';
 import { ApplicationRepository } from '@/repositories/application.repository';
 import { ResumeRepository } from '@/repositories/resume.repository';
+import { EApplicationStatus } from '@/enums/application.enum';
+import { ILike } from 'typeorm';
+import { NotFoundError } from 'routing-controllers';
 
 export class ApplicationService {
-  private amqpService: AMQPService;
+  private amqpService: AmqpService;
 
   constructor() {
-    this.amqpService = new AMQPService(AMQP_EVENTS.APPLICANT.APPLY);
-    this.amqpService.init();
+    this.amqpService = new AmqpService();
   }
 
   public async apply(application: ApplicationDto, applicant: Applicant) {
@@ -27,14 +28,87 @@ export class ApplicationService {
 
       incomingApplication = await ApplicationRepository.findByVacantAndResume(vacant, resume);
 
-      const wasPublished = this.amqpService.publish({
+      await this.amqpService.publish('applicant.apply', {
         applicationId: incomingApplication.id,
+        vacantId: vacant.id,
+        applicantId: applicant.id,
+        resumeId: resume.id,
       });
 
-      return wasPublished;
+      return true;
     } catch (e) {
       console.error('[ApplicationService] - Error: ', e.message);
       return false;
     }
+  }
+
+  public async getApplicationsByVacant(vacantId: number, page = 1, pageSize = 10, query: string) {
+    const vacant = await VacantRepository.getBasicById(vacantId);
+    const [results, total] = await ApplicationRepository.findAndCount({
+      select: {
+        affinity: true,
+        feedBack: true,
+        id: true,
+        resume: {
+          id: true,
+          applicant: {
+            id: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+      where: {
+        vacant: {
+          id: vacant.id,
+          title: query.trim().length > 0 ? ILike(`%${query}%`) : undefined,
+          description: query.trim().length > 0 ? ILike(`%${query}%`) : undefined,
+        },
+        status: EApplicationStatus.ANALYZED,
+      },
+      order: {
+        affinity: 'DESC',
+      },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      relations: ['vacant', 'resume', 'resume.applicant'],
+    });
+    return {
+      result: results.map(application => ApplicationVacantDto.fromApplication(application)),
+      totalPages: Math.ceil(total / pageSize),
+      currentPage: page,
+    };
+  }
+
+  public async isApplicationDone(vacantId: number, resumeId: number, applicant: Applicant) {
+    try {
+      const resume = await ResumeRepository.getBasicInfoById(resumeId, applicant);
+      const vacant = await VacantRepository.getBasicById(vacantId);
+      const application = await ApplicationRepository.findByVacantAndResume(vacant, resume);
+      return { isDone: !!application };
+    } catch (e) {
+      console.error('[ApplicationService] - Error: ', e.message);
+      return { isDone: false };
+    }
+  }
+
+  public async getApplicationDetail(applicationId: number) {
+    const application = await ApplicationRepository.findOne({
+      where: {
+        id: applicationId,
+      },
+      relations: [
+        'vacant',
+        'resume',
+        'resume.applicant',
+        'resume.skills',
+        'resume.resumeLanguage',
+        'resume.resumeLanguage.language',
+        'resume.educations',
+        'resume.experiences',
+      ],
+    });
+    if (!application) throw new NotFoundError('La solicitud no fue encontrada');
+    return ApplicationDetailDto.fromApplication(application);
   }
 }
