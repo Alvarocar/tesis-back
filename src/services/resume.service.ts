@@ -1,4 +1,4 @@
-import { CreateAboutMeDto, CreateResumeDto, ResumeDto } from '@/dtos/resume.dto';
+import { CreateAboutMeDto, CreateResumeDto, EditResumeDto, ResumeDto } from '@/dtos/resume.dto';
 import { GenericService } from './generic.service';
 import { Resume } from '@/models/resume.model';
 import { AppDataSource } from '@/data-source';
@@ -54,6 +54,10 @@ export class ResumeService extends GenericService {
 
       await Promise.all(educations.map(edu => manager.createQueryBuilder().insert().into(Education).values(edu).execute()));
     });
+  }
+
+  async PutTitle(resumeDto: EditResumeDto, applicant: Applicant) {
+    return await ResumeRepository.update({ id: resumeDto.id, applicant: applicant }, { title: resumeDto.title });
   }
 
   async createResumeWithJustTitle(resumeDto: CreateResumeDto, applicant: Applicant) {

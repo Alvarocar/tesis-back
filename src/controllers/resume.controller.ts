@@ -1,4 +1,4 @@
-import { CreateAboutMeDto, CreateResumeDto, EducationDto, ExperienceDto, LanguageDto, SkillDto } from '@/dtos/resume.dto';
+import { CreateAboutMeDto, CreateResumeDto, EditResumeDto, EducationDto, ExperienceDto, LanguageDto, SkillDto } from '@/dtos/resume.dto';
 import { RequestWithApplicant } from '@/interfaces/auth.interface';
 import authApplicantMiddleware from '@/middlewares/authApplicant.middleware';
 import { validationMiddleware } from '@/middlewares/validation.middleware';
@@ -23,6 +23,15 @@ export class ResumeController {
   async createResume(@Body() resume: CreateResumeDto, @Req() req: RequestWithApplicant) {
     const resp = await this.resumeService.createResumeWithJustTitle(resume, req.user);
     return { id: resp.id };
+  }
+
+  @Patch('/')
+  @UseBefore(authApplicantMiddleware)
+  @UseBefore(validationMiddleware(EditResumeDto, 'body'))
+  @HttpCode(204)
+  async putTitle(@Body() resumeDto: EditResumeDto, @Req() req: RequestWithApplicant) {
+    await this.resumeService.PutTitle(resumeDto, req.user);
+    return { title: resumeDto.title };
   }
   //metodo descripcion//
   @Patch('/about_me')

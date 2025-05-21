@@ -10,7 +10,8 @@ import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, Max, MaxLength, Min, 
 export class ResumeDto {
   constructor(resume: ResumeDto | undefined) {
     if (!resume) return;
-    const { aboutMe, applicantId, educations, experiences, languages: language, skills } = resume;
+    const { title, aboutMe, applicantId, educations, experiences, languages: language, skills } = resume;
+    this.title = title;
     this.aboutMe = aboutMe;
     this.applicantId = applicantId;
     this.educations = educations;
@@ -18,6 +19,9 @@ export class ResumeDto {
     this.languages = language;
     this.skills = skills;
   }
+
+  @IsString()
+  title: string;
 
   @IsString()
   aboutMe: string;
@@ -40,6 +44,7 @@ export class ResumeDto {
 
   public static createFromEntity(entity: Resume) {
     return new ResumeDto({
+      title: entity.title,
       aboutMe: entity.aboutMe,
       applicantId: entity.applicant.id,
       educations: entity.educations.map(edu => EducationDto.createFromEntity(edu)),
@@ -60,6 +65,11 @@ export class CreateResumeDto {
   @IsString()
   @MaxLength(60)
   title: string;
+}
+
+export class EditResumeDto extends CreateResumeDto {
+  @IsNumber()
+  id: number;
 }
 
 export class LanguageDto {
