@@ -53,6 +53,9 @@ export class GetJobsBuilder {
       skip: this.skip,
       take: this.take,
       where: this.where,
+      order: {
+        creationDate: 'DESC',
+      },
     });
 
     return {
