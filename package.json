@@ -16,7 +16,7 @@
     "deploy:prod": "npm run build && pm2 start ecosystem.config.js --only prod",
     "deploy:dev": "pm2 start ecosystem.config.js --only dev",
     "start:workers": "ts-node --files src/worker.boot.ts",
-    "dev:workers": "cross-env NODE_ENV=development nodemon --exec ts-node --files -r tsconfig-paths/register src/worker.boot.ts"
+    "heroku-build": "swc src -d dist --source-maps --copy-files"
   },
   "dependencies": {
     "@ai-sdk/openai-compatible": "^0.2.13",
