@@ -56,6 +56,7 @@ export class ApplicationDetailDto {
     this.affinity = affinity;
     this.feedBack = feedBack;
     this.resume = ResumeDto.createFromEntity(resume);
+    this.resume.title = resume.applicant.firstName + ' ' + resume.applicant.lastName;
     this.vacancy = VacantDto.createFromEntity(vacant);
   }
 
