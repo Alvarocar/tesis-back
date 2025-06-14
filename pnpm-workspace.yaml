@@ -6,5 +6,6 @@ ignoredBuiltDependencies:
 
 onlyBuiltDependencies:
   - '@swc/core'
+  - '@swc/cli'
   - bcrypt
   - nodemon
