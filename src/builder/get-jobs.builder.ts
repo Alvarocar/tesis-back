@@ -54,7 +54,7 @@ export class GetJobsBuilder {
       take: this.take,
       where: this.where,
       order: {
-        creationDate: 'DESC',
+        id: 'DESC',
       },
     });
 
