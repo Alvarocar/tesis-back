@@ -11,21 +11,6 @@ import { GetJobsBuilder } from '@/builder/get-jobs.builder';
 export class VacantService {
   async createVacant(vacant: VacantDto, recruiter: Recruiter) {
     try {
-      AppDataSource.transaction(async manager => {
-        await manager
-          .createQueryBuilder()
-          .insert()
-          .into(Vacant)
-          .values({
-            title: vacant.title,
-            description: vacant.description,
-            jobType: vacant.jobType,
-            salaryOffer: vacant.salary,
-            experienceYears: vacant.experienceYears ?? null,
-            recruiter: recruiter,
-          })
-          .execute();
-      });
       const result = await VacantRepository.insert({
         title: vacant.title,
         description: vacant.description,
