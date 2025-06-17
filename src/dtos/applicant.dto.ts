@@ -68,7 +68,6 @@ export class ApplicantPersonalInfoDto {
   lastName: string;
 
   @IsString()
-  @IsNumberString()
   identification: string;
 
   @IsOptional()
