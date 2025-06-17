@@ -8,6 +8,7 @@ import { ApplicationRepository } from '@/repositories/application.repository';
 import { BaseListener } from './base.listener';
 import { AIService } from '@/services/ai.service';
 import { getResponseFromModel } from '@/utils/getFromModel.util';
+import { differenceInSeconds } from '@/utils/date.util';
 
 export class ApplicationListener extends BaseListener<'applicant.apply'> {
   topic = 'applicant.apply' as const;
@@ -41,10 +42,17 @@ export class ApplicationListener extends BaseListener<'applicant.apply'> {
     const resumeDto = new ResumeTemplateDto(resume);
 
     const prompt = APPLY_TEMPLATE_PROMPT.format(vacantDto.getTemplate(), resumeDto.getTemplate());
-
-    const response = await this.iaService.generate(prompt);
-    console.log(response.text);
+    const start = new Date();
+    let response = null;
+    try {
+      response = await this.iaService.generate(prompt);
+    } catch (error) {
+      console.error(`[ApplicantApplyListener] FAIL: ${error}`);
+      return;
+    }
+    const end = new Date();
+    const timeTaken = differenceInSeconds(start, end);
     const { affinity, feedback } = await getResponseFromModel(response.text);
-    await ApplicationRepository.endApply(applicationId, affinity, feedback);
+    await ApplicationRepository.endApply(applicationId, affinity, feedback, timeTaken);
   }
 }

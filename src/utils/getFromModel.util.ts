@@ -1,8 +1,7 @@
-const firstExpresion = /feedback:([\w\W]*)affinity:\s*([.,\d]+)\s*/gi;
+const firstExpresion = /feedback:\s*([\s\S]*?)affinity:\s*([.,\d]+)%?/i;
+const secondExpresion = /affinity:\s*([.,\d]+)%?\s*feedback:\s*([\s\S]*)/i;
+const thirdExpresion = /\*\*feedback:\*\*\s*([\s\S]*?)\*\*affinity:\*\*\s*([.,\d]+)%?/i;
 
-const secondExpresion = /affinity:\s*([.,\d]+)\s*feedback:([\w\W]*)/gi;
-
-const thirdExpresion = /\*\*feedback:\*\*([\w\W]*)\*\*affinity:\*\*\s*([.,\d]+)\s*/gi;
 /**
  * Obtiene la respuesta del modelo
  * @param response
@@ -35,5 +34,6 @@ export const getResponseFromModel = async (response: string) => {
     };
   }
 
+  console.log('Texto no reconocido:', response);
   throw new Error('No se pudo obtener la respuesta del modelo');
 };

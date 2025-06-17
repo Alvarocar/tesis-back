@@ -14,12 +14,13 @@ export const ApplicationRepository = AppDataSource.getRepository(Application).ex
     });
   },
 
-  endApply: async (id: number, affinity: number, feedBack: string) => {
+  endApply: async (id: number, affinity: number, feedBack: string, timeTaken: number) => {
     return ApplicationRepository.update(
       { id },
       {
         affinity: affinity,
         feedBack: feedBack,
+        iaTimeTaken: timeTaken,
         status: EApplicationStatus.ANALYZED,
       },
     );
