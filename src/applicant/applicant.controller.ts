@@ -12,7 +12,7 @@ import { ParseIntIdPipe } from 'src/shared/pipes/parse-int-id.pipe';
 export class ApplicantController {
   constructor(private readonly applicantService: ApplicantService) {}
 
-  @Post()
+  @Post('/sign-up')
   create(@Body() createApplicantDto: CreateApplicantDto) {
     return this.applicantService.create(createApplicantDto);
   }
