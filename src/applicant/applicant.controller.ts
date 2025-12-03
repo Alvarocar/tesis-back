@@ -6,6 +6,7 @@ import { Roles } from 'src/shared/constants/metadata.constant';
 import { Role } from 'src/shared/enums/role.enum';
 import { UpdateApplicantDto } from './dto/update-applicant.dto';
 import { ApplicantService } from './applicant.service';
+import { ParseIntIdPipe } from 'src/shared/pipes/parse-int-id.pipe';
 
 @Controller('v1/applicants')
 export class ApplicantController {
@@ -17,8 +18,8 @@ export class ApplicantController {
   }
 
   @Get()
-  findOne(@Param('id') id: string) {
-    return this.applicantService.findOne(+id);
+  findOne(@Param('id', ParseIntIdPipe) id: number) {
+    return this.applicantService.findOne(id);
   }
 
   @Patch('/personal-info')
