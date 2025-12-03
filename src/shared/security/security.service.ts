@@ -1,4 +1,4 @@
-import { SignJWT, jwtVerify } from 'jose'
+import { JWTPayload, SignJWT, jwtVerify } from 'jose'
 import { Injectable } from '@nestjs/common';
 import { hash, genSalt, compare } from 'bcrypt'
 import { TokenDto } from './dto/token.dto';
@@ -24,7 +24,7 @@ export class SecurityService {
             .sign(secret);
     }
 
-    async verifyToken(token: string): Promise<any> {
+    async verifyToken(token: string): Promise<TokenDto & JWTPayload> {
         const secret = new TextEncoder().encode(SECURITY_JWT_SECRET);
         const { payload } = await jwtVerify<TokenDto>(token, secret);
         return payload;

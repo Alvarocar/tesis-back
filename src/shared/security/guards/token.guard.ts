@@ -6,11 +6,11 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
-import { SecurityService } from './security.service';
-import { METADATA_KEY } from '../constants/metadata.constant';
+import { SecurityService } from '../security.service';
+import { METADATA_KEY } from '../../constants/metadata.constant';
 
 @Injectable()
-export class SecurityGuard implements CanActivate {
+export class TokenGuard implements CanActivate {
   constructor(
     private readonly securityService: SecurityService,
     private readonly reflector: Reflector) {}

@@ -1,10 +1,10 @@
 import { Module, Global } from '@nestjs/common';
 import { SecurityService } from './security/security.service';
-import { SecurityGuard } from './security/security.guard';
+import { TokenGuard } from './security/guards/token.guard';
 
 @Global()
 @Module({
-  providers: [SecurityService, SecurityGuard],
-  exports: [SecurityService, SecurityGuard]
+  providers: [SecurityService, TokenGuard],
+  exports: [SecurityService, TokenGuard]
 })
 export class SharedModule {}

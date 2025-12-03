@@ -1,9 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ApplicantService } from './applicant.service';
-import { CreateApplicantDto } from './dto/create-applicant.dto';
+import { Controller, Get, Post, Body, Patch, Param, UseGuards, Req } from '@nestjs/common';
+import type { RequestWithUser } from 'src/shared/types/request-with-user';
+import { CreateApplicantDto } from 'src/auth/dto/create-applicant.dto';
+import { TokenGuard } from 'src/shared/security/guards/token.guard';
+import { Roles } from 'src/shared/constants/metadata.constant';
+import { Role } from 'src/shared/enums/role.enum';
 import { UpdateApplicantDto } from './dto/update-applicant.dto';
+import { ApplicantService } from './applicant.service';
 
-@Controller('applicant')
+@Controller('v1/applicants')
 export class ApplicantController {
   constructor(private readonly applicantService: ApplicantService) {}
 
@@ -13,22 +17,14 @@ export class ApplicantController {
   }
 
   @Get()
-  findAll() {
-    return this.applicantService.findAll();
-  }
-
-  @Get(':id')
   findOne(@Param('id') id: string) {
     return this.applicantService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateApplicantDto: UpdateApplicantDto) {
-    return this.applicantService.update(+id, updateApplicantDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.applicantService.remove(+id);
+  @Patch('/personal-info')
+  @Roles(Role.Employee)
+  @UseGuards(TokenGuard)
+  async updatePersonalInfo(@Body() updateApplicantDto: UpdateApplicantDto, @Req() request: RequestWithUser) {
+    return this.applicantService.update(request.user, updateApplicantDto);
   }
 }

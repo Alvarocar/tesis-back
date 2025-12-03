@@ -1,19 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Req } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Query, Req } from '@nestjs/common';
 import { JobService } from './job.service';
-import { CreateJobDto } from './dto/create-job.dto';
-import { UpdateJobDto } from './dto/update-job.dto';
 import { JobFilterDto } from './dto/job-filter.dto';
-import { SecurityGuard } from 'src/shared/security/security.guard';
-import { Public } from 'src/shared/constants/metadata.constant';
+import { TokenGuard } from 'src/shared/security/guards/token.guard';
+import { Public, Roles } from 'src/shared/constants/metadata.constant';
 import { ParseIntIdPipe } from 'src/shared/pipes/parse-int-id.pipe';
 import type { RequestWithOptionalUser, RequestWithUser } from 'src/shared/types/request-with-user';
+import { Role } from 'src/shared/enums/role.enum';
 
 @Controller('job')
 export class JobController {
   constructor(private readonly jobService: JobService) {}
 
   @Get()
-  @UseGuards(SecurityGuard)
+  @UseGuards(TokenGuard)
   @Public()
   async findAll(
     @Query() filter: JobFilterDto,
@@ -36,7 +35,8 @@ export class JobController {
   }
 
   @Get('applied/:id')
-  @UseGuards(SecurityGuard)
+  @Roles(Role.Employee)
+  @UseGuards(TokenGuard)
   findOneApplied(
     @Param('id', ParseIntIdPipe) id: number,
     @Req() request: RequestWithUser,
