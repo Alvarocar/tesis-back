@@ -52,18 +52,4 @@ export class VacancyController {
   ) {
     return this.vacancyService.findAll(filter, req.user);
   }
-
-/*   @Get('/procceses/:vacantId')
-  @Roles(Role.Employee, Role.Admin)
-  @UseGuards(TokenGuard)
-  @HttpCode(200)
-  async getApplicationsByVacant(
-    @Param('vacantId') vacantId: number,
-    @QueryParam('page') page = 1,
-    @QueryParam('pageSize') pageSize = 10,
-    @QueryParam('q') query: string = '',
-    @Req() req: RequestWithRecruiter,
-  ) {
-    return this.applicationService.getApplicationsByVacant(vacantId, page, pageSize, query);
-  } */
 }

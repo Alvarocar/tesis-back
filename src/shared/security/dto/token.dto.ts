@@ -6,4 +6,5 @@ export class TokenDto {
     lastName: string
     email: string;
     role: Role;
+    companyId?: number;
 }

@@ -1,34 +1,42 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Param, UseGuards, HttpCode, Query, Req } from '@nestjs/common';
+import { Role } from 'src/shared/enums/role.enum';
+import { Roles } from 'src/shared/constants/metadata.constant';
+import { TokenGuard } from 'src/shared/security/guards/token.guard';
+import type { RequestWithUser } from 'src/shared/types/request-with-user';
+import { ApplicationFilterDto } from './dto/application-filter.dto';
 import { ApplicationService } from './application.service';
-import { CreateApplicationDto } from './dto/create-application.dto';
-import { UpdateApplicationDto } from './dto/update-application.dto';
 
 @Controller('application')
 export class ApplicationController {
-  constructor(private readonly applicationService: ApplicationService) {}
+  constructor(private readonly applicationService: ApplicationService) { }
 
-  @Post()
-  create(@Body() createApplicationDto: CreateApplicationDto) {
-    return this.applicationService.create(createApplicationDto);
+  @Post('/apply/:vacantId/:resumeId')
+  @Roles(Role.Employee)
+  @UseGuards(TokenGuard)
+  @HttpCode(202)
+  async apply(@Req() request: RequestWithUser, @Param('vacantId') vacancyId: number, @Param('resumeId') resumeId: number) {
+    await this.applicationService.apply(request.user, vacancyId, resumeId)
+    return { applied: true };
   }
 
-  @Get()
-  findAll() {
-    return this.applicationService.findAll();
+  @Get('/is-done/:vacantId/:resumeId')
+  @Roles(Role.Employee)
+  @UseGuards(TokenGuard)
+  @HttpCode(200)
+  async isDone(@Param('vacantId') vacantId, @Param('resumeId') resumeId, @Req() req: RequestWithUser) {
+    const { application } = await this.applicationService.wasApplicationDone(vacantId, resumeId, req.user);
+    return { isDone: Boolean(application) };
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.applicationService.findOne(+id);
-  }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateApplicationDto: UpdateApplicationDto) {
-    return this.applicationService.update(+id, updateApplicationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.applicationService.remove(+id);
+  @Get('/procceses/:vacantId')
+  @Roles(Role.Employee, Role.Admin)
+  @UseGuards(TokenGuard)
+  @HttpCode(200)
+  async getApplicationsByVacant(
+    @Param('vacantId') vacantId: number,
+    @Query() filters: ApplicationFilterDto,
+  ) {
+    return this.applicationService.getApplicationsByVacant(filters, vacantId);
   }
 }
