@@ -2,7 +2,7 @@ import { Skill } from "src/shared/entities/skill";
 import { LaboralReference } from "./laboral-reference";
 import { Experience } from "./experience";
 import { Education } from "./education";
-import { Language } from "../../shared/entities/language";
+import { Language } from "../../language/entities/language";
 
 export class Resume {
   constructor(

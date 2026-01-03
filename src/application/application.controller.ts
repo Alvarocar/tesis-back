@@ -6,7 +6,7 @@ import type { RequestWithUser } from 'src/shared/types/request-with-user';
 import { ApplicationFilterDto } from './dto/application-filter.dto';
 import { ApplicationService } from './application.service';
 
-@Controller('application')
+@Controller('v1/application')
 export class ApplicationController {
   constructor(private readonly applicationService: ApplicationService) { }
 
@@ -38,5 +38,13 @@ export class ApplicationController {
     @Query() filters: ApplicationFilterDto,
   ) {
     return this.applicationService.getApplicationsByVacant(filters, vacantId);
+  }
+
+  @Get('/:applicationId')
+  @Roles(Role.Employee, Role.Admin)
+  @UseGuards(TokenGuard)
+  @HttpCode(200)
+  async getApplicationDetail(@Param('applicationId') applicationId: number) {
+    return this.applicationService.getApplicationDetail(applicationId);
   }
 }

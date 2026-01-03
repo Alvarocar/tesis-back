@@ -9,7 +9,7 @@ import { Role } from 'src/shared/enums/role.enum';
 import { UpdateVacancyDto } from './dto/update-vacancy.dto';
 import { VacancyFilterDto } from './dto/vacancy-filter.dto';
 
-@Controller('api/vacancy')
+@Controller('v1/vacancy')
 export class VacancyController {
   constructor(private readonly vacancyService: VacancyService) {}
 

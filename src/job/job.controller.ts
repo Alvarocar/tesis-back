@@ -7,7 +7,7 @@ import { ParseIntIdPipe } from 'src/shared/pipes/parse-int-id.pipe';
 import type { RequestWithOptionalUser, RequestWithUser } from 'src/shared/types/request-with-user';
 import { Role } from 'src/shared/enums/role.enum';
 
-@Controller('job')
+@Controller('v1/job')
 export class JobController {
   constructor(private readonly jobService: JobService) {}
 

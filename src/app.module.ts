@@ -13,9 +13,11 @@ import { AuthModule } from './auth/auth.module';
 import { ApplicantModule } from './applicant/applicant.module';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './shared/security/guards/roles.guard';
+import { LanguageModule } from './language/language.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
-  imports: [ResumeModule, SharedModule, VacancyModule, EvaluationModule, LlmClientModule, AuthModule, ApplicantModule, EmployeeModule, JobModule, ApplicationModule],
+  imports: [ResumeModule, SharedModule, VacancyModule, EvaluationModule, LlmClientModule, AuthModule, ApplicantModule, EmployeeModule, JobModule, ApplicationModule, LanguageModule, MailModule],
   controllers: [AppController],
   providers: [
     AppService,

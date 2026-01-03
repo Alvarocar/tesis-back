@@ -6,7 +6,7 @@ import { CreatedApplicantDto } from './dto/created-applicant.dto';
 import { Role } from 'src/shared/enums/role.enum';
 import { SignInDto } from './dto/sign-in.dto';
 
-@Controller('auth')
+@Controller('v1/auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,

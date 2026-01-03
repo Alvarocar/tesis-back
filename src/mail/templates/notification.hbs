@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 30px auto;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: linear-gradient(to right, #4facfe, #00f2fe);
+        color: white;
+        padding: 30px;
+        text-align: center;
+        border-radius: 10px 10px 0 0;
+      }
+      .body {
+        padding: 30px;
+        line-height: 1.6;
+        color: #333;
+      }
+      .highlight {
+        background-color: #fff3cd;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 20px 0;
+        border-left: 4px solid #ffc107;
+      }
+      .footer {
+        background: #f8f9fa;
+        padding: 20px;
+        text-align: center;
+        color: #6c757d;
+        font-size: 12px;
+        border-radius: 0 0 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>{{title}}</h1>
+      </div>
+      <div class="body">
+        <h2>Hola {{name}},</h2>
+        <p>{{message}}</p>
+        
+        {{#if highlightText}}
+        <div class="highlight">
+          {{highlightText}}
+        </div>
+        {{/if}}
+        
+        <p>Saludos cordiales,<br>El equipo de NeuroScreen</p>
+      </div>
+      <div class="footer">
+        <p>© 2026 NeuroScreen - Este es un proyecto académico</p>
+      </div>
+    </div>
+  </body>
+</html>

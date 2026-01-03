@@ -20,7 +20,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/common": "^11.0.1",
+    "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.1",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.0.1",
@@ -30,8 +32,10 @@
     "class-validator": "^0.14.2",
     "dayjs": "^1.11.19",
     "dompurify": "^3.3.0",
+    "handlebars": "^4.7.8",
     "jose": "^6.1.2",
     "jsdom": "^27.2.0",
+    "nodemailer": "^7.0.12",
     "openai": "^6.5.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",

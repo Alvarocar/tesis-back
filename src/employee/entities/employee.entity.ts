@@ -36,8 +36,24 @@ export class Employee {
     type: 'varchar',
     name: 'password',
     length: 60,
+    nullable: true,
   })
   password: string;
+
+  @Column({
+    type: 'varchar',
+    name: 'invitation_token',
+    length: 255,
+    nullable: true,
+  })
+  invitationToken: string;
+
+  @Column({
+    type: 'timestamp',
+    name: 'invitation_token_expires',
+    nullable: true,
+  })
+  invitationTokenExpires: Date;
 
   @Column({
     type: 'boolean',

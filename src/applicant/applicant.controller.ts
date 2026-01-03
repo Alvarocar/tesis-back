@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, UseGuards, Req, HttpCode } from '@nestjs/common';
 import type { RequestWithUser } from 'src/shared/types/request-with-user';
 import { CreateApplicantDto } from 'src/auth/dto/create-applicant.dto';
 import { TokenGuard } from 'src/shared/security/guards/token.guard';
@@ -18,13 +18,17 @@ export class ApplicantController {
   }
 
   @Get()
-  findOne(@Param('id', ParseIntIdPipe) id: number) {
-    return this.applicantService.findOne(id);
+  @Roles(Role.Employee)
+  @UseGuards(TokenGuard)
+  @HttpCode(200)
+  findOne(@Req() request: RequestWithUser) {
+    return this.applicantService.findOne(request.user.id);
   }
 
   @Patch('/personal-info')
   @Roles(Role.Employee)
   @UseGuards(TokenGuard)
+  @HttpCode(200)
   async updatePersonalInfo(@Body() updateApplicantDto: UpdateApplicantDto, @Req() request: RequestWithUser) {
     return this.applicantService.update(request.user, updateApplicantDto);
   }

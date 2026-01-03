@@ -12,6 +12,8 @@ import { TokenDto } from 'src/shared/security/dto/token.dto';
 import { Resume } from 'src/resume/entities/resume.entity';
 import { Vacancy } from 'src/vacancy/entities/vacancy.entity';
 import { EApplicationStatus } from 'src/shared/enums/application-status.enum';
+import { ApplicationDetailDto } from './dto/application-detail.dto';
+import { EducationDto, ExperienceDto, LanguageDto } from 'src/resume/dto/resume-detail.dto';
 
 @Injectable()
 export class ApplicationService {
@@ -90,5 +92,66 @@ export class ApplicationService {
       totalPages: Math.ceil(count / filters.pageSize),
       currentPage: filters.page,
     }
+  }
+
+  async getApplicationDetail(applicationId: number): Promise<any> {
+    const application = await this.applicationRepository.findOne({
+      where: { id: applicationId },
+      relations: {
+        resume: { applicant: true },
+        vacancy: true,
+      }
+    });
+
+    if (!application) {
+      throw new NotFoundException('Application not found');
+    }
+
+    return {
+      affinity: application.affinity,
+      creationDate: DateUtil.toString(application.creationDate),
+      feedBack: application.feedBack,
+      id: application.id,
+      resume: {
+        applicantId: application.resume.applicant.id,
+        educations: application.resume.educations.map<EducationDto>(edu => ({
+          id: edu.id,
+          title: edu.title,
+          endDate: edu.endDate ? DateUtil.toString(edu.endDate) : null,
+          institute: edu.institute,
+          keepStudy: edu.keepStudy ?? false,
+          startDate: DateUtil.toString(edu.startDate),
+        })),
+        aboutMe: application.resume.aboutMe,       
+        title: application.resume.applicant.firstName + ' ' + application.resume.applicant.lastName,
+        skills: application.resume.skills,
+        experiences: application.resume.experiences.map<ExperienceDto>(exp => ({
+          id: exp.id,
+          rol: exp.rol,
+          company: exp.company,
+          startDate: DateUtil.toString(exp.startDate),
+          endDate: exp.endDate ? DateUtil.toString(exp.endDate) : null,
+          description: exp.description,
+          keepWorking: exp.keepWorking ?? false,
+        })),
+        languages: application.resume.resumeLanguage.map<LanguageDto>(lang => ({
+          id: lang.id,
+          level: lang.languageLevel,
+          name: lang.language.name,
+        })),
+      },
+      vacancy: {
+        title: application.vacancy.title,
+        description: application.vacancy.description,
+        salary: application.vacancy.salaryOffer,
+        jobType: application.vacancy.jobType,
+        experienceYears: application.vacancy.experienceYears,
+      },
+      applicant: {
+        firstName: application.resume.applicant.firstName,
+        lastName: application.resume.applicant.lastName,
+        phoneNumber: application.resume.applicant.phoneNumber,
+      },
+    } satisfies ApplicationDetailDto
   }
 }

@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, type Relation } from 'typeorm';
-import { Language } from 'src/shared/entities/language';
+import { Language } from 'src/language/entities/language';
 import { Resume } from './resume.entity';
 
 @Entity('resume_language')

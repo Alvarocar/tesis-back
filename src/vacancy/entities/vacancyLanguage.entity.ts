@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from 'typeorm';
 import { Vacancy } from './vacancy.entity';
-import { Language } from 'src/shared/entities/language';
+import { Language } from 'src/language/entities/language';
 
 @Entity({ name: 'vacancy_language' })
 export class VacancyLanguage {
