@@ -1,14 +1,10 @@
-import { Body, Controller, Post, ValidationPipe } from '@nestjs/common';
-import { EvaluationCreateDto } from './dto/evaluation-create.dto';
+import { Controller } from '@nestjs/common';
 import { EvaluationService } from './evaluation.service';
-import { Evaluation } from 'src/shared/entities/evaluation';
-import { mapResumeEvaluationToEntity, mapVacancyEvaluationToEntity } from './mapper/evaluation_to_entity';
 
 @Controller('evaluation')
 export class EvaluationController {
-
-    constructor(private evaluationService: EvaluationService) {}
-
+  constructor(private evaluationService: EvaluationService) {}
+  /* 
     @Post('/')
     evaluate(
         @Body(new ValidationPipe({ transform: true })) evaluation: EvaluationCreateDto
@@ -20,5 +16,5 @@ export class EvaluationController {
             )
         )
         return "Evaluation endpoint";
-    }
+    } */
 }

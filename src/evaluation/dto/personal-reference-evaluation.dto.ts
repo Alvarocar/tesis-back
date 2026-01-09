@@ -1,13 +1,13 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsString } from 'class-validator';
 
 export class PersonalReferenceEvaluationDto {
-    @IsString()
-    name: string;
+  @IsString()
+  name: string;
 
-    @IsString()
-    relationship: string;
+  @IsString()
+  relationship: string;
 
-     @IsString()
-    @IsNotEmpty()
-    phone: string;
+  @IsString()
+  @IsNotEmpty()
+  phone: string;
 }

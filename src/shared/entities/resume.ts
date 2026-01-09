@@ -1,8 +1,8 @@
-import { Skill } from "src/shared/entities/skill";
-import { LaboralReference } from "./laboral-reference";
-import { Experience } from "./experience";
-import { Education } from "./education";
-import { Language } from "../../language/entities/language";
+import { Skill } from 'src/shared/entities/skill.entity';
+import { LaboralReference } from './laboral-reference';
+import { Experience } from './experience';
+import { Education } from './education';
+import { Language } from '../../language/entities/language.entity';
 
 export class Resume {
   constructor(

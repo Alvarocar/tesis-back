@@ -4,7 +4,11 @@ import {
   ValidationArguments,
 } from 'class-validator';
 
-type SupportedFormat = 'YYYY-MM-DD' | 'DD-MM-YYYY' | 'YYYY/MM/DD' | 'DD/MM/YYYY';
+type SupportedFormat =
+  | 'YYYY-MM-DD'
+  | 'DD-MM-YYYY'
+  | 'YYYY/MM/DD'
+  | 'DD/MM/YYYY';
 
 const FORMAT_MAP: Record<
   SupportedFormat,
@@ -33,7 +37,7 @@ export function IsDateFormat(
   validationOptions?: ValidationOptions,
 ) {
   const config = FORMAT_MAP[format];
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       name: 'isCustomDateFormat',
       target: object.constructor,

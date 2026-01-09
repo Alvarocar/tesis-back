@@ -4,7 +4,7 @@ export const nanoSecondsToSeconds = (nanoSeconds: number): number => {
 
 export const millisecondsToSeconds = (milliseconds: number): number => {
   return milliseconds / 1_000;
-}
+};
 
 export const secondsToMilliseconds = (seconds: number): number => {
   return seconds * 1_000;

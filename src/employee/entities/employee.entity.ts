@@ -1,5 +1,17 @@
+import type { Relation } from 'typeorm';
 import { Vacancy } from 'src/vacancy/entities/vacancy.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import { Company } from 'src/company/entities/company.entity';
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { EmployeeRole } from '../enums/employee-role.enum';
 
 @Entity({
   name: 'employee',
@@ -46,14 +58,14 @@ export class Employee {
     length: 255,
     nullable: true,
   })
-  invitationToken: string;
+  invitationToken: string | null;
 
   @Column({
     type: 'timestamp',
     name: 'invitation_token_expires',
     nullable: true,
   })
-  invitationTokenExpires: Date;
+  invitationTokenExpires: Date | null;
 
   @Column({
     type: 'boolean',
@@ -61,6 +73,14 @@ export class Employee {
     default: true,
   })
   isActive: boolean;
+
+  @Column({
+    type: 'enum',
+    enum: EmployeeRole,
+    name: 'role',
+    default: EmployeeRole.Employee,
+  })
+  role: EmployeeRole;
 
   @Column({
     type: 'date',
@@ -74,6 +94,27 @@ export class Employee {
   })
   modificationDate: Date;
 
-  @OneToMany(() => Vacancy, vacant => vacant.employee)
+  @ManyToOne(() => Company, (company) => company.employees, { nullable: false })
+  @JoinColumn({ name: 'company_id' })
+  company: Relation<Company>;
+
+  @Column({
+    type: 'int',
+    name: 'company_id',
+  })
+  companyId: number;
+
+  @OneToMany(() => Vacancy, (vacant) => vacant.employee)
   vacancies: Relation<Vacancy>[];
+
+  @BeforeInsert()
+  setCreationDate() {
+    this.creationDate = new Date();
+    this.modificationDate = new Date();
+  }
+
+  @BeforeUpdate()
+  setModificationDate() {
+    this.modificationDate = new Date();
+  }
 }

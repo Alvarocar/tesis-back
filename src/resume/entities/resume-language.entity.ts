@@ -1,5 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, type Relation } from 'typeorm';
-import { Language } from 'src/language/entities/language';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from 'typeorm';
+import { Language } from 'src/language/entities/language.entity';
 import { Resume } from './resume.entity';
 
 @Entity('resume_language')
@@ -15,9 +21,9 @@ export class ResumeLanguage {
   })
   languageLevel: number;
 
-  @ManyToOne(() => Resume, resume => resume.resumeLanguage)
+  @ManyToOne(() => Resume, (resume) => resume.resumeLanguage)
   resume: Relation<Resume>;
 
-  @ManyToOne(() => Language, language => language.resumeLanguage)
+  @ManyToOne(() => Language, (language) => language.resumeLanguage)
   language: Relation<Language>;
 }

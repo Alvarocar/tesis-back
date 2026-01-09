@@ -1,5 +1,5 @@
-import { ResumeDetailDto } from "src/resume/dto/resume-detail.dto";
-import { VacancyDetailDto } from "src/vacancy/dto/detail-vacancy.dto";
+import { ResumeDetailDto } from 'src/resume/dto/resume-detail.dto';
+import { VacancyDetailDto } from 'src/vacancy/dto/detail-vacancy.dto';
 
 export class ApplicationDetailDto {
   id: number;

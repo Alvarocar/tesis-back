@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
+import { FRONTEND_URL } from 'src/shared/constants/env.constant';
 
 @Injectable()
 export class MailService {
@@ -19,11 +20,17 @@ export class MailService {
   /**
    * Enviar correo usando template de Handlebars
    */
-  async sendTemplateEmail(to: string, subject: string, template: string, context: any) {
+  async sendTemplateEmail(
+    to: string,
+    subject: string,
+    template: string,
+    context: any,
+  ) {
     await this.mailerService.sendMail({
       to,
       subject,
       template, // nombre del archivo sin extensión (ej: 'welcome')
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       context, // variables para el template
     });
   }
@@ -32,8 +39,8 @@ export class MailService {
    * Enviar correo de invitación con token para establecer contraseña
    */
   async sendInvitationEmail(email: string, name: string, token: string) {
-    const invitationUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/set-password?token=${token}`;
-    
+    const invitationUrl = `${FRONTEND_URL || 'http://localhost:3000'}/set-password?token=${token}`;
+
     await this.sendTemplateEmail(
       email,
       'Invitación a NeuroScreen - Configura tu contraseña',
@@ -137,7 +144,11 @@ export class MailService {
   /**
    * Ejemplo: Notificar sobre una nueva aplicación
    */
-  async sendApplicationNotification(email: string, applicantName: string, jobTitle: string) {
+  async sendApplicationNotification(
+    email: string,
+    applicantName: string,
+    jobTitle: string,
+  ) {
     const htmlContent = `
       <!DOCTYPE html>
       <html>

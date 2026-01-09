@@ -1,7 +1,12 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, type Relation } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from 'typeorm';
 import { VacancyLanguage } from 'src/vacancy/entities/vacancyLanguage.entity';
 import { ResumeLanguage } from 'src/resume/entities/resume-language.entity';
-
 
 @Entity()
 export class Language {
@@ -17,9 +22,12 @@ export class Language {
   })
   name: string;
 
-  @OneToMany(() => ResumeLanguage, resumeToLanguage => resumeToLanguage.resume)
+  @OneToMany(
+    () => ResumeLanguage,
+    (resumeToLanguage) => resumeToLanguage.resume,
+  )
   resumeLanguage: Relation<ResumeLanguage>;
 
-  @OneToMany(() => VacancyLanguage, vacancyLanguage => vacancyLanguage.vacant)
+  @OneToMany(() => VacancyLanguage, (vacancyLanguage) => vacancyLanguage.vacant)
   vacancyLanguage: Relation<VacancyLanguage>[];
 }

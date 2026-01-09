@@ -1,20 +1,19 @@
-import { IsString } from 'class-validator'
+import { IsString } from 'class-validator';
 import { IsDateFormat } from 'src/shared/decorators/is-date-format.decorator';
 
 export class EducationEvaluationDTO {
-    
-    @IsString()
-    institution: string;
-    
-    @IsString()
-    fieldOfStudy: string;
+  @IsString()
+  institution: string;
 
-    @IsString()
-    degree: string;
+  @IsString()
+  fieldOfStudy: string;
 
-    @IsDateFormat()
-    public readonly startDate: string
+  @IsString()
+  degree: string;
 
-    @IsDateFormat()
-    public readonly endDate?: Date
+  @IsDateFormat()
+  public readonly startDate: string;
+
+  @IsDateFormat()
+  public readonly endDate?: Date;
 }

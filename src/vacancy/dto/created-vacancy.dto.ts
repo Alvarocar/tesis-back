@@ -1,4 +1,4 @@
-import { CreateVacancyDto } from "./create-vacancy.dto";
+import { CreateVacancyDto } from './create-vacancy.dto';
 
 export class CreatedVacancyDto extends CreateVacancyDto {
   id: number;

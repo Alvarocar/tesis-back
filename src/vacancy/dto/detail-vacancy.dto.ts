@@ -1,7 +1,14 @@
-import { Transform } from "class-transformer";
-import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString } from "class-validator";
-import { DomUtil } from "src/shared/utils/dom.util";
-import { VacancyJobType } from "../enums/vacancy-job-type.enum";
+import { Transform } from 'class-transformer';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPositive,
+  IsString,
+} from 'class-validator';
+import { DomUtil } from 'src/shared/utils/dom.util';
+import { VacancyJobType } from '../enums/vacancy-job-type.enum';
 
 export class VacancyDetailDto {
   @IsString()

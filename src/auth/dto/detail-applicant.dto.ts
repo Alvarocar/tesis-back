@@ -16,6 +16,6 @@ export class DetailApplicantDto {
   birthDate: string;
 
   direction: string;
-  
+
   identification: string;
 }

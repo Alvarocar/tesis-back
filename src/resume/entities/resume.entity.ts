@@ -1,6 +1,19 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, type Relation, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  type Relation,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Applicant } from 'src/applicant/entities/applicant.entity';
-import { Skill } from 'src/shared/entities/skill';
+import { Skill } from 'src/shared/entities/skill.entity';
 import { PersonalReference } from './personal-reference.entity';
 import { LaboralReference } from './laboral-reference.entity';
 import { ResumeLanguage } from './resume-language.entity';
@@ -43,33 +56,47 @@ export class Resume {
   })
   modificationDate: Date;
 
-  @OneToMany(() => ResumeLanguage, resumeToLanguage => resumeToLanguage.resume, { onDelete: 'CASCADE' })
+  @OneToMany(
+    () => ResumeLanguage,
+    (resumeToLanguage) => resumeToLanguage.resume,
+    { onDelete: 'CASCADE' },
+  )
   resumeLanguage: Relation<ResumeLanguage>[];
 
-  @OneToMany(() => Education, education => education.resume, { onDelete: 'CASCADE' })
+  @OneToMany(() => Education, (education) => education.resume, {
+    onDelete: 'CASCADE',
+  })
   educations: Relation<Education>[];
 
-  @OneToMany(() => Experience, experience => experience.resume, { onDelete: 'CASCADE' })
+  @OneToMany(() => Experience, (experience) => experience.resume, {
+    onDelete: 'CASCADE',
+  })
   experiences: Relation<Experience>[];
 
-  @ManyToOne(() => Applicant, applicant => applicant.resumes)
+  @ManyToOne(() => Applicant, (applicant) => applicant.resumes)
   @JoinColumn({
     name: 'applicant_id',
     referencedColumnName: 'id',
   })
   applicant: Relation<Applicant>;
 
-  @OneToMany(() => PersonalReference, personal => personal.resume, { onDelete: 'CASCADE' })
+  @OneToMany(() => PersonalReference, (personal) => personal.resume, {
+    onDelete: 'CASCADE',
+  })
   personal_references: Relation<PersonalReference>[];
 
-  @OneToMany(() => LaboralReference, laboral => laboral.resume, { onDelete: 'CASCADE' })
+  @OneToMany(() => LaboralReference, (laboral) => laboral.resume, {
+    onDelete: 'CASCADE',
+  })
   laboral_references: Relation<LaboralReference>[];
 
   @ManyToMany(() => Skill, { cascade: false })
   @JoinTable({ name: 'resume_skill' })
   skills: Relation<Skill>[];
 
-  @OneToMany(() => Applicant, applicant => applicant.resumes, { onDelete: 'CASCADE' })
+  @OneToMany(() => Applicant, (applicant) => applicant.resumes, {
+    onDelete: 'CASCADE',
+  })
   applications: Relation<Applicant>[];
 
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })

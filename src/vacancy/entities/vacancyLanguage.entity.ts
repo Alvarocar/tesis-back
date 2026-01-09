@@ -1,6 +1,13 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from 'typeorm';
 import { Vacancy } from './vacancy.entity';
-import { Language } from 'src/language/entities/language';
+import { Language } from 'src/language/entities/language.entity';
 
 @Entity({ name: 'vacancy_language' })
 export class VacancyLanguage {
@@ -15,11 +22,11 @@ export class VacancyLanguage {
   })
   languageLevel: number;
 
-  @ManyToOne(() => Vacancy, vacant => vacant.vacancyLanguage)
+  @ManyToOne(() => Vacancy, (vacant) => vacant.vacancyLanguage)
   @JoinColumn({ name: 'vacant_id' })
   vacant: Relation<Vacancy>;
 
-  @ManyToOne(() => Language, language => language.vacancyLanguage)
+  @ManyToOne(() => Language, (language) => language.vacancyLanguage)
   @JoinColumn({ name: 'language_id' })
   language: Relation<Language>;
 }

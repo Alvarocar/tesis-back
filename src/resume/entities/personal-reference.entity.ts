@@ -1,4 +1,11 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, type Relation } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  type Relation,
+} from 'typeorm';
 import { Resume } from './resume.entity';
 
 @Entity()
@@ -29,7 +36,7 @@ export class PersonalReference {
   })
   relationship: string;
 
-  @ManyToOne(() => Resume, resume => resume.personal_references)
+  @ManyToOne(() => Resume, (resume) => resume.personal_references)
   @JoinColumn({ name: 'resume_id' })
   resume: Relation<Resume>;
 }

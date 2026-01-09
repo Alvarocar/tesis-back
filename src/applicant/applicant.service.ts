@@ -1,6 +1,13 @@
 import { Repository } from 'typeorm';
-import { BadRequestException, HttpException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm'
+import {
+  BadRequestException,
+  HttpException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateApplicantDto } from './dto/update-applicant.dto';
 import { CreateApplicantDto } from 'src/auth/dto/create-applicant.dto';
 import { Applicant } from './entities/applicant.entity';
@@ -21,9 +28,16 @@ export class ApplicantService {
 
   async create(createApplicantDto: CreateApplicantDto) {
     try {
-      const doppleganger = await this.applicantRepository.findOne({ where: { email: createApplicantDto.email } });
-      if (doppleganger != null) throw new BadRequestException('Esta dirección de correo ya está en uso.');
-      const hashedPassword = await this.securityService.generateHash(createApplicantDto.password);
+      const doppleganger = await this.applicantRepository.findOne({
+        where: { email: createApplicantDto.email },
+      });
+      if (doppleganger != null)
+        throw new BadRequestException(
+          'Esta dirección de correo ya está en uso.',
+        );
+      const hashedPassword = await this.securityService.generateHash(
+        createApplicantDto.password,
+      );
       const applicantEntity = this.applicantRepository.create({
         creationDate: new Date(),
         modificationDate: new Date(),
@@ -34,10 +48,15 @@ export class ApplicantService {
       });
 
       return applicantEntity;
-    } catch (e) {
-      this.logger.error('Error inesperado al crear el solicitante.', e.stack);
+    } catch (e: unknown) {
+      this.logger.error(
+        'Error inesperado al crear el solicitante.',
+        (e as Error).stack,
+      );
       if (e instanceof HttpException) throw e;
-      throw new InternalServerErrorException('Error inesperado al crear el solicitante.');
+      throw new InternalServerErrorException(
+        'Error inesperado al crear el solicitante.',
+      );
     }
   }
 
@@ -57,13 +76,17 @@ export class ApplicantService {
           birthDate: DateUtil.toDate(updateApplicantDto.birthDate),
           direction: updateApplicantDto.direction,
           modificationDate: new Date(),
-        }
-      )
+        },
+      );
 
-      const updatedApplicant = await this.applicantRepository.findOne({ where: { id: user.id } });
+      const updatedApplicant = await this.applicantRepository.findOne({
+        where: { id: user.id },
+      });
 
       if (!updatedApplicant) {
-        this.logger.error(`No se encontró el solicitante con ID ${user.id} después de la actualización.`);
+        this.logger.error(
+          `No se encontró el solicitante con ID ${user.id} después de la actualización.`,
+        );
         throw new NotFoundException('Solicitante no encontrado');
       }
 
@@ -74,17 +97,21 @@ export class ApplicantService {
         identification: updatedApplicant.identification,
         lastName: updatedApplicant.lastName,
         phoneNumber: updatedApplicant.phoneNumber,
-      } satisfies UpdateApplicantDto
-
-    } catch (e) {
-      this.logger.error(`Error inesperado al actualizar la información personal del solicitante con ID ${user.id}.`, e.stack);
+      } satisfies UpdateApplicantDto;
+    } catch (e: unknown) {
+      this.logger.error(
+        `Error inesperado al actualizar la información personal del solicitante con ID ${user.id}.`,
+        (e as Error).stack,
+      );
       if (e instanceof HttpException) throw e;
-      throw new NotFoundException('Error inesperado al actualizar la información personal del solicitante.');
+      throw new NotFoundException(
+        'Error inesperado al actualizar la información personal del solicitante.',
+      );
     }
   }
 
   async findOne(id: number) {
-    const applicant =  await this.applicantRepository.findOne({ where: { id } });
+    const applicant = await this.applicantRepository.findOne({ where: { id } });
     if (!applicant) {
       this.logger.error(`Solicitante con ID ${id} no encontrado.`);
       throw new NotFoundException('Solicitante no encontrado');

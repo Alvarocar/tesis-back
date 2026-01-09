@@ -1,4 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn, Relation } from 'typeorm';
+import {
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  Relation,
+} from 'typeorm';
 import { Resume } from 'src/resume/entities/resume.entity';
 
 @Entity()
@@ -72,11 +78,11 @@ export class Applicant {
   })
   identification: string;
 
-/*   @Column({
-    nullable: true,
-    type: 'enum',
-    name: 'identification_type',
-    enum: EIdentificationType,
+  /* @Column({
+  nullable: true,
+  type: 'enum',
+  name: 'identification_type',
+  enum: EIdentificationType,
   })
   identificationType: EIdentificationType; */
 
@@ -95,6 +101,6 @@ export class Applicant {
   })
   birthDate: Date;
 
-  @OneToMany(() => Resume, resume => resume.applicant)
+  @OneToMany(() => Resume, (resume) => resume.applicant)
   resumes: Relation<Resume>[];
 }

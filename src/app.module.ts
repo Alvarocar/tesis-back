@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { SharedModule } from './shared/shared.module';
 import { VacancyModule } from './vacancy/vacancy.module';
 import { ResumeModule } from './resume/resume.module';
@@ -15,16 +13,36 @@ import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './shared/security/guards/roles.guard';
 import { LanguageModule } from './language/language.module';
 import { MailModule } from './mail/mail.module';
+import { CompanyModule } from './company/company.module';
+import { getTypeOrmModule } from './database.setup';
+import { TokenGuard } from './shared/security/guards/token.guard';
 
 @Module({
-  imports: [ResumeModule, SharedModule, VacancyModule, EvaluationModule, LlmClientModule, AuthModule, ApplicantModule, EmployeeModule, JobModule, ApplicationModule, LanguageModule, MailModule],
-  controllers: [AppController],
+  imports: [
+    getTypeOrmModule(),
+    ResumeModule,
+    SharedModule,
+    VacancyModule,
+    EvaluationModule,
+    LlmClientModule,
+    AuthModule,
+    ApplicantModule,
+    EmployeeModule,
+    JobModule,
+    ApplicationModule,
+    LanguageModule,
+    MailModule,
+    CompanyModule,
+  ],
   providers: [
-    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: TokenGuard,
+    },
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
-    }
+    },
   ],
 })
 export class AppModule {}

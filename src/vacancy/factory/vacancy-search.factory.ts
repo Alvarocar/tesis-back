@@ -1,21 +1,26 @@
-import { Repository, SelectQueryBuilder } from "typeorm";
-import { CriteriaBuilder, CriteriaCombiner } from "src/shared/criteria/criteria";
-import { VacancyFilterDto } from "../dto/vacancy-filter.dto";
-import { Vacancy } from "../entities/vacancy.entity";
-import { TokenDto } from "src/shared/security/dto/token.dto";
+import { Repository, SelectQueryBuilder } from 'typeorm';
+import {
+  CriteriaBuilder,
+  CriteriaCombiner,
+} from 'src/shared/criteria/criteria';
+import { VacancyFilterDto } from '../dto/vacancy-filter.dto';
+import { Vacancy } from '../entities/vacancy.entity';
+import { TokenDto } from 'src/shared/security/dto/token.dto';
 
 export class VacancySearchFactory {
-
-  constructor(private readonly repository: Repository<Vacancy>) { }
+  constructor(private readonly repository: Repository<Vacancy>) {}
 
   /**
    * This method builds a query to search vacancies based on the provided filter DTO and user.
    * thats mean it will only return the vacancies created by the user.
-   * @param dto 
-   * @param user 
-   * @returns 
+   * @param dto
+   * @param user
+   * @returns
    */
-  buildSearchVacancysQuery(dto: VacancyFilterDto, user: TokenDto): SelectQueryBuilder<Vacancy> {
+  buildSearchVacancysQuery(
+    dto: VacancyFilterDto,
+    user: TokenDto,
+  ): SelectQueryBuilder<Vacancy> {
     const { q } = dto;
     const queryBuilder = this.repository
       .createQueryBuilder('vacancy')
@@ -27,28 +32,34 @@ export class VacancySearchFactory {
         'vacancy.salaryOffer',
         'vacancy.jobType',
         'vacancy.creationDate',
-        'vacancy.modificationDate'
+        'vacancy.modificationDate',
       ])
       .leftJoin('vacancy.employee', 'employee')
       .addSelect(['employee.id']);
 
     // Start with pagination criteria
     let criteriaBuilder = CriteriaCombiner.create(
-      CriteriaBuilder.pagination<Vacancy>(dto)
+      CriteriaBuilder.pagination<Vacancy>(dto),
     );
 
     criteriaBuilder = criteriaBuilder.and(
-      CriteriaBuilder.equals<Vacancy>('employee.id', user.id)
+      CriteriaBuilder.equals<Vacancy>('employee.id', user.id),
     );
 
     // Add optional search in title and description (case insensitive)
     if (q && q.trim()) {
-      const titleSearchCriteria = CriteriaBuilder.ilike<Vacancy>('vacancy.title', q.trim());
-      const descriptionSearchCriteria = CriteriaBuilder.ilike<Vacancy>('vacancy.description', q.trim());
+      const titleSearchCriteria = CriteriaBuilder.ilike<Vacancy>(
+        'vacancy.title',
+        q.trim(),
+      );
+      const descriptionSearchCriteria = CriteriaBuilder.ilike<Vacancy>(
+        'vacancy.description',
+        q.trim(),
+      );
 
-      const searchCombiner = CriteriaCombiner
-        .create(titleSearchCriteria)
-        .or(descriptionSearchCriteria);
+      const searchCombiner = CriteriaCombiner.create(titleSearchCriteria).or(
+        descriptionSearchCriteria,
+      );
 
       criteriaBuilder = criteriaBuilder.and(searchCombiner);
     }

@@ -1,4 +1,13 @@
-import { IsBoolean, IsInt, IsNumber, IsOptional, IsString, Max, Min, ValidateNested } from "class-validator";
+import {
+  IsBoolean,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+  ValidateNested,
+} from 'class-validator';
 
 export class ResumeDetailDto {
   @IsString()

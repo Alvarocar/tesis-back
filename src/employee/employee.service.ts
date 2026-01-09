@@ -1,21 +1,26 @@
-import { ConflictException, Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { UpdateEmployeeDto } from './dto/update-employee.dto';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Employee } from './entities/employee.entity';
 import { Repository } from 'typeorm';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { MailService } from '../mail/mail.service';
 import { SetPasswordDto } from './dto/set-password.dto';
+import { CompanyService } from '../company/company.service';
 import * as crypto from 'crypto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class EmployeeService {
-
   constructor(
     @InjectRepository(Employee)
     private readonly employeeRepository: Repository<Employee>,
     private readonly mailService: MailService,
+    private readonly companyService: CompanyService,
   ) {}
 
   findByEmail(email: string) {
@@ -38,11 +43,16 @@ export class EmployeeService {
     return expiration;
   }
 
-  async createEmployee(createEmployeeDto: CreateEmployeeDto) {
-
+  async createEmployee(
+    createEmployeeDto: CreateEmployeeDto,
+    companyId: number,
+  ) {
     if (await this.findByEmail(createEmployeeDto.email)) {
       throw new ConflictException('El correo ya está en uso');
     }
+
+    // Verificar que la compañía existe
+    await this.companyService.findOne(companyId);
 
     const invitationToken = this.generateInvitationToken();
     const invitationTokenExpires = this.getTokenExpiration();
@@ -51,20 +61,19 @@ export class EmployeeService {
       firstName: createEmployeeDto.firstName,
       lastName: createEmployeeDto.lastName,
       email: createEmployeeDto.email,
+      companyId,
       invitationToken,
       invitationTokenExpires,
     });
-    
+
     const savedEmployee = await this.employeeRepository.save(employee);
-    
+
     // Enviar correo de invitación
     await this.mailService.sendInvitationEmail(
       savedEmployee.email,
-      savedEmployee.firstName,
+      savedEmployee.firstName + ' ' + savedEmployee.lastName,
       invitationToken,
     );
-    
-    return savedEmployee;
   }
 
   /**
@@ -80,7 +89,10 @@ export class EmployeeService {
     }
 
     // Verificar si el token ha expirado
-    if (new Date() > employee.invitationTokenExpires) {
+    if (
+      employee.invitationTokenExpires &&
+      new Date() > employee.invitationTokenExpires
+    ) {
       throw new BadRequestException('El token de invitación ha expirado');
     }
 
@@ -143,7 +155,10 @@ export class EmployeeService {
       return { valid: false, message: 'Token inválido' };
     }
 
-    if (new Date() > employee.invitationTokenExpires) {
+    if (
+      employee.invitationTokenExpires &&
+      new Date() > employee.invitationTokenExpires
+    ) {
       return { valid: false, message: 'Token expirado' };
     }
 
@@ -152,5 +167,46 @@ export class EmployeeService {
       email: employee.email,
       name: `${employee.firstName} ${employee.lastName}`,
     };
+  }
+
+  /**
+   * Obtiene todos los empleados de una compañía
+   */
+  async findByCompany(companyId: number) {
+    return await this.employeeRepository.find({
+      where: { companyId, isActive: true },
+      relations: ['company'],
+    });
+  }
+
+  /**
+   * Obtiene un empleado específico de una compañía
+   */
+  async findOneByCompany(employeeId: number, companyId: number) {
+    const employee = await this.employeeRepository.findOne({
+      where: { id: employeeId, companyId, isActive: true },
+      relations: ['company'],
+    });
+
+    if (!employee) {
+      throw new NotFoundException(
+        'Empleado no encontrado o no pertenece a esta compañía',
+      );
+    }
+
+    return employee;
+  }
+
+  /**
+   * Valida que un empleado pertenezca a una compañía específica
+   */
+  async validateEmployeeCompany(
+    employeeId: number,
+    companyId: number,
+  ): Promise<boolean> {
+    const employee = await this.employeeRepository.findOne({
+      where: { id: employeeId, companyId },
+    });
+    return !!employee;
   }
 }

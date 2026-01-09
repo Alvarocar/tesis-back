@@ -1,4 +1,3 @@
-
 export interface LLMMessage {
   prompt: string;
 }

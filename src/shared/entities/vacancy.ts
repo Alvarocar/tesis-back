@@ -1,8 +1,8 @@
-import { Skill } from "src/shared/entities/skill";
-import { Salary } from "src/shared/entities/salary";
-import { Language } from "src/language/entities/language";
-import { ExperienceTime } from "src/shared/entities/experienceTime";
-import { VacancyJobType } from "../enums/vacancy-job-type.enum";
+import { Skill } from 'src/shared/entities/skill.entity';
+import { Salary } from 'src/shared/entities/salary';
+import { Language } from 'src/language/entities/language.entity';
+import { ExperienceTime } from 'src/shared/entities/experienceTime';
+import { VacancyJobType } from '../enums/vacancy-job-type.enum';
 
 export class Vacancy {
   constructor(
@@ -17,9 +17,9 @@ export class Vacancy {
   ) {}
 
   requiresExperience(): boolean {
-    const months = this.experience?.months ?? 0
-    const years = this.experience?.years ?? 0
+    const months = this.experience?.months ?? 0;
+    const years = this.experience?.years ?? 0;
 
-    return months > 0 || years > 0
-  } 
+    return months > 0 || years > 0;
+  }
 }

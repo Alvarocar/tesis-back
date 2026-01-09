@@ -1,8 +1,10 @@
-import { In, Repository } from 'typeorm';
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CreateApplicationDto } from './dto/create-application.dto';
-import { UpdateApplicationDto } from './dto/update-application.dto';
 import { Application } from './entities/application.entity';
 import { ApplicationSearchFactory } from './factory/application-search.factory';
 import { ApplicationFilterDto } from './dto/application-filter.dto';
@@ -13,11 +15,15 @@ import { Resume } from 'src/resume/entities/resume.entity';
 import { Vacancy } from 'src/vacancy/entities/vacancy.entity';
 import { EApplicationStatus } from 'src/shared/enums/application-status.enum';
 import { ApplicationDetailDto } from './dto/application-detail.dto';
-import { EducationDto, ExperienceDto, LanguageDto } from 'src/resume/dto/resume-detail.dto';
+import {
+  EducationDto,
+  ExperienceDto,
+  LanguageDto,
+  SkillDto,
+} from 'src/resume/dto/resume-detail.dto';
 
 @Injectable()
 export class ApplicationService {
-
   constructor(
     @InjectRepository(Application)
     private readonly applicationRepository: Repository<Application>,
@@ -25,37 +31,53 @@ export class ApplicationService {
     private readonly resumeRepository: Repository<Resume>,
     @InjectRepository(Vacancy)
     private readonly vacancyRepository: Repository<Vacancy>,
-  ) {
-
-  }
+  ) {}
 
   async apply(user: TokenDto, vacancyId: number, resumeId: number) {
-    const { application: existingApplication, resume, vacancy } = await this.wasApplicationDone(vacancyId, resumeId, user);
+    const {
+      application: existingApplication,
+      resume,
+      vacancy,
+    } = await this.wasApplicationDone(vacancyId, resumeId, user);
 
     if (existingApplication) {
-      throw new ForbiddenException('Application already exists for this resume and vacancy');
+      throw new ForbiddenException(
+        'Application already exists for this resume and vacancy',
+      );
     }
 
-    this.applicationRepository.insert({
+    await this.applicationRepository.insert({
       resume,
       vacancy,
       status: EApplicationStatus.APPLIED,
       creationDate: new Date(),
-    })
- 
+    });
+
     // TODO: send notification to analyse the application.
 
     return true;
   }
 
-  async wasApplicationDone(vacancyId: number, resumeId: number, user: TokenDto) {
-    const resumePromise = this.resumeRepository.findOneBy({ id: resumeId, applicant: { id: user.id } });
+  async wasApplicationDone(
+    vacancyId: number,
+    resumeId: number,
+    user: TokenDto,
+  ) {
+    const resumePromise = this.resumeRepository.findOneBy({
+      id: resumeId,
+      applicant: { id: user.id },
+    });
     const vacancyPromise = this.vacancyRepository.findOneBy({ id: vacancyId });
 
-    const [resume, vacancy] = await Promise.all([resumePromise, vacancyPromise])
-  
+    const [resume, vacancy] = await Promise.all([
+      resumePromise,
+      vacancyPromise,
+    ]);
+
     if (!resume) {
-      throw new NotFoundException('Resume not found or does not belong to the user');
+      throw new NotFoundException(
+        'Resume not found or does not belong to the user',
+      );
     }
     if (!vacancy) {
       throw new NotFoundException('Vacancy not found');
@@ -64,17 +86,24 @@ export class ApplicationService {
     const application = await this.applicationRepository.findOne({
       where: {
         resume: { id: resume.id },
-        vacancy: { id: vacancy.id }
-      }
-    })
+        vacancy: { id: vacancy.id },
+      },
+    });
 
     return { application, resume, vacancy };
   }
 
-  async getApplicationsByVacant(filters: ApplicationFilterDto, vacancyId: number) {
-    const [result, count] = await new ApplicationSearchFactory(this.applicationRepository).buildSearchByVacantQuery(vacancyId, filters).getManyAndCount();
+  async getApplicationsByVacant(
+    filters: ApplicationFilterDto,
+    vacancyId: number,
+  ) {
+    const [result, count] = await new ApplicationSearchFactory(
+      this.applicationRepository,
+    )
+      .buildSearchByVacantQuery(vacancyId, filters)
+      .getManyAndCount();
     return {
-      result: result.map<ApplicationOverviewDto>(item => ({
+      result: result.map<ApplicationOverviewDto>((item) => ({
         id: item.id,
         status: item.status,
         feedBack: item.feedBack,
@@ -87,20 +116,46 @@ export class ApplicationService {
           id: item.resume.applicant.id,
           firstName: item.resume.applicant.firstName,
           lastName: item.resume.applicant.lastName,
-        }
+        },
       })),
       totalPages: Math.ceil(count / filters.pageSize),
       currentPage: filters.page,
-    }
+    };
   }
 
-  async getApplicationDetail(applicationId: number): Promise<any> {
+  async getApplicationDetail(applicationId: number): Promise<{
+    affinity: number;
+    creationDate: string;
+    feedBack: string;
+    id: number;
+    resume: {
+      applicantId: number;
+      educations: EducationDto[];
+      aboutMe: string;
+      title: string;
+      skills: SkillDto[];
+      experiences: ExperienceDto[];
+      languages: LanguageDto[];
+    };
+    vacancy: {
+      title: string;
+      description: string;
+      salary: number;
+      jobType: string;
+      experienceYears: number;
+    };
+    applicant: {
+      firstName: string;
+      lastName: string;
+      phoneNumber: string;
+    };
+  }> {
     const application = await this.applicationRepository.findOne({
       where: { id: applicationId },
       relations: {
         resume: { applicant: true },
         vacancy: true,
-      }
+      },
     });
 
     if (!application) {
@@ -114,7 +169,7 @@ export class ApplicationService {
       id: application.id,
       resume: {
         applicantId: application.resume.applicant.id,
-        educations: application.resume.educations.map<EducationDto>(edu => ({
+        educations: application.resume.educations.map<EducationDto>((edu) => ({
           id: edu.id,
           title: edu.title,
           endDate: edu.endDate ? DateUtil.toString(edu.endDate) : null,
@@ -122,23 +177,30 @@ export class ApplicationService {
           keepStudy: edu.keepStudy ?? false,
           startDate: DateUtil.toString(edu.startDate),
         })),
-        aboutMe: application.resume.aboutMe,       
-        title: application.resume.applicant.firstName + ' ' + application.resume.applicant.lastName,
+        aboutMe: application.resume.aboutMe,
+        title:
+          application.resume.applicant.firstName +
+          ' ' +
+          application.resume.applicant.lastName,
         skills: application.resume.skills,
-        experiences: application.resume.experiences.map<ExperienceDto>(exp => ({
-          id: exp.id,
-          rol: exp.rol,
-          company: exp.company,
-          startDate: DateUtil.toString(exp.startDate),
-          endDate: exp.endDate ? DateUtil.toString(exp.endDate) : null,
-          description: exp.description,
-          keepWorking: exp.keepWorking ?? false,
-        })),
-        languages: application.resume.resumeLanguage.map<LanguageDto>(lang => ({
-          id: lang.id,
-          level: lang.languageLevel,
-          name: lang.language.name,
-        })),
+        experiences: application.resume.experiences.map<ExperienceDto>(
+          (exp) => ({
+            id: exp.id,
+            rol: exp.rol,
+            company: exp.company,
+            startDate: DateUtil.toString(exp.startDate),
+            endDate: exp.endDate ? DateUtil.toString(exp.endDate) : null,
+            description: exp.description,
+            keepWorking: exp.keepWorking ?? false,
+          }),
+        ),
+        languages: application.resume.resumeLanguage.map<LanguageDto>(
+          (lang) => ({
+            id: lang.id,
+            level: lang.languageLevel,
+            name: lang.language.name,
+          }),
+        ),
       },
       vacancy: {
         title: application.vacancy.title,
@@ -152,6 +214,6 @@ export class ApplicationService {
         lastName: application.resume.applicant.lastName,
         phoneNumber: application.resume.applicant.phoneNumber,
       },
-    } satisfies ApplicationDetailDto
+    } satisfies ApplicationDetailDto;
   }
 }

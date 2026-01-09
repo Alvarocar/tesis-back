@@ -1,17 +1,17 @@
-import { Resume } from "./resume";
-import { Vacancy } from "./vacancy";
+import { Resume } from './resume';
+import { Vacancy } from './vacancy';
 
 export class Evaluation {
-    constructor(
-        private readonly resume: Resume,
-        private readonly vacancy: Vacancy,
-    ) {}
+  constructor(
+    private readonly resume: Resume,
+    private readonly vacancy: Vacancy,
+  ) {}
 
-    getResume(): Resume {
-        return this.resume;
-    }
+  getResume(): Resume {
+    return this.resume;
+  }
 
-    getVacancy(): Vacancy {
-        return this.vacancy;
-    }
+  getVacancy(): Vacancy {
+    return this.vacancy;
+  }
 }

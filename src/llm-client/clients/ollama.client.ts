@@ -15,26 +15,33 @@ interface OllamaApiResponse {
   eval_duration: number;
 }
 
-export class OllamaClient implements ILLMClient { 
-
+export class OllamaClient implements ILLMClient {
   async sendMessage(messages: LLMMessage): Promise<LLMResponse> {
     const { prompt } = messages;
     try {
-        const { data } = await axios.post<OllamaApiResponse>(`${OLLAMA_HOST}/api/generate`, {
+      const { data } = await axios.post<OllamaApiResponse>(
+        `${OLLAMA_HOST}/api/generate`,
+        {
           model: OLLAMA_MODEL,
           prompt,
           stream: false,
-          format: "json",
-        });
+          format: 'json',
+        },
+      );
 
-        return {
-          content: JSON.parse(data.response) as { affinity: number; feedback: string },
-          duration: nanoSecondsToSeconds(data.prompt_eval_duration + data.eval_duration),
-          inputTokens: data.prompt_eval_count,
-          outputTokens: data.eval_count,
-          model: data.model,
-        };
-    }  catch (error) {
+      return {
+        content: JSON.parse(data.response) as {
+          affinity: number;
+          feedback: string;
+        },
+        duration: nanoSecondsToSeconds(
+          data.prompt_eval_duration + data.eval_duration,
+        ),
+        inputTokens: data.prompt_eval_count,
+        outputTokens: data.eval_count,
+        model: data.model,
+      };
+    } catch (error) {
       console.error('Error generating response from Ollama:', error);
       throw new Error('Failed to generate response from Ollama');
     }

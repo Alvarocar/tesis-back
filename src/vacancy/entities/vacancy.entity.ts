@@ -1,6 +1,18 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, type Relation, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  type Relation,
+  UpdateDateColumn,
+} from 'typeorm';
 import { VacancyJobType } from '../enums/vacancy-job-type.enum';
-import { Skill } from 'src/shared/entities/skill';
+import { Skill } from 'src/shared/entities/skill.entity';
 import { VacancyLanguage } from './vacancyLanguage.entity';
 import { Employee } from 'src/employee/entities/employee.entity';
 import { Application } from 'src/application/entities/application.entity';
@@ -65,13 +77,13 @@ export class Vacancy {
   @JoinTable({ name: 'vacancy_skill' })
   skills: Relation<Skill>[];
 
-  @OneToMany(() => VacancyLanguage, vacancyLanguage => vacancyLanguage.vacant)
+  @OneToMany(() => VacancyLanguage, (vacancyLanguage) => vacancyLanguage.vacant)
   vacancyLanguage: Relation<VacancyLanguage>[];
 
-  @OneToMany(() => Application, application => application.vacancy)
+  @OneToMany(() => Application, (application) => application.vacancy)
   applications: Relation<Application>[];
 
-  @ManyToOne(() => Employee, employee => employee.vacancies)
+  @ManyToOne(() => Employee, (employee) => employee.vacancies)
   @JoinColumn({ name: 'employee_id', referencedColumnName: 'id' })
   employee: Relation<Employee>;
 }

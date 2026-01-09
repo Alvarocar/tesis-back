@@ -1,5 +1,5 @@
 export class ApplicationOverviewDto {
-    id: number;
+  id: number;
   creationDate: string;
   affinity: number;
   feedBack: string;
