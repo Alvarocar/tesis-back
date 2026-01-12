@@ -36,7 +36,7 @@ export class ResumeDetailDto {
 export class EducationDto {
   @IsNumber()
   @IsOptional()
-  id: number;
+  id?: number;
 
   @IsString()
   institute: string;
