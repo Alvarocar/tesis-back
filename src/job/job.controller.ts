@@ -3,11 +3,10 @@ import { JobService } from './job.service';
 import { JobFilterDto } from './dto/job-filter.dto';
 import { Public, Roles } from 'src/shared/constants/metadata.constant';
 import { ParseIntPipe } from 'src/shared/pipes/parse-int-id.pipe';
-import type {
-  RequestWithOptionalUser,
-  RequestWithUser,
-} from 'src/shared/types/request-with-user';
+import type { RequestWithUser } from 'src/shared/types/request-with-user';
 import { Role } from 'src/shared/enums/role.enum';
+import { CurrentUser } from 'src/shared/decorators/current-user.decorator';
+import { TokenDto } from 'src/shared/security/dto/token.dto';
 
 @Controller('v1/job')
 export class JobController {
@@ -15,12 +14,9 @@ export class JobController {
 
   @Get()
   @Public()
-  async findAll(
-    @Query() filter: JobFilterDto,
-    @Req() request: RequestWithOptionalUser,
-  ) {
+  async findAll(@Query() filter: JobFilterDto, @CurrentUser() user?: TokenDto) {
     const { page = 1, pageSize = 10 } = filter;
-    const [result, count] = await this.jobService.findAll(filter, request.user);
+    const [result, count] = await this.jobService.findAll(filter, user);
     const skip = (page - 1) * pageSize;
     const take = pageSize;
 

@@ -53,6 +53,7 @@ export class JobService {
               type: vacancy.jobType,
               salaryOffer: vacancy.salaryOffer,
               jobType: vacancy.jobType,
+              editable: false,
             }) satisfies JobOverviewPublicDto,
         ),
         count,

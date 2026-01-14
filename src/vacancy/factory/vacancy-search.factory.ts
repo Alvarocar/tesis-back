@@ -67,6 +67,8 @@ export class VacancySearchFactory {
     // Apply all criteria to the query builder
     criteriaBuilder.apply(queryBuilder);
 
+    queryBuilder.orderBy('vacancy.modificationDate', 'DESC');
+
     return queryBuilder;
   }
 }

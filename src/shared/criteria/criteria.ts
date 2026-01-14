@@ -52,6 +52,7 @@ export class FieldCriteria<
       case ComparisonOperator.LESS_THAN:
       case ComparisonOperator.LESS_THAN_OR_EQUAL:
         queryBuilder.andWhere(`${this.field} ${this.operator} :${paramName}`, {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           [paramName]: this.value,
         });
         break;
@@ -82,7 +83,9 @@ export class FieldCriteria<
           queryBuilder.andWhere(
             `${this.field} BETWEEN :${paramName} AND :${paramName2}`,
             {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               [paramName]: this.value,
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               [paramName2]: this.secondValue,
             },
           );
@@ -172,13 +175,28 @@ export class CriteriaCombiner<
       const { criteria, operator } = this.criteriaList[i];
 
       if (operator === LogicalOperator.OR) {
-        // For OR operations, we need to wrap in parentheses for proper precedence
-        const subQuery = queryBuilder.subQuery();
-        criteria.apply(subQuery as any);
-        queryBuilder.orWhere(
-          `(${subQuery.getQuery()})`,
-          subQuery.getParameters(),
-        );
+        // For OR operations, create a clone to collect the where conditions
+        const tempQuery = queryBuilder.clone();
+        // Clear existing where conditions in the temp query
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        (tempQuery as any).expressionMap.wheres = [];
+
+        criteria.apply(tempQuery);
+
+        // Extract the where condition and parameters from temp query
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+        const whereCondition = (tempQuery as any).expressionMap.wheres
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access
+          .map((w: any) => w.condition)
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          .join(' AND ');
+
+        if (whereCondition) {
+          queryBuilder.orWhere(
+            `(${whereCondition})`,
+            tempQuery.getParameters(),
+          );
+        }
       } else {
         criteria.apply(queryBuilder);
       }

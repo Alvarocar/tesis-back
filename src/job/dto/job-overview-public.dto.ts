@@ -6,4 +6,5 @@ export class JobOverviewPublicDto {
   type: string;
   salaryOffer: number;
   jobType: string;
+  editable: boolean;
 }

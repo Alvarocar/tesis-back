@@ -125,7 +125,10 @@ export class VacancyService {
     } satisfies CreatedVacancyDto;
   }
 
-  async findAll(filters: VacancyFilterDto, user: TokenDto) {
+  async findAll(
+    filters: VacancyFilterDto,
+    user: TokenDto,
+  ): Promise<[JobOverviewDto[], number]> {
     const [vacancies, count] = await new VacancySearchFactory(
       this.vacancyRepository,
     )

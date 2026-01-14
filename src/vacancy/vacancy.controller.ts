@@ -8,10 +8,8 @@ import {
   Put,
   Query,
   Req,
-  UseGuards,
 } from '@nestjs/common';
 import type { RequestWithUser } from 'src/shared/types/request-with-user';
-import { TokenGuard } from 'src/shared/security/guards/token.guard';
 import { ParseIntPipe } from 'src/shared/pipes/parse-int-id.pipe';
 import { Roles } from 'src/shared/constants/metadata.constant';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
@@ -56,6 +54,15 @@ export class VacancyController {
     @Query() filter: VacancyFilterDto,
     @Req() req: RequestWithUser,
   ) {
-    return this.vacancyService.findAll(filter, req.user);
+    const { page = 1, pageSize = 10, q }: VacancyFilterDto = filter;
+    const [result, count] = await this.vacancyService.findAll(
+      { page, pageSize, q },
+      req.user,
+    );
+    return {
+      result,
+      currentPage: page,
+      totalPages: Math.ceil(count / pageSize),
+    };
   }
 }
