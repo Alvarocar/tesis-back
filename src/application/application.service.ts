@@ -161,7 +161,13 @@ export class ApplicationService {
     const application = await this.applicationRepository.findOne({
       where: { id: applicationId },
       relations: {
-        resume: { applicant: true },
+        resume: {
+          applicant: true,
+          educations: true,
+          experiences: true,
+          resumeLanguage: { language: true },
+          skills: true,
+        },
         vacancy: true,
       },
     });

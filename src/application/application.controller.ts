@@ -50,9 +50,11 @@ export class ApplicationController {
   @Roles(Role.Employee, Role.Admin)
   @HttpCode(200)
   async getApplicationsByVacant(
-    @Param('vacantId') vacantId: number,
+    @Param('vacantId', ParseIntPipe) vacantId: number,
     @Query() filters: ApplicationFilterDto,
   ) {
+    filters.page ??= 1;
+    filters.pageSize ??= 10;
     return this.applicationService.getApplicationsByVacant(filters, vacantId);
   }
 
