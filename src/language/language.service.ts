@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Language } from './entities/language.entity';
@@ -53,11 +53,13 @@ export class LanguageService {
       relations: ['language'],
     });
 
-    return languages.map<LanguageDto>((l) => ({
-      id: l.language.id,
-      name: l.language.name,
-      level: l.languageLevel,
-    }));
+    return languages
+      .filter((l) => l.language !== null)
+      .map<LanguageDto>((l) => ({
+        id: l.language.id,
+        name: l.language.name,
+        level: l.languageLevel,
+      }));
   }
 
   async createOrUpdateForApplicant(
@@ -75,26 +77,39 @@ export class LanguageService {
 
     const currentLanguages = await this.resumeLanguageRepository.find({
       where: { resume: { id: resumeId } },
+      relations: ['language'],
     });
 
     const languagesToRemove = currentLanguages.filter(
-      (lang) => !languages.some((l) => l.id === lang.id),
+      (lang) => !languages.some((l) => l.id === lang.language?.id),
     );
 
     if (languagesToRemove.length > 0) {
       await this.resumeLanguageRepository.remove(languagesToRemove);
     }
 
-    const savedLanguages = languages.map((languageDto) => {
-      const language = this.resumeLanguageRepository.create({
-        id: languageDto.id,
-        languageLevel: languageDto.level,
-        resume,
-      });
-      return this.resumeLanguageRepository.save(language);
+    const DBlanguages = await this.languageRepository.findBy({
+      name: In(languages.map((l) => l.name)),
     });
 
-    await Promise.all(savedLanguages);
+    const mapLanguages = DBlanguages.reduce<Record<string, Language>>(
+      (acc, lang) => {
+        acc[lang.name] = lang;
+        return acc;
+      },
+      {},
+    );
+
+    const languagesToSave = languages.map((languageDto) => {
+      return this.resumeLanguageRepository.create({
+        id: languageDto.id,
+        languageLevel: languageDto.level,
+        language: mapLanguages[languageDto.name],
+        resume,
+      });
+    });
+
+    await this.resumeLanguageRepository.save(languagesToSave);
 
     return this.getByResume(resumeId);
   }

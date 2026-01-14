@@ -31,10 +31,12 @@ export class ExperienceService {
     const experience = this.experienceRepository.create({
       id: experienceDto.id,
       company: experienceDto.company,
-      startDate: experienceDto.startDate,
-      endDate: experienceDto.endDate ? experienceDto.endDate : undefined,
+      startDate: DateUtil.toDate(experienceDto.startDate),
+      endDate: experienceDto.endDate
+        ? DateUtil.toDate(experienceDto.endDate)
+        : undefined,
       description: experienceDto.description,
-      keepWorking: experienceDto.keepWorking,
+      keepWorking: experienceDto.keepWorking ?? false,
       rol: experienceDto.rol,
       resume,
     });

@@ -19,14 +19,15 @@ export class JobController {
     @Query() filter: JobFilterDto,
     @Req() request: RequestWithOptionalUser,
   ) {
+    const { page = 1, pageSize = 10 } = filter;
     const [result, count] = await this.jobService.findAll(filter, request.user);
-    const skip = (filter.page - 1) * filter.pageSize;
-    const take = filter.pageSize;
+    const skip = (page - 1) * pageSize;
+    const take = pageSize;
 
     return {
       result,
-      totalPages: take ? Math.ceil(count / take) : count,
-      currentPage: skip && take ? skip / take + 1 : 1,
+      totalPages: Math.ceil(count / take),
+      currentPage: skip / take + 1,
     };
   }
 
@@ -36,7 +37,7 @@ export class JobController {
   }
 
   @Get('applied/:id')
-  @Roles(Role.Employee)
+  @Roles(Role.Applicant)
   findOneApplied(
     @Param('id', ParseIntPipe) id: number,
     @Req() request: RequestWithUser,

@@ -21,7 +21,9 @@ export class ResumeLanguage {
   })
   languageLevel: number;
 
-  @ManyToOne(() => Resume, (resume) => resume.resumeLanguage)
+  @ManyToOne(() => Resume, (resume) => resume.resumeLanguage, {
+    onDelete: 'CASCADE',
+  })
   resume: Relation<Resume>;
 
   @ManyToOne(() => Language, (language) => language.resumeLanguage)

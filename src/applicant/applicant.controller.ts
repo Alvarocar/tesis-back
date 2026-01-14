@@ -24,14 +24,14 @@ export class ApplicantController {
   }
 
   @Get()
-  @Roles(Role.Employee)
+  @Roles(Role.Applicant)
   @HttpCode(200)
   findOne(@Req() request: RequestWithUser) {
     return this.applicantService.findOne(request.user.id);
   }
 
   @Patch('/personal-info')
-  @Roles(Role.Employee)
+  @Roles(Role.Applicant)
   @HttpCode(200)
   async updatePersonalInfo(
     @Body() updateApplicantDto: UpdateApplicantDto,

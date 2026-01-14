@@ -1,4 +1,7 @@
 import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
 
 export class DateUtil {
   /**
@@ -9,7 +12,7 @@ export class DateUtil {
    * @returns
    */
   static toDate(date: string, format = 'DD-MM-YYYY'): Date {
-    return dayjs(date, format).toDate();
+    return dayjs(date, format, true).toDate();
   }
 
   /**

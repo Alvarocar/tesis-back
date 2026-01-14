@@ -18,11 +18,15 @@ export class Application {
   })
   id: number;
 
-  @ManyToOne(() => Vacancy, (vacant) => vacant.applications)
+  @ManyToOne(() => Vacancy, (vacant) => vacant.applications, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'vacancy_id' })
   vacancy: Relation<Vacancy>;
 
-  @ManyToOne(() => Resume, (resume) => resume.applications)
+  @ManyToOne(() => Resume, (resume) => resume.applications, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'resume_id' })
   resume: Relation<Resume>;
 

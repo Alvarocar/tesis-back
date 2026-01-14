@@ -7,5 +7,6 @@ import { Experience } from 'src/resume/entities/experience.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Experience, Resume])],
   providers: [ExperienceService],
+  exports: [ExperienceService],
 })
 export class ExperienceModule {}

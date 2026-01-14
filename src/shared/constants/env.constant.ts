@@ -1,11 +1,11 @@
 export const {
+  MODEL_PROVIDER,
+
   TOKEN,
   // OpenAI
   OPENAI_API_KEY,
-
-  // OpenRouter
-  OPENROUTER_API_KEY,
-  OPENROUTER_BASE_URL,
+  OPENAI_BASE_URL,
+  OPENAI_MODEL,
 
   // Ollama
   OLLAMA_HOST,

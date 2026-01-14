@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { LanguageService } from 'src/language/language.service';
-import { EducationService } from 'src/education/education.service';
+import { LanguageModule } from 'src/language/language.module';
+import { EducationModule } from 'src/education/education.module';
 import { ResumeController } from './resume.controller';
 import { Resume } from './entities/resume.entity';
 import { ResumeService } from './resume.service';
-import { ExperienceService } from 'src/experience/experience.service';
-import { SkillService } from 'src/skill/skill.service';
+import { ExperienceModule } from 'src/experience/experience.module';
+import { SkillModule } from 'src/skill/skill.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Resume]),
-    LanguageService,
-    EducationService,
-    ExperienceService,
-    SkillService,
+    LanguageModule,
+    EducationModule,
+    ExperienceModule,
+    SkillModule,
   ],
   controllers: [ResumeController],
   providers: [ResumeService],

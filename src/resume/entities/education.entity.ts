@@ -49,7 +49,9 @@ export class Education {
   })
   keepStudy?: boolean;
 
-  @ManyToOne(() => Resume, (resume) => resume.educations)
+  @ManyToOne(() => Resume, (resume) => resume.educations, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'resume_id' })
   resume: Relation<Resume>;
 }

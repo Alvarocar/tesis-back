@@ -19,7 +19,7 @@ export class ApplicationController {
   constructor(private readonly applicationService: ApplicationService) {}
 
   @Post('/apply/:vacantId/:resumeId')
-  @Roles(Role.Employee)
+  @Roles(Role.Applicant)
   @HttpCode(202)
   async apply(
     @Req() request: RequestWithUser,
@@ -31,7 +31,7 @@ export class ApplicationController {
   }
 
   @Get('/is-done/:vacantId/:resumeId')
-  @Roles(Role.Employee)
+  @Roles(Role.Applicant)
   @HttpCode(200)
   async isDone(
     @Param('vacantId', ParseIntPipe) vacantId: number,

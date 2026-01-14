@@ -84,11 +84,13 @@ export class ResumeService {
         skills: resume.skills,
         title: resume.title,
         applicantId: resume.applicant.id,
-        languages: resume.resumeLanguage.map<LanguageDto>((rlan) => ({
-          id: rlan.id,
-          level: rlan.languageLevel,
-          name: rlan.language.name,
-        })),
+        languages: resume.resumeLanguage
+          .filter((rlan) => rlan.language !== null)
+          .map<LanguageDto>((rlan) => ({
+            id: rlan.id,
+            level: rlan.languageLevel,
+            name: rlan.language.name,
+          })),
       } satisfies ResumeDetailDto;
     } catch (e) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access

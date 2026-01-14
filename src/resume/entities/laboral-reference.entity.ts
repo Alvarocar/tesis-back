@@ -42,7 +42,9 @@ export class LaboralReference {
   })
   company: string;
 
-  @ManyToOne(() => Resume, (resume) => resume.laboral_references)
+  @ManyToOne(() => Resume, (resume) => resume.laboral_references, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'resume_id' })
   resume: Relation<Resume>;
 }

@@ -55,7 +55,9 @@ export class Experience {
   })
   description: string;
 
-  @ManyToOne(() => Resume, (resume) => resume.experiences)
+  @ManyToOne(() => Resume, (resume) => resume.experiences, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'resume_id' })
   resume: Relation<Resume>;
 }

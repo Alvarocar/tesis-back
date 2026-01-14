@@ -29,7 +29,7 @@ import {
   SkillDto,
 } from './dto/resume-detail.dto';
 
-@Roles(Role.Employee)
+@Roles(Role.Applicant)
 @Controller('v1/resume')
 export class ResumeController {
   constructor(
@@ -142,7 +142,7 @@ export class ResumeController {
     await this.experienceService.delete(resumeId, id, user);
   }
 
-  @Patch('/skills/:resumeId')
+  @Patch('/skill/:resumeId')
   @HttpCode(200)
   updateSkills(
     @Body() skills: SkillDto[],

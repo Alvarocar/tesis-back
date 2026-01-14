@@ -3,7 +3,13 @@ export interface LLMMessage {
 }
 
 export interface LLMResponse {
-  content: { affinity: number; feedback: string };
+  content: {
+    affinity: number;
+    feedback: string;
+    recommendation: 'advance' | 'reject';
+    strengths: string[];
+    weaknesses: string[];
+  };
   duration: number;
   inputTokens: number;
   outputTokens: number;

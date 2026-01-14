@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { SharedModule } from './shared/shared.module';
 import { VacancyModule } from './vacancy/vacancy.module';
 import { ResumeModule } from './resume/resume.module';
@@ -20,6 +21,12 @@ import { TokenGuard } from './shared/security/guards/token.guard';
 @Module({
   imports: [
     getTypeOrmModule(),
+    EventEmitterModule.forRoot({
+      wildcard: true,
+      delimiter: '.',
+      maxListeners: 10,
+      verboseMemoryLeak: true,
+    }),
     ResumeModule,
     SharedModule,
     VacancyModule,

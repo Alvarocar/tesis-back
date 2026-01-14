@@ -1,14 +1,9 @@
-import { DomUtil } from 'src/shared/utils/dom.util';
-import { Resume } from '../entities/resume.entity';
+import { Resume } from 'src/resume/entities/resume.entity';
 import { DateUtil } from 'src/shared/utils/date.util';
 
-export class ResumeTemplateHelper {
+export class ResumeTemplateDto {
   private resume: Resume;
 
-  /**
-   *
-   * @param resume The resume entity should have relations loaded: experiences, educations, resumeLanguage.language, skills
-   */
   constructor(resume: Resume) {
     this.resume = resume;
   }
@@ -50,12 +45,8 @@ export class ResumeTemplateHelper {
   }
 
   getDescription() {
-    const rawDescription = DomUtil.sanitizeHtml(this.resume.aboutMe);
-    const container = DomUtil.getWindow().document.createElement('div');
-    container.innerHTML = rawDescription;
-    return container.textContent ?? '';
+    return this.resume.aboutMe;
   }
-
   getTemplate() {
     return `
       descripción:
