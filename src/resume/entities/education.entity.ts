@@ -40,7 +40,7 @@ export class Education {
     name: 'end_date',
     nullable: true,
   })
-  endDate?: Date;
+  endDate?: Date | null;
 
   @Column({
     type: 'boolean',

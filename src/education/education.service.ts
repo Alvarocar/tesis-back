@@ -34,9 +34,7 @@ export class EducationService {
       institute: education.institute,
       title: education.title,
       startDate: DateUtil.toDate(education.startDate),
-      endDate: education.endDate
-        ? DateUtil.toDate(education.endDate)
-        : undefined,
+      endDate: education.endDate ? DateUtil.toDate(education.endDate) : null,
       keepStudy: education.keepStudy,
       resume,
     });

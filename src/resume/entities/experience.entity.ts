@@ -40,7 +40,7 @@ export class Experience {
     name: 'end_date',
     nullable: true,
   })
-  endDate?: Date;
+  endDate?: Date | null;
 
   @Column({
     type: 'boolean',

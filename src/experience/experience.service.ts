@@ -34,7 +34,7 @@ export class ExperienceService {
       startDate: DateUtil.toDate(experienceDto.startDate),
       endDate: experienceDto.endDate
         ? DateUtil.toDate(experienceDto.endDate)
-        : undefined,
+        : null,
       description: experienceDto.description,
       keepWorking: experienceDto.keepWorking ?? false,
       rol: experienceDto.rol,
