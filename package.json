@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "packageManager": "pnpm@10.28.0",
   "scripts": {
+    "typeorm:run": "ts-node -r tsconfig-paths/register -r dotenv/config ./node_modules/typeorm/cli.js migration:run -d ./src/typeorm-datasource.ts",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -83,7 +84,10 @@
     ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
-    "transform": {},
+    "transform": {
+      "^.+\\\\.(ts|tsx)$": "ts-jest"
+    },
+    "preset": "ts-jest",
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],

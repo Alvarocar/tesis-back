@@ -1,4 +1,5 @@
-import { TypeOrmModule } from '@nestjs/typeorm';
+import 'reflect-metadata';
+import { DataSource } from 'typeorm';
 import { Employee } from './employee/entities/employee.entity';
 import { Company } from './company/entities/company.entity';
 import { Skill } from './shared/entities/skill.entity';
@@ -23,35 +24,33 @@ import {
   RELATIONAL_DB_LOGGING,
 } from './shared/constants/env.constant';
 
-export const getTypeOrmModule = () => {
-  return TypeOrmModule.forRoot({
-    type: 'postgres',
-    database: RELATIONAL_DB_DATABASE,
-    host: RELATIONAL_DB_HOST,
-    port: Number(RELATIONAL_DB_PORT),
-    username: RELATIONAL_DB_USERNAME,
-    password: RELATIONAL_DB_PASSWORD,
-    synchronize: false,
-    logging: RELATIONAL_DB_LOGGING === 'true',
-    ssl: {
-      rejectUnauthorized: false,
-    },
-    entities: [
-      Employee,
-      Company,
-      Skill,
-      Resume,
-      Education,
-      Experience,
-      LaboralReference,
-      PersonalReference,
-      Language,
-      ResumeLanguage,
-      Applicant,
-      Vacancy,
-      VacancyLanguage,
-      AIModel,
-      Application,
-    ],
-  });
-};
+export const AppDataSource = new DataSource({
+  type: 'postgres',
+  host: RELATIONAL_DB_HOST,
+  port: Number(RELATIONAL_DB_PORT),
+  username: RELATIONAL_DB_USERNAME,
+  password: RELATIONAL_DB_PASSWORD,
+  database: RELATIONAL_DB_DATABASE,
+  synchronize: false, // Disable in favor of migrations
+  logging: RELATIONAL_DB_LOGGING === 'true',
+  entities: [
+    Employee,
+    Company,
+    Skill,
+    Resume,
+    Education,
+    Experience,
+    LaboralReference,
+    PersonalReference,
+    Applicant,
+    Language,
+    ResumeLanguage,
+    Vacancy,
+    VacancyLanguage,
+    AIModel,
+    Application,
+  ],
+  ssl: {
+    rejectUnauthorized: false,
+  },
+});
