@@ -17,6 +17,8 @@ import { VacancyLanguage } from './vacancyLanguage.entity';
 import { Employee } from 'src/employee/entities/employee.entity';
 import { Application } from 'src/application/entities/application.entity';
 
+import { VacancyStatus } from '../enums/vacancy-status.enum';
+
 @Entity({
   name: 'vacancy',
 })
@@ -65,6 +67,20 @@ export class Vacancy {
     nullable: true,
   })
   salaryOffer: number;
+
+  @Column({
+    type: 'enum',
+    enum: VacancyStatus,
+    default: VacancyStatus.ENABLE,
+  })
+  status: VacancyStatus;
+
+  @Column({
+    type: 'int',
+    name: 'max_applicant_count',
+    nullable: true,
+  })
+  maxApplicantCount: number;
 
   @Column({
     type: 'enum',

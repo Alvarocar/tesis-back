@@ -8,6 +8,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Role } from 'src/shared/enums/role.enum';
+import { VacancyStatus } from './enums/vacancy-status.enum';
 import { DateUtil } from 'src/shared/utils/date.util';
 import { TokenDto } from 'src/shared/security/dto/token.dto';
 import { JobOverviewDto } from 'src/job/dto/job-overview.dto';
@@ -26,6 +27,17 @@ export class VacancyService {
     @InjectRepository(Vacancy)
     private readonly vacancyRepository: Repository<Vacancy>,
   ) {}
+
+  private async checkAndUpdateStatus(vacancy: Vacancy): Promise<void> {
+    if (
+      vacancy.maxApplicantCount !== null &&
+      vacancy.applications.length >= vacancy.maxApplicantCount
+    ) {
+      await this.vacancyRepository.update(vacancy.id, {
+        status: VacancyStatus.COMPLETED,
+      });
+    }
+  }
 
   async create(createVacancyDto: CreateVacancyDto, user: TokenDto) {
     try {
@@ -134,8 +146,15 @@ export class VacancyService {
     )
       .buildSearchVacancysQuery(filters, user)
       .getManyAndCount();
+    // Filter vacancies by status unless the user is an Admin or Employee viewing a specific detail
+    const showAllStatuses = user.role === Role.Admin;
+
+    const filteredVacancies = vacancies.filter(
+      (vacancy) => showAllStatuses || vacancy.status === 'ENABLE',
+    );
+
     return [
-      vacancies.map(
+      filteredVacancies.map(
         (vacancy) =>
           ({
             id: vacancy.id,
@@ -152,7 +171,88 @@ export class VacancyService {
     ];
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} vacancy`;
+  async findCompletedAndArchivedVacancies(
+    filter: { page: number; pageSize: number; statusFilter?: VacancyStatus },
+    user: TokenDto,
+  ): Promise<[JobOverviewDto[], number]> {
+    try {
+      if (user.role !== Role.Employee && user.role !== Role.Admin) {
+        throw new HttpException('Acceso denegado', 403);
+      }
+
+      const queryBuilder = this.vacancyRepository.createQueryBuilder('vacancy');
+      if (filter.statusFilter) {
+        queryBuilder.where('vacancy.status = :status', {
+          status: filter.statusFilter,
+        });
+      } else {
+        queryBuilder.where('vacancy.status IN (:...statuses)', {
+          statuses: [VacancyStatus.COMPLETED, VacancyStatus.ARCHIVED],
+        });
+      }
+
+      queryBuilder
+        .skip((filter.page - 1) * filter.pageSize)
+        .take(filter.pageSize);
+
+      const [vacancies, count] = await queryBuilder.getManyAndCount();
+      const results = vacancies.map(
+        (vacancy) =>
+          ({
+            id: vacancy.id,
+            title: vacancy.title,
+            salary: vacancy.salaryOffer,
+            type: vacancy.jobType,
+            salaryOffer: vacancy.salaryOffer,
+            jobType: vacancy.jobType,
+            status: vacancy.status,
+            company: 'UMB',
+            editable:
+              user.id === vacancy.employee?.id || user.role === Role.Admin,
+          }) satisfies JobOverviewDto,
+      );
+
+      return [results, count];
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      this.logger.error(
+        'Error fetching completed and archived vacancies',
+        error,
+      );
+      throw new InternalServerErrorException(
+        'No se pueden obtener las vacantes completadas o archivadas',
+      );
+    }
+  }
+
+  async archiveVacancy(id: number, user: TokenDto): Promise<void> {
+    try {
+      // Find vacancy by ID
+      const vacancy = await this.vacancyRepository.findOne({
+        where: { id },
+        relations: ['employee'],
+      });
+
+      if (!vacancy) {
+        throw new NotFoundException('Vacante no encontrada');
+      }
+
+      // Authorization check
+      if (
+        user.role !== Role.Admin &&
+        (!vacancy.employee || vacancy.employee.id !== user.id)
+      ) {
+        throw new HttpException('Acceso denegado', 403);
+      }
+
+      // Update status to ARCHIVED
+      await this.vacancyRepository.update(id, {
+        status: VacancyStatus.ARCHIVED,
+      });
+    } catch (error) {
+      if (error instanceof HttpException) throw error;
+      this.logger.error('Error archiving vacancy', error);
+      throw new InternalServerErrorException('No se pudo archivar la vacante');
+    }
   }
 }

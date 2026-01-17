@@ -65,4 +65,24 @@ export class VacancyController {
       totalPages: Math.ceil(count / pageSize),
     };
   }
+
+  @Get('/completed-and-archived')
+  @Roles(Role.Employee, Role.Admin)
+  @HttpCode(200)
+  async getCompletedAndArchivedVacancies(
+    @Query('page', ParseIntPipe) page = 1,
+    @Query('pageSize', ParseIntPipe) pageSize = 10,
+    @Req() req: RequestWithUser,
+  ) {
+    const [result, count] =
+      await this.vacancyService.findCompletedAndArchivedVacancies(
+        { page, pageSize },
+        req.user,
+      );
+    return {
+      result,
+      currentPage: page,
+      totalPages: Math.ceil(count / pageSize),
+    };
+  }
 }
