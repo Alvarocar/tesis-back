@@ -7,11 +7,13 @@ import { Resume } from '../resume/entities/resume.entity';
 import { Vacancy } from '../vacancy/entities/vacancy.entity';
 import { LlmClientModule } from 'src/llm-client/llm-client.module';
 import { ApplicationListener } from './application.listener';
+import { VacancyModule } from 'src/vacancy/vacancy.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Application, Resume, Vacancy]),
     LlmClientModule,
+    VacancyModule,
   ],
   controllers: [ApplicationController],
   providers: [ApplicationService, ApplicationListener],

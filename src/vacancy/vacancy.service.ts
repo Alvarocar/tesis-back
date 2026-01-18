@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
+  ForbiddenException,
   HttpException,
   Injectable,
   InternalServerErrorException,
@@ -28,7 +29,7 @@ export class VacancyService {
     private readonly vacancyRepository: Repository<Vacancy>,
   ) {}
 
-  private async checkAndUpdateStatus(vacancy: Vacancy): Promise<void> {
+  public async checkAndUpdateStatus(vacancy: Vacancy): Promise<void> {
     if (
       vacancy.maxApplicantCount !== null &&
       vacancy.applications.length >= vacancy.maxApplicantCount
@@ -242,7 +243,7 @@ export class VacancyService {
         user.role !== Role.Admin &&
         (!vacancy.employee || vacancy.employee.id !== user.id)
       ) {
-        throw new HttpException('Acceso denegado', 403);
+        throw new ForbiddenException('Acceso denegado');
       }
 
       // Update status to ARCHIVED

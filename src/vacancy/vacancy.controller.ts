@@ -7,16 +7,17 @@ import {
   Post,
   Put,
   Query,
-  Req,
 } from '@nestjs/common';
-import type { RequestWithUser } from 'src/shared/types/request-with-user';
 import { ParseIntPipe } from 'src/shared/pipes/parse-int-id.pipe';
+import { Patch } from '@nestjs/common';
 import { Roles } from 'src/shared/constants/metadata.constant';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
 import { VacancyService } from './vacancy.service';
 import { Role } from 'src/shared/enums/role.enum';
 import { UpdateVacancyDto } from './dto/update-vacancy.dto';
 import { VacancyFilterDto } from './dto/vacancy-filter.dto';
+import { CurrentUser } from 'src/shared/decorators/current-user.decorator';
+import { TokenDto } from 'src/shared/security/dto/token.dto';
 
 @Controller('v1/vacancy')
 export class VacancyController {
@@ -25,8 +26,8 @@ export class VacancyController {
   @Post()
   @Roles(Role.Admin, Role.Employee)
   @HttpCode(201)
-  create(@Body() vacant: CreateVacancyDto, @Req() req: RequestWithUser) {
-    return this.vacancyService.create(vacant, req.user);
+  create(@Body() vacant: CreateVacancyDto, @CurrentUser() user: TokenDto) {
+    return this.vacancyService.create(vacant, user);
   }
 
   @Get('/:id')
@@ -42,9 +43,19 @@ export class VacancyController {
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateVacancyDto: UpdateVacancyDto,
-    @Req() req: RequestWithUser,
+    @CurrentUser() user: TokenDto,
   ) {
-    return this.vacancyService.update(id, updateVacancyDto, req.user);
+    return this.vacancyService.update(id, updateVacancyDto, user);
+  }
+
+  @Patch('/:id/archive')
+  @Roles(Role.Admin, Role.Employee)
+  @HttpCode(204)
+  async archiveVacancy(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: TokenDto,
+  ) {
+    return this.vacancyService.archiveVacancy(id, user);
   }
 
   @Get('/')
@@ -52,12 +63,12 @@ export class VacancyController {
   @HttpCode(200)
   async getVacantsByEmployee(
     @Query() filter: VacancyFilterDto,
-    @Req() req: RequestWithUser,
+    @CurrentUser() user: TokenDto,
   ) {
     const { page = 1, pageSize = 10, q }: VacancyFilterDto = filter;
     const [result, count] = await this.vacancyService.findAll(
       { page, pageSize, q },
-      req.user,
+      user,
     );
     return {
       result,
@@ -72,12 +83,12 @@ export class VacancyController {
   async getCompletedAndArchivedVacancies(
     @Query('page', ParseIntPipe) page = 1,
     @Query('pageSize', ParseIntPipe) pageSize = 10,
-    @Req() req: RequestWithUser,
+    @CurrentUser() user: TokenDto,
   ) {
     const [result, count] =
       await this.vacancyService.findCompletedAndArchivedVacancies(
         { page, pageSize },
-        req.user,
+        user,
       );
     return {
       result,

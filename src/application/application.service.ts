@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { VacancyService } from 'src/vacancy/vacancy.service';
 import { Application } from './entities/application.entity';
 import { ApplicationSearchFactory } from './factory/application-search.factory';
 import { ApplicationFilterDto } from './dto/application-filter.dto';
@@ -34,6 +35,7 @@ export class ApplicationService {
     @InjectRepository(Vacancy)
     private readonly vacancyRepository: Repository<Vacancy>,
     private readonly eventEmitter: EventEmitter2,
+    private readonly vacancyService: VacancyService,
   ) {}
 
   async apply(user: TokenDto, vacancyId: number, resumeId: number) {
@@ -63,6 +65,7 @@ export class ApplicationService {
       vacantId: vacancyId,
       resumeId: resumeId,
     } satisfies ApplicationAppliedEvent);
+    await this.vacancyService.checkAndUpdateStatus(vacancy);
     return true;
   }
 
