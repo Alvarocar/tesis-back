@@ -55,6 +55,15 @@ export class EmployeeController {
   }
 
   /**
+   * Obtener el empleado actual
+   */
+  @Get('me')
+  @Roles(Role.Employee, Role.Admin)
+  getCurrentEmployee(@CurrentUser() user: Required<TokenDto>) {
+    return this.employeeService.findOneByCompany(user.id, user.companyId);
+  }
+
+  /**
    * Obtener un empleado específico de la compañía del usuario
    */
   @Get(':id')
