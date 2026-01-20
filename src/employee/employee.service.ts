@@ -13,9 +13,15 @@ import { SetPasswordDto } from './dto/set-password.dto';
 import { CompanyService } from '../company/company.service';
 import * as crypto from 'crypto';
 import * as bcrypt from 'bcrypt';
+import { FRONTEND_URL } from 'src/shared/constants/env.constant';
 
 @Injectable()
 export class EmployeeService {
+  private readonly FRONTEND_INVITATION = new URL(
+    '/set-password',
+    FRONTEND_URL || '',
+  );
+
   constructor(
     @InjectRepository(Employee)
     private readonly employeeRepository: Repository<Employee>,
@@ -68,12 +74,19 @@ export class EmployeeService {
 
     const savedEmployee = await this.employeeRepository.save(employee);
 
+    const invitationUrl = `${this.FRONTEND_INVITATION.toString()}?token=${invitationToken}`;
+
     // Enviar correo de invitación
-    await this.mailService.sendInvitationEmail(
-      savedEmployee.email,
-      savedEmployee.firstName + ' ' + savedEmployee.lastName,
-      invitationToken,
-    );
+    await this.mailService.sendEmail({
+      key: 'welcome.employee',
+      to: savedEmployee.email,
+      subject: '¡Bienvenido a NextStep! Configura tu cuenta',
+      context: {
+        name: savedEmployee.firstName + ' ' + savedEmployee.lastName,
+        expirationHours: '24',
+        invitationUrl: invitationUrl,
+      },
+    });
   }
 
   /**
@@ -134,11 +147,17 @@ export class EmployeeService {
     await this.employeeRepository.save(employee);
 
     // Reenviar correo de invitación
-    await this.mailService.sendInvitationEmail(
-      employee.email,
-      employee.firstName,
-      invitationToken,
-    );
+
+    await this.mailService.sendEmail({
+      key: 'welcome.employee',
+      to: employee.email,
+      subject: 'Reenvío de invitación - Configura tu cuenta',
+      context: {
+        name: employee.firstName + ' ' + employee.lastName,
+        expirationHours: '24',
+        invitationUrl: `${this.FRONTEND_INVITATION.toString()}?token=${invitationToken}`,
+      },
+    });
 
     return { message: 'Invitación reenviada exitosamente' };
   }

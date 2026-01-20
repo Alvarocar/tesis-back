@@ -14,8 +14,6 @@ import { MailService } from './mail.service';
         transport: {
           host: configService.get<string>('MAIL_HOST', 'localhost'),
           port: parseInt(configService.get<string>('MAIL_PORT', '1025'), 10),
-          ignoreTLS: configService.get<string>('MAIL_IGNORE_TLS', 'true') === 'true',
-          secure: configService.get<string>('MAIL_SECURE', 'false') === 'true',
           auth: configService.get<string>('MAIL_USER')
             ? {
                 user: configService.get<string>('MAIL_USER'),
@@ -24,10 +22,7 @@ import { MailService } from './mail.service';
             : undefined,
         },
         defaults: {
-          from: configService.get<string>(
-            'MAIL_FROM',
-            '"NeuroScreen" <noreply@neuroscreen.com>',
-          ),
+          from: configService.get<string>('MAIL_FROM', ''),
         },
         template: {
           dir: join(__dirname, 'templates'),
@@ -38,6 +33,7 @@ import { MailService } from './mail.service';
         },
       }),
     }),
+    ConfigModule,
   ],
   providers: [MailService],
   exports: [MailService],

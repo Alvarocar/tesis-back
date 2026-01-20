@@ -11,10 +11,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateApplicantDto } from './dto/update-applicant.dto';
 import { CreateApplicantDto } from 'src/auth/dto/create-applicant.dto';
 import { Applicant } from './entities/applicant.entity';
-import { SecurityService } from 'src/shared/security/security.service';
 import { TokenDto } from 'src/shared/security/dto/token.dto';
 import { DateUtil } from 'src/shared/utils/date.util';
 import { DetailApplicantDto } from 'src/auth/dto/detail-applicant.dto';
+import { MailService } from 'src/mail/mail.service';
+import { SecurityService } from 'src/shared/security/security.service';
+import { FRONTEND_URL } from 'src/shared/constants/env.constant';
 
 @Injectable()
 export class ApplicantService {
@@ -23,6 +25,7 @@ export class ApplicantService {
   constructor(
     @InjectRepository(Applicant)
     private readonly applicantRepository: Repository<Applicant>,
+    private readonly mailService: MailService,
     private readonly securityService: SecurityService,
   ) {}
 
@@ -47,12 +50,21 @@ export class ApplicantService {
         lastName: createApplicantDto.lastName,
       });
 
+      await this.applicantRepository.save(applicantEntity);
+
+      await this.mailService.sendEmail({
+        to: applicantEntity.email,
+        subject: '¡Bienvenido a NextStep!',
+        key: 'welcome.applicant',
+        context: {
+          name: `${applicantEntity.firstName} ${applicantEntity.lastName}`,
+          url: FRONTEND_URL ?? '',
+        },
+      });
+
       return applicantEntity;
     } catch (e: unknown) {
-      this.logger.error(
-        'Error inesperado al crear el solicitante.',
-        (e as Error).stack,
-      );
+      this.logger.error((e as Error).message, (e as Error).stack);
       if (e instanceof HttpException) throw e;
       throw new InternalServerErrorException(
         'Error inesperado al crear el solicitante.',

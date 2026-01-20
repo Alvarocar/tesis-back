@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 50px auto;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      .header {
+        background: #0F0E0E;
+        color: white;
+        padding: 40px 20px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+      }
+      .content {
+        padding: 40px 30px;
+        color: #333;
+      }
+      .content h2 {
+        color: #0F0E0E;
+        margin-top: 0;
+      }
+      .button {
+        display: inline-block;
+        padding: 12px 30px;
+        background: #0F0E0E;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 20px;
+      }
+      .footer {
+        background: #f8f9fa;
+        padding: 20px;
+        text-align: center;
+        color: #6c757d;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='container'>
+      <div class='header'>
+        <h1>🎉 Bienvenido a NextStep</h1>
+      </div>
+      <div class='content'>
+        <h2>¡Hola {{name}}!</h2>
+        <p>
+          Nos complace darte la bienvenida a nuestra plataforma de empleo.
+        </p>
+        <p>
+          Con NextStep, podrás explorar oportunidades laborales, postularte a
+          ofertas de trabajo y gestionar tu perfil profesional de manera sencilla.
+        </p>
+        <a href='{{url}}' class='button'>Acceder a la plataforma</a>
+      </div>
+      <div class='footer'>
+        <p>© 2026 NextStep - Proyecto Académico</p>
+        <p>Este es un correo automático, por favor no responder.</p>
+      </div>
+    </div>
+  </body>
+</html>

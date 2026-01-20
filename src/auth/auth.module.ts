@@ -8,5 +8,6 @@ import { EmployeeModule } from '../employee/employee.module';
   imports: [ApplicantModule, EmployeeModule],
   controllers: [AuthController],
   providers: [AuthService],
+  exports: [AuthService],
 })
 export class AuthModule {}

@@ -1,14 +1,5 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Req,
-  HttpCode,
-} from '@nestjs/common';
+import { Controller, Get, Body, Patch, Req, HttpCode } from '@nestjs/common';
 import type { RequestWithUser } from 'src/shared/types/request-with-user';
-import { CreateApplicantDto } from 'src/auth/dto/create-applicant.dto';
 import { Roles } from 'src/shared/constants/metadata.constant';
 import { Role } from 'src/shared/enums/role.enum';
 import { UpdateApplicantDto } from './dto/update-applicant.dto';
@@ -17,11 +8,6 @@ import { ApplicantService } from './applicant.service';
 @Controller('v1/applicants')
 export class ApplicantController {
   constructor(private readonly applicantService: ApplicantService) {}
-
-  @Post('/sign-up')
-  create(@Body() createApplicantDto: CreateApplicantDto) {
-    return this.applicantService.create(createApplicantDto);
-  }
 
   @Get()
   @Roles(Role.Applicant)
