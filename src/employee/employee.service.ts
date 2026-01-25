@@ -18,7 +18,7 @@ import { FRONTEND_URL } from 'src/shared/constants/env.constant';
 @Injectable()
 export class EmployeeService {
   private readonly FRONTEND_INVITATION = new URL(
-    '/set-password',
+    '/empleados/set-password',
     FRONTEND_URL || '',
   );
 
