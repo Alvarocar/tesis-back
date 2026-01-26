@@ -1,9 +1,9 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddVacancyStatusAndMaxApplicantCount
+export class AddVacancyStatusAndMaxApplicantCount1685503700000
   implements MigrationInterface
 {
-  name = 'AddVacancyStatusAndMaxApplicantCount';
+  name = 'AddVacancyStatusAndMaxApplicantCount1685503700000';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     // Create the PostgreSQL Enum for Vacancy Status

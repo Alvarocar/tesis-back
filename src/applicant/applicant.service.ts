@@ -15,11 +15,102 @@ import { TokenDto } from 'src/shared/security/dto/token.dto';
 import { DateUtil } from 'src/shared/utils/date.util';
 import { DetailApplicantDto } from 'src/auth/dto/detail-applicant.dto';
 import { MailService } from 'src/mail/mail.service';
+import { MoreThan } from 'typeorm';
+import { Role } from 'src/shared/enums/role.enum';
 import { SecurityService } from 'src/shared/security/security.service';
 import { FRONTEND_URL } from 'src/shared/constants/env.constant';
 
 @Injectable()
 export class ApplicantService {
+  // Delete an applicant and cascade related entities
+  async deleteApplicant(id: number): Promise<void> {
+    const applicant = await this.applicantRepository.findOne({ where: { id } });
+
+    if (!applicant) {
+      throw new NotFoundException(`Applicant with ID ${id} not found`);
+    }
+
+    try {
+      await this.applicantRepository.remove(applicant);
+    } catch (error) {
+      this.logger.error('Error deleting applicant:', error);
+      throw new InternalServerErrorException(
+        'Failed to delete applicant due to database constraints',
+      );
+    }
+  }
+  private readonly resetLink = `${FRONTEND_URL}/aspirante/restablecer-contrasena`;
+
+  async generatePasswordResetToken(email: string): Promise<void> {
+    try {
+      const applicant = await this.findByEmail(email);
+      if (!applicant) {
+        throw new NotFoundException(
+          'No se encontró un solicitante con este correo electrónico.',
+        );
+      }
+
+      const expirationTime = new Date();
+      expirationTime.setHours(expirationTime.getHours() + 1);
+      const token = await this.securityService.generateToken({
+        id: applicant.id,
+        firstName: applicant.firstName,
+        lastName: applicant.lastName,
+        email: applicant.email,
+        role: Role.Applicant,
+        exp: Math.floor(expirationTime.getTime() / 1000),
+      });
+      const resetLink = `${this.resetLink}?token=${token}`;
+
+      await this.applicantRepository.update(applicant.id, {
+        invitationToken: token,
+        invitationTokenExpires: expirationTime,
+      });
+
+      await this.mailService.sendEmail({
+        to: applicant.email,
+        subject: 'Instrucciones para restablecer tu contraseña',
+        key: 'reset-password.applicant',
+        context: {
+          name: `${applicant.firstName} ${applicant.lastName}`,
+          url: resetLink,
+        },
+      });
+    } catch (error) {
+      this.logger.error('Failed to generate password reset token', error);
+      throw new InternalServerErrorException(
+        'No se pudo enviar el enlace para restablecer la contraseña.',
+      );
+    }
+  }
+
+  async resetPassword(token: string, newPassword: string): Promise<void> {
+    try {
+      const applicant = await this.applicantRepository.findOne({
+        where: {
+          invitationToken: token,
+          invitationTokenExpires: MoreThan(new Date()),
+        },
+      });
+
+      if (!applicant) {
+        throw new BadRequestException('El token es inválido o ha expirado.');
+      }
+
+      const hashedPassword =
+        await this.securityService.generateHash(newPassword);
+      applicant.password = hashedPassword;
+      applicant.invitationToken = null;
+      applicant.invitationTokenExpires = null;
+
+      await this.applicantRepository.save(applicant);
+    } catch (error) {
+      this.logger.error('Failed to reset password', error);
+      throw new InternalServerErrorException(
+        'No se pudo restablecer la contraseña.',
+      );
+    }
+  }
   private readonly logger = new Logger(ApplicantService.name);
 
   constructor(

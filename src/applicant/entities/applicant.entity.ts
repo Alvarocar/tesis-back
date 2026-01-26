@@ -101,6 +101,21 @@ export class Applicant {
   })
   birthDate: Date;
 
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    name: 'invitation_token',
+    length: 255,
+  })
+  invitationToken: string | null;
+
+  @Column({
+    nullable: true,
+    type: 'timestamp',
+    name: 'invitation_token_expires',
+  })
+  invitationTokenExpires: Date | null;
+
   @OneToMany(() => Resume, (resume) => resume.applicant)
   resumes: Relation<Resume>[];
 }

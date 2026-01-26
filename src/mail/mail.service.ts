@@ -24,7 +24,18 @@ interface EmailStrategy {
      */
     name: string;
     /**
-     * URL to access the platform
+     * URL to reset the password
+     */
+    url: string;
+  };
+
+  'reset-password.applicant': {
+    /**
+     * Name of the applicant
+     */
+    name: string;
+    /**
+     * URL to reset the password
      */
     url: string;
   };

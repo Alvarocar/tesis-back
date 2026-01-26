@@ -32,6 +32,7 @@ export const AppDataSource = new DataSource({
   password: RELATIONAL_DB_PASSWORD,
   database: RELATIONAL_DB_DATABASE,
   synchronize: false, // Disable in favor of migrations
+  migrations: ['src/migrations/**/*.ts'],
   logging: RELATIONAL_DB_LOGGING === 'true',
   entities: [
     Employee,
