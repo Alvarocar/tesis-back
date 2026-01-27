@@ -16,6 +16,8 @@ import { SetPasswordDto } from './dto/set-password.dto';
 import { ResendInvitationDto } from './dto/resend-invitation.dto';
 import { CurrentUser } from 'src/shared/decorators/current-user.decorator';
 import { TokenDto } from 'src/shared/security/dto/token.dto';
+import { Query } from '@nestjs/common';
+import { EmployeeFilterDto } from './dto/employee-filter.dto';
 
 @Controller('v1/recruiter')
 export class EmployeeController {
@@ -50,8 +52,11 @@ export class EmployeeController {
    */
   @Get()
   @Roles(Role.Admin)
-  findEmployeesByCompany(@CurrentUser() user: Required<TokenDto>) {
-    return this.employeeService.findByCompany(user.companyId);
+  async findByCompany(
+    @Query() filter: EmployeeFilterDto,
+    @CurrentUser() user: TokenDto,
+  ) {
+    return await this.employeeService.findAll(filter, user);
   }
 
   /**

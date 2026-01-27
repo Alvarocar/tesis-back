@@ -13,6 +13,10 @@ import { SetPasswordDto } from './dto/set-password.dto';
 import { CompanyService } from '../company/company.service';
 import * as crypto from 'crypto';
 import * as bcrypt from 'bcrypt';
+import { ParsingUtil } from 'src/shared/utils/parsing.util';
+import { EmployeeFilterDto } from './dto/employee-filter.dto';
+import { TokenDto } from 'src/shared/security/dto/token.dto';
+import { EmployeeOverviewDto } from './dto/employee-overview.dto';
 import { FRONTEND_URL } from 'src/shared/constants/env.constant';
 
 @Injectable()
@@ -191,11 +195,47 @@ export class EmployeeService {
   /**
    * Obtiene todos los empleados de una compañía
    */
-  async findByCompany(companyId: number) {
-    return await this.employeeRepository.find({
-      where: { companyId, isActive: true },
-      relations: ['company'],
-    });
+  async findAll(filter: EmployeeFilterDto, user: TokenDto) {
+    filter.page = filter.page || 1;
+    filter.pageSize = filter.pageSize || 10;
+    const query = this.employeeRepository.createQueryBuilder('employee');
+
+    query
+      .where('employee.companyId = :companyId', { companyId: user.companyId })
+      .andWhere('employee.isActive = :isActive', { isActive: true });
+
+    const [employees, count] = await query
+      .select([
+        'employee.id',
+        'employee.firstName',
+        'employee.lastName',
+        'employee.email',
+        'employee.role',
+        'employee.password',
+      ])
+      .skip((filter.page - 1) * filter.pageSize)
+      .take(filter.pageSize)
+      .getManyAndCount();
+
+    // Map the result to EmployeeOverviewDto
+    const mappedEmployees: EmployeeOverviewDto[] = employees.map(
+      (employee) => ({
+        id: employee.id,
+        firstName: employee.firstName,
+        lastName: employee.lastName,
+        email: employee.email,
+        role: employee.role,
+        hasAccount: !!employee.password, // Compute hasAccount based on password
+      }),
+    );
+
+    // Use ParsingUtil to format the response
+    return ParsingUtil.paginate(
+      mappedEmployees,
+      count,
+      filter.page,
+      filter.pageSize,
+    );
   }
 
   /**

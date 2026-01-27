@@ -7,6 +7,7 @@ import type { RequestWithUser } from 'src/shared/types/request-with-user';
 import { Role } from 'src/shared/enums/role.enum';
 import { CurrentUser } from 'src/shared/decorators/current-user.decorator';
 import { TokenDto } from 'src/shared/security/dto/token.dto';
+import { ParsingUtil } from 'src/shared/utils/parsing.util';
 
 @Controller('v1/job')
 export class JobController {
@@ -17,14 +18,7 @@ export class JobController {
   async findAll(@Query() filter: JobFilterDto, @CurrentUser() user?: TokenDto) {
     const { page = 1, pageSize = 10 } = filter;
     const [result, count] = await this.jobService.findAll(filter, user);
-    const skip = (page - 1) * pageSize;
-    const take = pageSize;
-
-    return {
-      result,
-      totalPages: Math.ceil(count / take),
-      currentPage: skip / take + 1,
-    };
+    return ParsingUtil.paginate(result, count, page, pageSize);
   }
 
   @Get(':id')
