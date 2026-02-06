@@ -22,7 +22,7 @@ import { FRONTEND_URL } from 'src/shared/constants/env.constant';
 @Injectable()
 export class EmployeeService {
   private readonly FRONTEND_INVITATION = new URL(
-    '/empleados/set-password',
+    '/empleados/restablecer-contrasena',
     FRONTEND_URL || '',
   );
 
@@ -137,10 +137,6 @@ export class EmployeeService {
       throw new NotFoundException('Empleado no encontrado');
     }
 
-    if (employee.password) {
-      throw new BadRequestException('El empleado ya ha activado su cuenta');
-    }
-
     // Generar nuevo token
     const invitationToken = this.generateInvitationToken();
     const invitationTokenExpires = this.getTokenExpiration();
@@ -215,6 +211,7 @@ export class EmployeeService {
       ])
       .skip((filter.page - 1) * filter.pageSize)
       .take(filter.pageSize)
+      .orderBy('employee.creationDate', 'DESC')
       .getManyAndCount();
 
     // Map the result to EmployeeOverviewDto

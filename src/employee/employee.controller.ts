@@ -93,6 +93,7 @@ export class EmployeeController {
    */
   @Patch('resend-invitation')
   @Roles(Role.Admin)
+  @HttpCode(204)
   resendInvitation(@Body() resendInvitationDto: ResendInvitationDto) {
     return this.employeeService.resendInvitation(resendInvitationDto.email);
   }
