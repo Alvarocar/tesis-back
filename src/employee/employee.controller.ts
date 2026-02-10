@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   HttpCode,
+  Delete,
 } from '@nestjs/common';
 import { Roles } from 'src/shared/constants/metadata.constant';
 import { EmployeeService } from './employee.service';
@@ -54,7 +55,7 @@ export class EmployeeController {
   @Roles(Role.Admin)
   async findByCompany(
     @Query() filter: EmployeeFilterDto,
-    @CurrentUser() user: TokenDto,
+    @CurrentUser() user: Required<TokenDto>,
   ) {
     return await this.employeeService.findAll(filter, user);
   }
@@ -64,7 +65,7 @@ export class EmployeeController {
    */
   @Get('me')
   @Roles(Role.Employee, Role.Admin)
-  getCurrentEmployee(@CurrentUser() user: Required<TokenDto>) {
+  async getCurrentEmployee(@CurrentUser() user: Required<TokenDto>) {
     return this.employeeService.findOneByCompany(user.id, user.companyId);
   }
 
@@ -96,5 +97,18 @@ export class EmployeeController {
   @HttpCode(204)
   resendInvitation(@Body() resendInvitationDto: ResendInvitationDto) {
     return this.employeeService.resendInvitation(resendInvitationDto.email);
+  }
+
+  /**
+   * Delete an employee, reassigning their vacancies to the admin
+   */
+  @Delete(':id')
+  @Roles(Role.Admin)
+  @HttpCode(204)
+  async deleteEmployee(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user: Required<TokenDto>,
+  ) {
+    return this.employeeService.deleteEmployee(id, user.id);
   }
 }

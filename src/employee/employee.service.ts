@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Employee } from './entities/employee.entity';
-import { Repository } from 'typeorm';
+import { Repository, EntityManager } from 'typeorm';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { MailService } from '../mail/mail.service';
 import { SetPasswordDto } from './dto/set-password.dto';
@@ -32,6 +32,48 @@ export class EmployeeService {
     private readonly mailService: MailService,
     private readonly companyService: CompanyService,
   ) {}
+
+  /**
+   * Deletes an employee and reassigns their vacancies to the admin.
+   * @param employeeId - The ID of the employee to delete.
+   * @param adminId - The admin's ID to whom the vacancies will be reassigned.
+   */
+  async deleteEmployee(employeeId: number, adminId: number) {
+    const employee = await this.employeeRepository.findOne({
+      where: { id: employeeId },
+    });
+
+    if (!employee) {
+      throw new NotFoundException('Empleado no encontrado');
+    }
+
+    const admin = await this.employeeRepository.findOne({
+      where: { id: adminId },
+    });
+
+    if (!admin) {
+      throw new NotFoundException('El administrador no existe');
+    }
+
+    await this.employeeRepository.manager.transaction(
+      async (transactionManager: EntityManager) => {
+        // Reassign vacancies from the employee-to-be-removed to the admin
+        await transactionManager.update(
+          'Vacancy',
+          { employee: employee },
+          { employee: admin },
+        );
+
+        // Delete the employee
+        await transactionManager.delete(Employee, { id: employeeId });
+      },
+    );
+
+    return {
+      message:
+        'Empleado eliminado y vacantes asignadas al administrador con éxito',
+    };
+  }
 
   findByEmail(email: string) {
     return this.employeeRepository.findOne({ where: { email } });
