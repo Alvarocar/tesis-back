@@ -46,6 +46,12 @@ export class VacancySearchFactory {
       CriteriaBuilder.equals<Vacancy>('employee.id', user.id),
     );
 
+    if (dto.statusFilter) {
+      criteriaBuilder = criteriaBuilder.and(
+        CriteriaBuilder.equals<Vacancy>('vacancy.status', dto.statusFilter),
+      );
+    }
+
     // Add optional search in title and description (case insensitive)
     if (q && q.trim()) {
       const titleSearchCriteria = CriteriaBuilder.ilike<Vacancy>(

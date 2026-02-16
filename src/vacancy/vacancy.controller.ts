@@ -18,6 +18,7 @@ import { UpdateVacancyDto } from './dto/update-vacancy.dto';
 import { VacancyFilterDto } from './dto/vacancy-filter.dto';
 import { CurrentUser } from 'src/shared/decorators/current-user.decorator';
 import { TokenDto } from 'src/shared/security/dto/token.dto';
+import { VacancyStatus } from './enums/vacancy-status.enum';
 
 @Controller('v1/vacancy')
 export class VacancyController {
@@ -33,8 +34,8 @@ export class VacancyController {
   @Get('/:id')
   @Roles(Role.Admin, Role.Employee)
   @HttpCode(200)
-  getOne(@Param('id', ParseIntPipe) id: number) {
-    return this.vacancyService.findOne(id);
+  getOne(@Param('id', ParseIntPipe) id: number, @CurrentUser() user: TokenDto) {
+    return this.vacancyService.findOne(id, user);
   }
 
   @Put('/:id')
@@ -65,6 +66,7 @@ export class VacancyController {
     @Query() filter: VacancyFilterDto,
     @CurrentUser() user: TokenDto,
   ) {
+    filter.statusFilter ??= VacancyStatus.ENABLE;
     const { page = 1, pageSize = 10, q }: VacancyFilterDto = filter;
     const [result, count] = await this.vacancyService.findAll(
       { page, pageSize, q },

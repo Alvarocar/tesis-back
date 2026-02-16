@@ -64,6 +64,7 @@ export class VacancyService {
         experienceYears: vacancy.experienceYears,
         creationDate: DateUtil.toString(vacancy.creationDate),
         modificationDate: DateUtil.toString(vacancy.modificationDate),
+        editable: true,
       } satisfies CreatedVacancyDto;
     } catch (error) {
       this.logger.error('Error creating vacancy', error);
@@ -71,10 +72,10 @@ export class VacancyService {
     }
   }
 
-  async findOne(id: number) {
+  async findOne(id: number, user: TokenDto) {
     try {
       const vacancy = await this.vacancyRepository.findOne({
-        where: { id },
+        where: { id, employee: { companyId: user.companyId } },
       });
 
       if (!vacancy) throw new NotFoundException('Vacante no encontrada');
@@ -88,6 +89,7 @@ export class VacancyService {
         modificationDate: DateUtil.toString(vacancy.modificationDate),
         salary: vacancy.salaryOffer,
         title: vacancy.title,
+        editable: user.role === Role.Admin || vacancy.employee?.id === user.id,
       } satisfies CreatedVacancyDto;
     } catch (error) {
       if (error instanceof HttpException) throw error;
@@ -135,6 +137,7 @@ export class VacancyService {
       modificationDate: DateUtil.toString(vacancy.modificationDate),
       salary: vacancy.salaryOffer,
       title: vacancy.title,
+      editable: user.role === Role.Admin || vacancy.employee?.id === user.id,
     } satisfies CreatedVacancyDto;
   }
 
@@ -147,15 +150,9 @@ export class VacancyService {
     )
       .buildSearchVacancysQuery(filters, user)
       .getManyAndCount();
-    // Filter vacancies by status unless the user is an Admin or Employee viewing a specific detail
-    const showAllStatuses = user.role === Role.Admin;
-
-    const filteredVacancies = vacancies.filter(
-      (vacancy) => showAllStatuses || vacancy.status === 'ENABLE',
-    );
 
     return [
-      filteredVacancies.map(
+      vacancies.map(
         (vacancy) =>
           ({
             id: vacancy.id,
@@ -165,7 +162,8 @@ export class VacancyService {
             salaryOffer: vacancy.salaryOffer,
             jobType: vacancy.jobType,
             company: 'UMB',
-            editable: true,
+            editable:
+              user.role === Role.Admin || vacancy.employee?.id === user.id,
           }) satisfies JobOverviewDto,
       ),
       count,
