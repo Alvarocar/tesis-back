@@ -18,6 +18,7 @@ import { JobDetailDto } from './dto/job-detail.dto';
 import { DateUtil } from 'src/shared/utils/date.util';
 import { Resume } from 'src/resume/entities/resume.entity';
 import { Application } from 'src/application/entities/application.entity';
+import { VacancyStatus } from 'src/vacancy/enums/vacancy-status.enum';
 
 @Injectable()
 export class JobService {
@@ -36,6 +37,7 @@ export class JobService {
     jobFilterDto: JobFilterDto,
     user?: TokenDto,
   ): Promise<[(JobOverviewDto | JobOverviewPublicDto)[], number]> {
+    jobFilterDto.status ??= VacancyStatus.ENABLE;
     const [vacancies, count] = await new JobSearchFactory(
       this.vacancyRepository,
     )
@@ -72,7 +74,7 @@ export class JobService {
               type: vacancy.jobType,
               salaryOffer: vacancy.salaryOffer,
               jobType: vacancy.jobType,
-              editable: true,
+              editable: user.companyId === vacancy.employee.companyId,
             }) satisfies JobOverviewDto,
         ),
         count,

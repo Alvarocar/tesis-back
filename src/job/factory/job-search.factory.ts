@@ -5,7 +5,6 @@ import {
   CriteriaBuilder,
   CriteriaCombiner,
 } from 'src/shared/criteria/criteria';
-import { VacancyStatus } from 'src/vacancy/enums/vacancy-status.enum';
 
 export class JobSearchFactory {
   constructor(private readonly repository: Repository<Vacancy>) {}
@@ -38,7 +37,7 @@ export class JobSearchFactory {
     );
 
     criteriaBuilder = criteriaBuilder.and(
-      CriteriaBuilder.equals<Vacancy>('vacancy.status', VacancyStatus.ENABLE),
+      CriteriaBuilder.equals<Vacancy>('vacancy.status', dto.status),
     );
 
     // Add optional search in title and description (case insensitive)
