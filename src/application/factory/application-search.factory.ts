@@ -43,6 +43,8 @@ export class ApplicationSearchFactory {
       CriteriaBuilder.equals<Application>(`${this.vacancyAlias}.id`, vacancyId),
     );
 
+    queryBuilder.orderBy(`${this.alias}.affinity`, 'DESC');
+
     const { q } = filter;
 
     if (q && q.trim()) {
