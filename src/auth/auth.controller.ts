@@ -5,6 +5,7 @@ import {
   HttpCode,
   ValidationPipe,
   Put,
+  Get,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateApplicantDto } from './dto/create-applicant.dto';
@@ -12,6 +13,7 @@ import { SecurityService } from 'src/shared/security/security.service';
 import { CreatedApplicantDto } from './dto/created-applicant.dto';
 import { Role } from 'src/shared/enums/role.enum';
 import { SignInDto } from './dto/sign-in.dto';
+import { Roles } from 'src/shared/constants/metadata.constant';
 
 @Controller('v1/auth')
 export class AuthController {
@@ -101,4 +103,9 @@ export class AuthController {
       }),
     };
   }
+
+  @Get('/check')
+  @Roles(Role.Applicant, Role.Employee, Role.Admin)
+  @HttpCode(204)
+  check() {}
 }

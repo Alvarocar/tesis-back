@@ -75,7 +75,11 @@ export class VacancyService {
   async findOne(id: number, user: TokenDto) {
     try {
       const vacancy = await this.vacancyRepository.findOne({
-        where: { id, employee: { companyId: user.companyId } },
+        where: {
+          id,
+          employee: { companyId: user.companyId },
+          status: VacancyStatus.ENABLE,
+        },
       });
 
       if (!vacancy) throw new NotFoundException('Vacante no encontrada');
