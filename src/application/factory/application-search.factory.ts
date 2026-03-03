@@ -5,6 +5,7 @@ import {
   CriteriaBuilder,
   CriteriaCombiner,
 } from 'src/shared/criteria/criteria';
+import { EApplicationStatus } from 'src/shared/enums/application-status.enum';
 
 export class ApplicationSearchFactory {
   constructor(private readonly repository: Repository<Application>) {}
@@ -39,9 +40,19 @@ export class ApplicationSearchFactory {
     // Start with pagination criteria
     let criteriaBuilder = CriteriaCombiner.create(
       CriteriaBuilder.pagination<Application>(filter),
-    ).and(
-      CriteriaBuilder.equals<Application>(`${this.vacancyAlias}.id`, vacancyId),
-    );
+    )
+      .and(
+        CriteriaBuilder.equals<Application>(
+          `${this.vacancyAlias}.id`,
+          vacancyId,
+        ),
+      )
+      .and(
+        CriteriaBuilder.equals<Application>(
+          `${this.applicantAlias}.status`,
+          EApplicationStatus.ANALYZED,
+        ),
+      );
 
     queryBuilder.orderBy(`${this.alias}.affinity`, 'DESC');
 

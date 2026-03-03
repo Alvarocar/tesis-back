@@ -62,7 +62,7 @@ export class ApplicationListener {
           inputTokens: response.inputTokens,
           outputTokens: response.outputTokens,
           aiModel: {
-            id: 4, // Mistral 7B Instruct
+            id: 2, // LLama 3 instruct 8B, should be dynamic in the future
           },
         },
       );
