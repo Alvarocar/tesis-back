@@ -49,7 +49,7 @@ export class ApplicationSearchFactory {
       )
       .and(
         CriteriaBuilder.equals<Application>(
-          `${this.applicantAlias}.status`,
+          `${this.alias}.status`,
           EApplicationStatus.ANALYZED,
         ),
       );
