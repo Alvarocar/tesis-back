@@ -1,75 +1,36 @@
-import { Repository } from 'typeorm';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Resume } from 'src/resume/entities/resume.entity';
-import { Vacancy } from 'src/vacancy/entities/vacancy.entity';
+import { StructuredLogger } from 'src/shared/logging/structured-logger';
 import { ApplicationAppliedEvent } from './events/aplication-apply.event';
-import { Application } from './entities/application.entity';
-import { ResumeFactory } from 'src/resume/factory/resume.factory';
-import { LLMClientService } from 'src/llm-client/llm-client.service';
-import { APPLY_TEMPLATE_PROMPT } from './helper/apply-template.helper';
-import { VacancyTemplateDto } from './dto/vacancy-template.dto';
-import { ResumeTemplateDto } from './dto/resume-template.dto';
-import { EApplicationStatus } from 'src/shared/enums/application-status.enum';
+import { AnalyzeApplicationUseCase } from './use-cases/analyze-application.use-case';
 
+/**
+ * Listener de eventos.
+ *
+ * Al dispararse `application.applied`, delega en `AnalyzeApplicationUseCase`
+ * que reusa la query hidratada (1 query en lugar de las 3 que hacía el
+ * listener original).
+ *
+ * Errores se loguean; el listener nunca rompe el flujo del emisor.
+ */
 @Injectable()
 export class ApplicationListener {
-  private readonly logger = new Logger(ApplicationListener.name);
-
   constructor(
-    @InjectRepository(Resume)
-    private readonly resumeRepository: Repository<Resume>,
-    @InjectRepository(Vacancy)
-    private readonly vacancyRepository: Repository<Vacancy>,
-    @InjectRepository(Application)
-    private readonly applicationRepository: Repository<Application>,
-    private readonly llmClientService: LLMClientService,
+    private readonly analyzeUc: AnalyzeApplicationUseCase,
+    private readonly logger: StructuredLogger,
   ) {}
 
   @OnEvent('application.applied')
-  async handleApplicationAppliedEvent(payload: ApplicationAppliedEvent) {
-    const resume = await new ResumeFactory(this.resumeRepository)
-      .getResumeByIdInsecure(payload.resumeId)
-      .getOne();
-    const vacancy = await this.vacancyRepository.findOne({
-      where: { id: payload.vacantId },
-    });
-
-    const application = await this.applicationRepository.findOne({
-      where: { id: payload.applicationId },
-    });
-
-    if (!resume || !vacancy || !application) {
-      return;
-    }
-
+  async handleApplicationAppliedEvent(
+    payload: ApplicationAppliedEvent,
+  ): Promise<void> {
     try {
-      const response = await this.llmClientService.ask(
-        APPLY_TEMPLATE_PROMPT.format(
-          new VacancyTemplateDto(vacancy).getTemplate(),
-          new ResumeTemplateDto(resume).getTemplate(),
-        ),
-      );
-
-      await this.applicationRepository.update(
-        { id: application.id },
-        {
-          affinity: response.content.affinity,
-          feedBack: response.content.feedback,
-          iaTimeTaken: response.duration,
-          status: EApplicationStatus.ANALYZED,
-          inputTokens: response.inputTokens,
-          outputTokens: response.outputTokens,
-          aiModel: {
-            id: 2, // LLama 3 instruct 8B, should be dynamic in the future
-          },
-        },
-      );
+      await this.analyzeUc.execute(payload.applicationId);
     } catch (error) {
-      this.logger.error(
-        `Error processing application ${payload.applicationId}: ${error}`,
-      );
+      this.logger.error('application.apply.listenerFailed', {
+        applicationId: payload.applicationId,
+        error: (error as Error).message,
+      });
     }
   }
 }

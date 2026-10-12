@@ -61,8 +61,8 @@ export class ApplicationController {
   @Get('/all-analyzed')
   @Roles(Role.Employee, Role.Admin)
   @HttpCode(200)
-  async getAllAnalyzedApplications() {
-    return this.applicationService.getAllAnalyzedApplications();
+  async getAllAnalyzedApplications(@Req() req: RequestWithUser) {
+    return this.applicationService.getAllAnalyzedApplications(req.user);
   }
 
   @Post('/benchmark/:applicationId')
