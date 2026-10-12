@@ -58,6 +58,22 @@ export class ApplicationController {
     return this.applicationService.getApplicationsByVacant(filters, vacantId);
   }
 
+  @Get('/all-analyzed')
+  @Roles(Role.Employee, Role.Admin)
+  @HttpCode(200)
+  async getAllAnalyzedApplications() {
+    return this.applicationService.getAllAnalyzedApplications();
+  }
+
+  @Post('/benchmark/:applicationId')
+  @Roles(Role.Employee, Role.Admin)
+  @HttpCode(200)
+  async benchmarkApplication(
+    @Param('applicationId', ParseIntPipe) applicationId: number,
+  ) {
+    return this.applicationService.benchmarkApplication(applicationId);
+  }
+
   @Get('/:applicationId')
   @Roles(Role.Employee, Role.Admin)
   @HttpCode(200)

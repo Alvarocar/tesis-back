@@ -22,6 +22,10 @@ export class OpenAIClient implements ILLMClient {
     try {
       const start = new Date();
       const data = await this.client.chat.completions.create({
+        temperature: 0,
+        //@ts-expect-error OpenAI types are wrong, response_format should be allowed
+        repetition_penalty: 1.2,
+        seed: 616161612,
         model: this.model,
         messages: [
           { role: 'system', content: SYSTEM_PROMPT },

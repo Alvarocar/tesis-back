@@ -14,6 +14,7 @@ import { Vacancy } from './vacancy/entities/vacancy.entity';
 import { VacancyLanguage } from './vacancy/entities/vacancyLanguage.entity';
 import { AIModel } from './shared/entities/ia-model.entity';
 import { Application } from './application/entities/application.entity';
+import { BenchmarkRun } from './application/entities/benchmark-run.entity';
 import {
   RELATIONAL_DB_DATABASE,
   RELATIONAL_DB_HOST,
@@ -52,6 +53,7 @@ export const getTypeOrmModule = () => {
       VacancyLanguage,
       AIModel,
       Application,
+      BenchmarkRun,
     ],
   });
 };

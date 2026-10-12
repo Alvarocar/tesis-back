@@ -2,6 +2,8 @@ import { Repository } from 'typeorm';
 import {
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -24,9 +26,19 @@ import {
   SkillDto,
 } from 'src/resume/dto/resume-detail.dto';
 import { ApplicationAppliedEvent } from './events/aplication-apply.event';
+import { LLMClientService } from 'src/llm-client/llm-client.service';
+import { APPLY_TEMPLATE_PROMPT } from './helper/apply-template.helper';
+import { VacancyTemplateDto } from './dto/vacancy-template.dto';
+import { ResumeTemplateDto } from './dto/resume-template.dto';
+import {
+  AnalyzedApplicationOverviewDto,
+  BenchmarkResultDto,
+} from './dto/benchmark-result.dto';
 
 @Injectable()
 export class ApplicationService {
+  private readonly logger = new Logger(ApplicationService.name);
+
   constructor(
     @InjectRepository(Application)
     private readonly applicationRepository: Repository<Application>,
@@ -36,6 +48,7 @@ export class ApplicationService {
     private readonly vacancyRepository: Repository<Vacancy>,
     private readonly eventEmitter: EventEmitter2,
     private readonly vacancyService: VacancyService,
+    private readonly llmClientService: LLMClientService,
   ) {}
 
   async apply(user: TokenDto, vacancyId: number, resumeId: number) {
@@ -154,6 +167,7 @@ export class ApplicationService {
       salary: number;
       jobType: string;
       experienceYears: number;
+      id: number;
     };
     applicant: {
       firstName: string;
@@ -225,6 +239,7 @@ export class ApplicationService {
         salary: application.vacancy.salaryOffer,
         jobType: application.vacancy.jobType,
         experienceYears: application.vacancy.experienceYears,
+        id: application.vacancy.id,
       },
       applicant: {
         firstName: application.resume.applicant.firstName,
@@ -232,5 +247,79 @@ export class ApplicationService {
         phoneNumber: application.resume.applicant.phoneNumber,
       },
     } satisfies ApplicationDetailDto;
+  }
+
+  async getAllAnalyzedApplications(): Promise<
+    AnalyzedApplicationOverviewDto[]
+  > {
+    try {
+      const applications = await this.applicationRepository.find({
+        where: { status: EApplicationStatus.ANALYZED },
+        relations: { resume: { applicant: true }, vacancy: true },
+        order: { creationDate: 'DESC' },
+      });
+
+      return applications.map<AnalyzedApplicationOverviewDto>((app) => ({
+        id: app.id,
+        vacancyTitle: app.vacancy.title,
+        applicantName:
+          app.resume.applicant.firstName + ' ' + app.resume.applicant.lastName,
+        creationDate: app.creationDate,
+      }));
+    } catch (error) {
+      this.logger.error('Error obteniendo aplicaciones analizadas', error);
+      throw new InternalServerErrorException(
+        'No se pudieron obtener las aplicaciones analizadas',
+      );
+    }
+  }
+
+  async benchmarkApplication(
+    applicationId: number,
+  ): Promise<BenchmarkResultDto> {
+    const applicationWithResume = await this.applicationRepository.findOne({
+      where: { id: applicationId },
+      relations: {
+        resume: {
+          educations: true,
+          experiences: true,
+          resumeLanguage: { language: true },
+          skills: true,
+          applicant: true,
+        },
+        vacancy: true,
+      },
+    });
+
+    if (!applicationWithResume) {
+      throw new NotFoundException('Application not found');
+    }
+
+    try {
+      const prompt = APPLY_TEMPLATE_PROMPT.format(
+        new VacancyTemplateDto(applicationWithResume.vacancy).getTemplate(),
+        new ResumeTemplateDto(applicationWithResume.resume).getTemplate(),
+      );
+
+      const response = await this.llmClientService.ask(prompt);
+
+      return {
+        applicationId,
+        affinity: response.content.affinity,
+        feedBack: response.content.feedback,
+        inputTokens: response.inputTokens,
+        outputTokens: response.outputTokens,
+        durationSecs: response.duration,
+        model: response.model,
+      } satisfies BenchmarkResultDto;
+    } catch (error) {
+      this.logger.error(
+        `Error ejecutando benchmark para application ${applicationId}`,
+        error,
+      );
+      throw new InternalServerErrorException(
+        'No se pudo ejecutar el benchmark de la aplicación',
+      );
+    }
   }
 }
