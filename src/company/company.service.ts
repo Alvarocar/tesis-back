@@ -1,93 +1,40 @@
+import { Inject, Injectable } from '@nestjs/common';
+import type { UpdateCompanyDto } from './dto/update-company.dto';
+import { FindCompanyWithCountUseCase } from './use-cases/find-company-with-count.use-case';
+import { UpdateCompanyUseCase } from './use-cases/update-company.use-case';
+import { CreateCompanyUseCase } from './use-cases/create-company.use-case';
 import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Company } from './entities/company.entity';
-import { Repository } from 'typeorm';
-import { CreateCompanyDto } from './dto/create-company.dto';
-import { UpdateCompanyDto } from './dto/update-company.dto';
+  COMPANY_REPOSITORY,
+  type CompanyRepositoryPort,
+} from './repositories/company.repository';
 
+/**
+ * Legacy facade: delega en use-cases. Expone también `findByNit` para
+ * compatibilidad con consumers existentes.
+ */
 @Injectable()
 export class CompanyService {
   constructor(
-    @InjectRepository(Company)
-    private readonly companyRepository: Repository<Company>,
+    private readonly findUc: FindCompanyWithCountUseCase,
+    private readonly updateUc: UpdateCompanyUseCase,
+    private readonly createUc: CreateCompanyUseCase,
+    @Inject(COMPANY_REPOSITORY)
+    private readonly companyRepo: CompanyRepositoryPort,
   ) {}
 
-  async create(createCompanyDto: CreateCompanyDto) {
-    // Verificar si el NIT ya existe
-    const existingCompany = await this.companyRepository.findOne({
-      where: { nit: createCompanyDto.nit },
-    });
-
-    if (existingCompany) {
-      throw new ConflictException('El NIT ya está registrado');
-    }
-
-    const company = this.companyRepository.create({
-      ...createCompanyDto,
-      creationDate: new Date(),
-      modificationDate: new Date(),
-    });
-
-    return await this.companyRepository.save(company);
+  findOne(id: number) {
+    return this.findUc.execute(id);
   }
 
-  async findAll() {
-    return await this.companyRepository.find({
-      where: { isActive: true },
-      relations: ['employees'],
-    });
+  update(id: number, dto: UpdateCompanyDto) {
+    return this.updateUc.execute(id, dto);
   }
 
-  async findOne(id: number) {
-    const company = await this.companyRepository.findOne({
-      where: { id, isActive: true },
-      relations: ['employees'],
-    });
-
-    if (!company) {
-      throw new NotFoundException('Compañía no encontrada');
-    }
-
-    return company;
+  create(dto: Parameters<CreateCompanyUseCase['execute']>[0]) {
+    return this.createUc.execute(dto);
   }
 
-  async update(id: number, updateCompanyDto: UpdateCompanyDto) {
-    const company = await this.findOne(id);
-
-    // Si se está actualizando el NIT, verificar que no exista
-    if (updateCompanyDto.nit && updateCompanyDto.nit !== company.nit) {
-      const existingCompany = await this.companyRepository.findOne({
-        where: { nit: updateCompanyDto.nit },
-      });
-
-      if (existingCompany) {
-        throw new ConflictException('El NIT ya está registrado');
-      }
-    }
-
-    Object.assign(company, {
-      ...updateCompanyDto,
-      modificationDate: new Date(),
-    });
-
-    return await this.companyRepository.save(company);
-  }
-
-  async remove(id: number) {
-    const company = await this.findOne(id);
-    company.isActive = false;
-    company.modificationDate = new Date();
-    await this.companyRepository.save(company);
-    return { message: 'Compañía desactivada exitosamente' };
-  }
-
-  async findByNit(nit: string) {
-    return await this.companyRepository.findOne({
-      where: { nit, isActive: true },
-    });
+  findByNit(nit: string) {
+    return this.companyRepo.findByNit(nit);
   }
 }
