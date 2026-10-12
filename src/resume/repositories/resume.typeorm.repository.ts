@@ -194,4 +194,13 @@ export class ResumeTypeOrmRepository implements ResumeRepositoryPort {
       where: { id, applicant: { id: applicantId } },
     });
   }
+
+  async validateOwnership(input: {
+    resumeId: number;
+    applicantId: number;
+  }): Promise<boolean> {
+    return this.repo.exists({
+      where: { id: input.resumeId, applicant: { id: input.applicantId } },
+    });
+  }
 }

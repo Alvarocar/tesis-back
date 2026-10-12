@@ -67,6 +67,13 @@ export interface ResumeRepositoryPort {
 
   existsOwned(id: number, applicantId: number): Promise<boolean>;
 
-  // Operaciones de submódulos (educations/experiences/languages/skills)
-  // siguen existiendo en sus módulos con sus propios repositorios.
+  /**
+   * Validación liviana de ownership para sub-recursos
+   * (educations/experiences/languages/skills).
+   * Devuelve boolean en lugar de cargar filas.
+   */
+  validateOwnership(input: {
+    resumeId: number;
+    applicantId: number;
+  }): Promise<boolean>;
 }
