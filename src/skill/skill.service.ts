@@ -2,7 +2,7 @@ import { In, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Resume } from 'src/resume/entities/resume.entity';
-import { Skill } from 'src/shared/entities/skill.entity';
+import { Skill } from 'src/shared/db/entities/skill.entity';
 import { SkillDto } from 'src/resume/dto/resume-detail.dto';
 import { TokenDto } from 'src/shared/security/dto/token.dto';
 

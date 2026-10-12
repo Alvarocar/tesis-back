@@ -31,7 +31,7 @@ export class OllamaClient implements ILLMClient {
 
       return {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        content: JSON.parse(data.response) as any,
+        content: JSON.parse(data.response),
         duration: nanoSecondsToSeconds(
           data.prompt_eval_duration + data.eval_duration,
         ),

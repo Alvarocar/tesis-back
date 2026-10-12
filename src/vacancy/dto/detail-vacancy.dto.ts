@@ -11,7 +11,6 @@ import { DomUtil } from 'src/shared/utils/dom.util';
 import { VacancyJobType } from '../enums/vacancy-job-type.enum';
 
 export class VacancyDetailDto {
-
   @IsNumber()
   @IsPositive()
   id: number;

@@ -1,7 +1,7 @@
-import { Skill } from 'src/shared/entities/skill.entity';
-import { Salary } from 'src/shared/entities/salary';
+import { Skill } from 'src/shared/db/entities/skill.entity';
+import { Salary } from 'src/shared/domain/salary';
 import { Language } from 'src/language/entities/language.entity';
-import { ExperienceTime } from 'src/shared/entities/experienceTime';
+import { ExperienceTime } from 'src/shared/domain/experienceTime';
 import { VacancyJobType } from '../enums/vacancy-job-type.enum';
 
 export class Vacancy {

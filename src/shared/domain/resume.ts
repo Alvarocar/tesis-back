@@ -1,4 +1,4 @@
-import { Skill } from 'src/shared/entities/skill.entity';
+import { Skill } from 'src/shared/db/entities/skill.entity';
 import { LaboralReference } from './laboral-reference';
 import { Experience } from './experience';
 import { Education } from './education';

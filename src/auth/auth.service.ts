@@ -36,6 +36,11 @@ export class AuthService {
     const employee = await this.employeeService.findByEmail(dto.email);
 
     if (!employee) throw new UnauthorizedException('Credenciales inválidas.');
+    if (!employee.password) {
+      throw new UnauthorizedException(
+        'La cuenta aún no tiene contraseña configurada.',
+      );
+    }
     const isPasswordValid = await this.securityService.compareHash(
       dto.password,
       employee.password,
