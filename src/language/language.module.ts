@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Language } from './entities/language.entity';
 import { Resume } from 'src/resume/entities/resume.entity';
@@ -18,7 +18,7 @@ import { ResumeModule } from 'src/resume/resume.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Language, Resume, ResumeLanguage]),
-    ResumeModule,
+    forwardRef(() => ResumeModule),
   ],
   controllers: [LanguageController],
   providers: [

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Resume } from 'src/resume/entities/resume.entity';
 import { Skill } from 'src/shared/db/entities/skill.entity';
@@ -9,7 +9,7 @@ import { ReplaceSkillsForApplicantUseCase } from './use-cases/replace-skills.use
 import { ResumeModule } from 'src/resume/resume.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Resume, Skill]), ResumeModule],
+  imports: [TypeOrmModule.forFeature([Resume, Skill]), forwardRef(() => ResumeModule)],
   providers: [
     {
       provide: SKILL_REPOSITORY,

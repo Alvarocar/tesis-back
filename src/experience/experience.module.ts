@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Resume } from 'src/resume/entities/resume.entity';
 import { Experience } from 'src/resume/entities/experience.entity';
@@ -10,7 +10,7 @@ import { DeleteExperienceUseCase } from './use-cases/delete-experience.use-case'
 import { ResumeModule } from 'src/resume/resume.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Experience, Resume]), ResumeModule],
+  imports: [TypeOrmModule.forFeature([Experience, Resume]), forwardRef(() => ResumeModule)],
   providers: [
     {
       provide: EXPERIENCE_REPOSITORY,
