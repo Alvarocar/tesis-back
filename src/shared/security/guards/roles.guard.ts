@@ -6,18 +6,21 @@ import { TokenDto } from '../dto/token.dto';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  constructor(private readonly reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
     const requiredRoles = this.reflector.getAllAndOverride<Role[]>(
       METADATA_KEY.ROLES,
       [context.getHandler(), context.getClass()],
     );
-    if (!requiredRoles) {
+    if (!requiredRoles?.length) {
       return true;
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const { user = {} } = context.switchToHttp().getRequest();
-    return requiredRoles.includes((user as TokenDto).role);
+    const request = context.switchToHttp().getRequest<{ user?: TokenDto }>();
+    const userRole = request.user?.role;
+    if (!userRole) {
+      return false;
+    }
+    return requiredRoles.includes(userRole);
   }
 }

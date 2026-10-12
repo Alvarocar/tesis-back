@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -9,9 +10,11 @@ import {
 import { EApplicationStatus } from 'src/shared/enums/application-status.enum';
 import { Vacancy } from 'src/vacancy/entities/vacancy.entity';
 import { Resume } from 'src/resume/entities/resume.entity';
-import { AIModel } from 'src/shared/entities/ia-model.entity';
+import { AIModel } from 'src/shared/db/entities/ia-model.entity';
 
 @Entity()
+@Index('idx_application_vacancy_id', ['vacancy'])
+@Index('idx_application_resume_id', ['resume'])
 export class Application {
   @PrimaryGeneratedColumn({
     type: 'int',
@@ -24,7 +27,7 @@ export class Application {
   @JoinColumn({ name: 'vacancy_id' })
   vacancy: Relation<Vacancy>;
 
-  @ManyToOne(() => Resume, (resume) => resume.applications, {
+  @ManyToOne(() => Resume, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'resume_id' })

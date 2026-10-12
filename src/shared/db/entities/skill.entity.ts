@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'skill' })
+@Index('idx_skill_name', ['name'], { unique: true })
 export class Skill {
   @PrimaryGeneratedColumn({
     type: 'int',

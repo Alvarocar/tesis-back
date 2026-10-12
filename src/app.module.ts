@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { SharedModule } from './shared/shared.module';
+import { LoggingModule } from './shared/logging/structured-logger';
 import { VacancyModule } from './vacancy/vacancy.module';
 import { ResumeModule } from './resume/resume.module';
 import { ApplicationModule } from './application/application.module';
@@ -27,6 +28,7 @@ import { TokenGuard } from './shared/security/guards/token.guard';
       maxListeners: 10,
       verboseMemoryLeak: true,
     }),
+    LoggingModule,
     ResumeModule,
     SharedModule,
     VacancyModule,

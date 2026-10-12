@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Index,
   OneToMany,
   PrimaryGeneratedColumn,
   Relation,
@@ -8,6 +9,8 @@ import {
 import { Resume } from 'src/resume/entities/resume.entity';
 
 @Entity()
+@Index('idx_applicant_email', ['email'])
+@Index('idx_applicant_invitation_token', ['invitationToken'])
 export class Applicant {
   @PrimaryGeneratedColumn({
     type: 'int',

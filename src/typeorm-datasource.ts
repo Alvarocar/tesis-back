@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 import { Employee } from './employee/entities/employee.entity';
 import { Company } from './company/entities/company.entity';
-import { Skill } from './shared/entities/skill.entity';
+import { Skill } from './shared/db/entities/skill.entity';
 import { Resume } from './resume/entities/resume.entity';
 import { Education } from './resume/entities/education.entity';
 import { Experience } from './resume/entities/experience.entity';
@@ -13,7 +13,7 @@ import { Language } from './language/entities/language.entity';
 import { ResumeLanguage } from './resume/entities/resume-language.entity';
 import { Vacancy } from './vacancy/entities/vacancy.entity';
 import { VacancyLanguage } from './vacancy/entities/vacancyLanguage.entity';
-import { AIModel } from './shared/entities/ia-model.entity';
+import { AIModel } from './shared/db/entities/ia-model.entity';
 import { Application } from './application/entities/application.entity';
 import {
   RELATIONAL_DB_DATABASE,

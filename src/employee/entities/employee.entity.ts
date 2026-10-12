@@ -6,6 +6,7 @@ import {
   BeforeUpdate,
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -16,6 +17,9 @@ import { EmployeeRole } from '../enums/employee-role.enum';
 @Entity({
   name: 'employee',
 })
+@Index('idx_employee_email', ['email'])
+@Index('idx_employee_company_id', ['companyId'])
+@Index('idx_employee_invitation_token', ['invitationToken'])
 export class Employee {
   @PrimaryGeneratedColumn({
     type: 'int',

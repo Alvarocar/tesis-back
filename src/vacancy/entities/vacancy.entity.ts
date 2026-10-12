@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   JoinTable,
   ManyToMany,
@@ -12,7 +13,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { VacancyJobType } from '../enums/vacancy-job-type.enum';
-import { Skill } from 'src/shared/entities/skill.entity';
+import { Skill } from 'src/shared/db/entities/skill.entity';
 import { VacancyLanguage } from './vacancyLanguage.entity';
 import { Employee } from 'src/employee/entities/employee.entity';
 import { Application } from 'src/application/entities/application.entity';
@@ -22,6 +23,8 @@ import { VacancyStatus } from '../enums/vacancy-status.enum';
 @Entity({
   name: 'vacancy',
 })
+@Index('idx_vacancy_employee_id', ['employee'])
+@Index('idx_vacancy_status', ['status'])
 export class Vacancy {
   @PrimaryGeneratedColumn({
     type: 'int',

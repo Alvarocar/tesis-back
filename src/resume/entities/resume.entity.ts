@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   JoinColumn,
   JoinTable,
   ManyToMany,
@@ -13,7 +14,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Applicant } from 'src/applicant/entities/applicant.entity';
-import { Skill } from 'src/shared/entities/skill.entity';
+import { Skill } from 'src/shared/db/entities/skill.entity';
 import { PersonalReference } from './personal-reference.entity';
 import { LaboralReference } from './laboral-reference.entity';
 import { ResumeLanguage } from './resume-language.entity';
@@ -21,6 +22,7 @@ import { Experience } from './experience.entity';
 import { Education } from './education.entity';
 
 @Entity()
+@Index('idx_resume_applicant_id', ['applicant'])
 export class Resume {
   @PrimaryGeneratedColumn({
     type: 'int',
@@ -95,11 +97,6 @@ export class Resume {
   @ManyToMany(() => Skill, { cascade: false })
   @JoinTable({ name: 'resume_skill' })
   skills: Relation<Skill>[];
-
-  @OneToMany(() => Applicant, (applicant) => applicant.resumes, {
-    onDelete: 'CASCADE',
-  })
-  applications: Relation<Applicant>[];
 
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   public deletedAt?: Date;
