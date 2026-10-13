@@ -6,4 +6,6 @@ export class JobDetailDto {
   salaryOffer: number;
   modificationDate: string;
   jobType: string;
+  company: string;
+  editable: boolean;
 }

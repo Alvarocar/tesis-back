@@ -94,6 +94,24 @@ export interface VacancyRepositoryPort {
     pagination: { page: number; pageSize: number },
   ): Promise<{ data: JobSearchResultRow[]; total: number }>;
 
+  /**
+   * Detalle de vacante con join a employee + company, todo en una query
+   * con `select` explícito. Usado por el public job detail.
+   */
+  findDetailById(id: number): Promise<{
+    id: number;
+    title: string;
+    description: string;
+    experienceYears: number | null;
+    salaryOffer: number | null;
+    modificationDate: Date;
+    jobType: Vacancy['jobType'];
+    status: VacancyStatus;
+    companyId: number | null;
+    companyName: string | null;
+    employeeOwnerId: number;
+  } | null>;
+
   countByStatus(status: VacancyStatus): Promise<number>;
 }
 

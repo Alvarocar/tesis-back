@@ -283,4 +283,72 @@ export class VacancyTypeOrmRepository implements VacancyRepositoryPort {
   async countByStatus(status: VacancyStatus): Promise<number> {
     return this.repo.count({ where: { status } });
   }
+
+  async findDetailById(id: number): Promise<{
+    id: number;
+    title: string;
+    description: string;
+    experienceYears: number | null;
+    salaryOffer: number | null;
+    modificationDate: Date;
+    jobType: Vacancy['jobType'];
+    status: VacancyStatus;
+    companyId: number | null;
+    companyName: string | null;
+    employeeOwnerId: number;
+  } | null> {
+    return this.logger.timed(
+      'vacancy.repo.findDetailById',
+      async () => {
+        const row = await this.repo
+          .createQueryBuilder('v')
+          .leftJoin('v.employee', 'e')
+          .leftJoin('e.company', 'c')
+          .select([
+            'v.id AS id',
+            'v.title AS title',
+            'v.description AS description',
+            'v.experience_years AS "experienceYears"',
+            'v.salary_offer AS "salaryOffer"',
+            'v.modification_date AS "modificationDate"',
+            'v.job_type AS "jobType"',
+            'v.status AS status',
+            'c.id AS "companyId"',
+            'c.name AS "companyName"',
+            'e.id AS "employeeOwnerId"',
+          ])
+          .where('v.id = :id', { id })
+          .getRawOne<{
+            id: number;
+            title: string;
+            description: string;
+            experienceYears: number | null;
+            salaryOffer: number | null;
+            modificationDate: Date;
+            jobType: Vacancy['jobType'];
+            status: VacancyStatus;
+            companyId: number | null;
+            companyName: string | null;
+            employeeOwnerId: number;
+          }>();
+
+        if (!row) return null;
+
+        return {
+          id: row.id,
+          title: row.title,
+          description: row.description,
+          experienceYears: row.experienceYears ?? null,
+          salaryOffer: row.salaryOffer ?? null,
+          modificationDate: row.modificationDate,
+          jobType: row.jobType,
+          status: row.status,
+          companyId: row.companyId ?? null,
+          companyName: row.companyName ?? null,
+          employeeOwnerId: row.employeeOwnerId,
+        };
+      },
+      { vacancyId: id },
+    );
+  }
 }

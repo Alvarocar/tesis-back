@@ -24,8 +24,11 @@ export class JobController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.jobService.findOne(id);
+  findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() user?: TokenDto,
+  ) {
+    return this.jobService.findOne(id, user);
   }
 
   @Get('applied/:id')

@@ -33,8 +33,8 @@ export class JobService {
     return this.searchUc.execute(filter, user);
   }
 
-  findOne(id: number): Promise<JobDetailDto> {
-    return this.detailUc.execute(id);
+  findOne(id: number, user?: TokenDto): Promise<JobDetailDto> {
+    return this.detailUc.execute(id, user);
   }
 
   isApplied(user: TokenDto, vacancyId: number): Promise<boolean> {
