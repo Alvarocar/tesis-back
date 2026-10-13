@@ -223,6 +223,21 @@ export class VacancyTypeOrmRepository implements VacancyRepositoryPort {
         const base = (status: VacancyStatus) =>
           this.repo
             .createQueryBuilder('vacancy')
+            .select([
+              'vacancy.id AS id',
+              'vacancy.title AS title',
+              'vacancy.description AS description',
+              'vacancy.experience_years AS "experienceYears"',
+              'vacancy.salary_offer AS "salaryOffer"',
+              'vacancy.job_type AS "jobType"',
+              'vacancy.creation_date AS "creationDate"',
+              'vacancy.modification_date AS "modificationDate"',
+              'vacancy.status AS status',
+              'vacancy.employee_id AS "employeeId"',
+              'employee.id AS "employeeOwnerId"',
+              'company.id AS "companyId"',
+              'company.name AS "companyName"',
+            ])
             .leftJoin('vacancy.employee', 'employee')
             .leftJoin('employee.company', 'company')
             .where('vacancy.status = :status', { status })
@@ -242,36 +257,36 @@ export class VacancyTypeOrmRepository implements VacancyRepositoryPort {
 
         const [rows, total] = await Promise.all([
           qb.getRawMany<{
-            vacancy_id: number;
-            vacancy_title: string;
-            vacancy_description: string;
-            vacancy_experience_years: number | null;
-            vacancy_salary_offer: number | null;
-            vacancy_job_type: string;
-            vacancy_creation_date: Date;
-            vacancy_modification_date: Date;
-            vacancy_status: VacancyStatus;
-            employee_id: number;
-            employee_companyId: number;
-            company_id: number;
-            company_name: string;
+            id: number;
+            title: string;
+            description: string;
+            experienceYears: number | null;
+            salaryOffer: number | null;
+            jobType: string;
+            creationDate: Date;
+            modificationDate: Date;
+            status: VacancyStatus;
+            employeeId: number;
+            employeeOwnerId: number;
+            companyId: number;
+            companyName: string;
           }>(),
           this.repo.count({ where: { status } }),
         ]);
 
         const data = rows.map((r) => ({
-          id: r.vacancy_id,
-          title: r.vacancy_title,
-          description: r.vacancy_description,
-          experienceYears: r.vacancy_experience_years,
-          salaryOffer: r.vacancy_salary_offer,
-          jobType: r.vacancy_job_type as Vacancy['jobType'],
-          creationDate: r.vacancy_creation_date,
-          modificationDate: r.vacancy_modification_date,
-          status: r.vacancy_status,
-          companyId: r.company_id,
-          companyName: r.company_name,
-          employeeOwnerId: r.employee_id,
+          id: r.id,
+          title: r.title,
+          description: r.description,
+          experienceYears: r.experienceYears,
+          salaryOffer: r.salaryOffer,
+          jobType: r.jobType as Vacancy['jobType'],
+          creationDate: r.creationDate,
+          modificationDate: r.modificationDate,
+          status: r.status,
+          companyId: r.companyId,
+          companyName: r.companyName,
+          employeeOwnerId: r.employeeOwnerId,
         }));
 
         return { data, total };
