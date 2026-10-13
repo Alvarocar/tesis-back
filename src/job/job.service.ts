@@ -1,12 +1,10 @@
 import { In, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
-  HttpException,
   Injectable,
   Logger,
-  NotFoundException,
-  InternalServerErrorException,
 } from '@nestjs/common';
+import { NotFoundError } from 'src/shared/errors/domain.error';
 import { TokenDto } from 'src/shared/security/dto/token.dto';
 import { Vacancy } from 'src/vacancy/entities/vacancy.entity';
 import { JobFilterDto } from './dto/job-filter.dto';
@@ -100,53 +98,35 @@ export class JobService {
   }
 
   async findOne(id: number) {
-    try {
-      const job = await new JobSearchFactory(this.vacancyRepository)
-        .buildByIdQuery(id)
-        .getOneOrFail();
-      return {
-        id: job.id,
-        title: job.title,
-        description: job.description,
-        experienceYears: job.experienceYears,
-        salaryOffer: job.salaryOffer,
-        modificationDate: DateUtil.toString(job.modificationDate),
-        jobType: job.jobType,
-      } satisfies JobDetailDto;
-    } catch (error) {
-      this.logger.error(`Job with id ${id} not found`, (error as Error).stack);
-      throw new NotFoundException('Job not found');
-    }
+    const job = await new JobSearchFactory(this.vacancyRepository)
+      .buildByIdQuery(id)
+      .getOneOrFail();
+    return {
+      id: job.id,
+      title: job.title,
+      description: job.description,
+      experienceYears: job.experienceYears,
+      salaryOffer: job.salaryOffer,
+      modificationDate: DateUtil.toString(job.modificationDate),
+      jobType: job.jobType,
+    } satisfies JobDetailDto;
   }
 
   async isApplied(user: TokenDto, vacancyId: number): Promise<boolean> {
-    try {
-      let exists = await this.vacancyRepository.exists({
-        where: { id: vacancyId },
-      });
-      if (!exists) throw new NotFoundException('Empleo no encontrado');
+    const exists = await this.vacancyRepository.exists({
+      where: { id: vacancyId },
+    });
+    if (!exists) throw new NotFoundError('Empleo no encontrado', { vacancyId });
 
-      const resumes = await this.resumeRepository.findBy({
-        applicant: { id: user.id },
-      });
+    const resumes = await this.resumeRepository.findBy({
+      applicant: { id: user.id },
+    });
 
-      exists = await this.applicationRepository.exists({
-        where: {
-          vacancy: { id: vacancyId },
-          resume: { id: In(resumes.map((r) => r.id)) },
-        },
-      });
-
-      return exists;
-    } catch (error) {
-      if (error instanceof HttpException) throw error;
-      this.logger.error(
-        `Job with id ${vacancyId} not found`,
-        (error as Error).stack,
-      );
-      throw new InternalServerErrorException(
-        'Error para procesar la solicitud',
-      );
-    }
+    return this.applicationRepository.exists({
+      where: {
+        vacancy: { id: vacancyId },
+        resume: { id: In(resumes.map((r) => r.id)) },
+      },
+    });
   }
 }

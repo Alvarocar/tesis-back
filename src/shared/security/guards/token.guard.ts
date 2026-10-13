@@ -2,12 +2,12 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { SecurityService } from '../security.service';
 import { METADATA_KEY } from '../../constants/metadata.constant';
+import { UnauthorizedError } from '../../errors/domain.error';
 
 @Injectable()
 export class TokenGuard implements CanActivate {
@@ -27,7 +27,7 @@ export class TokenGuard implements CanActivate {
         [context.getHandler(), context.getClass()],
       );
       if (!hasRoles) return true;
-      throw new UnauthorizedException();
+      throw new UnauthorizedError('Cabecera Authorization requerida');
     }
     try {
       const payload = await this.securityService.verifyToken(token);
@@ -36,7 +36,7 @@ export class TokenGuard implements CanActivate {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       request['user'] = payload;
     } catch {
-      throw new UnauthorizedException();
+      throw new UnauthorizedError('Token inválido o expirado');
     }
     return true;
   }
