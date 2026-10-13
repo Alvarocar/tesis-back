@@ -8,6 +8,7 @@ import {
 import { Role } from 'src/shared/enums/role.enum';
 import { VacancyStatus } from 'src/vacancy/enums/vacancy-status.enum';
 import { DateUtil } from 'src/shared/utils/date.util';
+import { isJobEditable } from './job-editable.policy';
 import type { JobDetailDto } from '../dto/job-detail.dto';
 import type { TokenDto } from 'src/shared/security/dto/token.dto';
 
@@ -17,7 +18,8 @@ import type { TokenDto } from 'src/shared/security/dto/token.dto';
  * Reglas:
  * - Si la vacante está archivada (ARCHIVED), solo Admin puede verla.
  * - Para usuarios autenticados, `editable` es true solo si son admin de la
- *   misma empresa o si son el empleado dueño.
+ *   misma empresa o si son el empleado dueño (regla compartida por
+ *   `isJobEditable` para garantizar consistencia con el listado).
  * - Para visitantes anónimos o applicants, editable siempre es false.
  */
 @Injectable()
@@ -37,7 +39,6 @@ export class FindJobDetailUseCase {
           throw new NotFoundError('Job', { jobId: id });
         }
 
-        // Bloqueo para vacantes archivadas: solo Admin las ve.
         if (
           row.status === VacancyStatus.ARCHIVED &&
           (!user || user.role !== Role.Admin)
@@ -48,7 +49,10 @@ export class FindJobDetailUseCase {
           );
         }
 
-        const editable = this.computeEditable(row.employeeOwnerId, row.companyId, user);
+        const editable = isJobEditable(user, {
+          employeeOwnerId: row.employeeOwnerId,
+          companyId: row.companyId,
+        });
 
         return {
           id: row.id,
@@ -64,19 +68,5 @@ export class FindJobDetailUseCase {
       },
       { jobId: id, hasUser: !!user },
     );
-  }
-
-  private computeEditable(
-    employeeOwnerId: number,
-    companyId: number | null,
-    user?: TokenDto,
-  ): boolean {
-    if (!user) return false;
-    if (user.role === Role.Applicant) return false;
-    if (user.role === Role.Admin) {
-      return companyId !== null && user.companyId === companyId;
-    }
-    // Employee: dueño de la vacante.
-    return user.id === employeeOwnerId;
   }
 }

@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { StructuredLogger } from 'src/shared/logging/structured-logger';
-import { Role } from 'src/shared/enums/role.enum';
 import { VacancyStatus } from 'src/vacancy/enums/vacancy-status.enum';
 import {
   VACANCY_REPOSITORY,
   type VacancyRepositoryPort,
 } from 'src/vacancy/repositories/vacancy.repository';
+import { isJobEditable } from './job-editable.policy';
 import type { JobFilterDto } from '../dto/job-filter.dto';
 import type { JobOverviewDto } from '../dto/job-overview.dto';
 import type { JobOverviewPublicDto } from '../dto/job-overview-public.dto';
@@ -39,22 +39,14 @@ export class SearchJobsUseCase {
           { page, pageSize },
         );
 
-        const isPublic =
-          !user ||
-          user.role === Role.Applicant ||
-          (user.role !== Role.Admin &&
-            data.some((v) =>
-              typeof v === 'number'
-                ? false
-                : (v as { employeeOwnerId: number }).employeeOwnerId !== user.id,
-            ));
-
+        // La política de editable vive en una sola función pura.
+        // Si NO hay usuario autenticado, devolvemos siempre el DTO público.
         const result: (JobOverviewDto | JobOverviewPublicDto)[] = data.map(
           (v) => {
-            const editable =
-              !!user &&
-              user.role === Role.Admin &&
-              v.companyId === user.companyId;
+            const editable = isJobEditable(user, {
+              employeeOwnerId: v.employeeOwnerId,
+              companyId: v.companyId,
+            });
 
             const base = {
               company: v.companyName || 'UMB',
@@ -66,13 +58,11 @@ export class SearchJobsUseCase {
               type: v.jobType,
             };
 
-            if (isPublic) {
+            if (!editable) {
+              // Visitante o applicant -> nunca editable.
               return { ...base, editable: false } satisfies JobOverviewPublicDto;
             }
-            const ownerEditable =
-              !!user &&
-              (user.role === Role.Admin ? editable : v.employeeOwnerId === user.id);
-            return { ...base, editable: ownerEditable } satisfies JobOverviewDto;
+            return { ...base, editable: true } satisfies JobOverviewDto;
           },
         );
 
