@@ -11,11 +11,7 @@ export class ExperienceService {
     private readonly deleteUc: DeleteExperienceUseCase,
   ) {}
 
-  createOrUpdate(
-    resumeId: number,
-    input: ExperienceDto,
-    user: TokenDto,
-  ) {
+  createOrUpdate(resumeId: number, input: ExperienceDto, user: TokenDto) {
     return this.upsertUc.execute(resumeId, input, user);
   }
 

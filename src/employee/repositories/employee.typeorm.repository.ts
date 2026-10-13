@@ -4,7 +4,6 @@ import { DataSource, Repository } from 'typeorm';
 import { Employee } from '../entities/employee.entity';
 import { StructuredLogger } from 'src/shared/logging/structured-logger';
 import {
-  EMPLOYEE_REPOSITORY,
   type CreateEmployeeData,
   type EmployeeListRow,
   type EmployeeRepositoryPort,
@@ -72,7 +71,6 @@ export class EmployeeTypeOrmRepository implements EmployeeRepositoryPort {
   async findByCompanyAndId(
     id: number,
     companyId: number,
-    _opts?: { includeRelations?: boolean },
   ): Promise<EmployeeWithCompanyId | null> {
     return this.repo
       .findOne({ where: { id, companyId, isActive: true } })

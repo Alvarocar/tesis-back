@@ -14,11 +14,7 @@ export class EducationService {
     private readonly deleteUc: DeleteEducationUseCase,
   ) {}
 
-  createOrUpdate(
-    resumeId: number,
-    education: EducationDto,
-    user: TokenDto,
-  ) {
+  createOrUpdate(resumeId: number, education: EducationDto, user: TokenDto) {
     return this.upsertUc.execute(resumeId, education, user);
   }
 

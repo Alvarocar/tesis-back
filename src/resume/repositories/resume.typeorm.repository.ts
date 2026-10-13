@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { Resume } from '../entities/resume.entity';
 import { StructuredLogger } from 'src/shared/logging/structured-logger';
 import {
-  RESUME_REPOSITORY,
   type CreateResumeData,
   type ResumeDetailHydrated,
   type ResumeOverviewRow,

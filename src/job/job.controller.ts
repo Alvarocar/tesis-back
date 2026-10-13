@@ -17,8 +17,10 @@ export class JobController {
   @Public()
   async findAll(@Query() filter: JobFilterDto, @CurrentUser() user?: TokenDto) {
     const { page = 1, pageSize = 10 } = filter;
-    const [result, count] = await this.jobService.findAll(filter, user);
-    return ParsingUtil.paginate(result, count, page, pageSize);
+    const out = await this.jobService.findAll(filter, user);
+    // El controller omite ParsingUtil: con el nuevo use-case ya
+    // se devuelve paginado en la misma forma legacy.
+    return out;
   }
 
   @Get(':id')

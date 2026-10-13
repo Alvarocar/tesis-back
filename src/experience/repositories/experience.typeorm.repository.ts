@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { Experience } from 'src/resume/entities/experience.entity';
 import { StructuredLogger } from 'src/shared/logging/structured-logger';
 import {
-  EXPERIENCE_REPOSITORY,
   type ExperiencePort,
   type ExperienceUpsertInput,
 } from 'src/resume/repositories/sub-resource.repositories';

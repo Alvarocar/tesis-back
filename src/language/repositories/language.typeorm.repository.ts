@@ -4,10 +4,7 @@ import { In, Repository } from 'typeorm';
 import { Language } from '../entities/language.entity';
 import { ResumeLanguage } from 'src/resume/entities/resume-language.entity';
 import { StructuredLogger } from 'src/shared/logging/structured-logger';
-import {
-  LANGUAGE_REPOSITORY,
-  type LanguagePort,
-} from 'src/resume/repositories/sub-resource.repositories';
+import { type LanguagePort } from 'src/resume/repositories/sub-resource.repositories';
 
 /**
  * Adapter TypeORM para LanguagePort. Reemplaza el flujo antes disperso
@@ -26,31 +23,35 @@ export class LanguageTypeOrmRepository implements LanguagePort {
   ) {}
 
   async searchByTerm(term: string): Promise<Language[]> {
-    return this.logger.timed(
-      'language.repo.search',
-      async () => {
-        const t = `%${term ?? ''}%`;
-        return this.langRepo
-          .createQueryBuilder('lan')
-          .select(['lan.id', 'lan.name'])
-          .where('lan.name ILIKE :term', { term: t })
-          .getMany();
-      },
-    );
+    return this.logger.timed('language.repo.search', async () => {
+      const t = `%${term ?? ''}%`;
+      return this.langRepo
+        .createQueryBuilder('lan')
+        .select(['lan.id', 'lan.name'])
+        .where('lan.name ILIKE :term', { term: t })
+        .getMany();
+    });
   }
 
   async listAll(): Promise<Language[]> {
-    return this.langRepo.find({ select: ['id', 'name'], order: { name: 'ASC' } });
+    return this.langRepo.find({
+      select: ['id', 'name'],
+      order: { name: 'ASC' },
+    });
   }
 
-  async listByResume(resumeId: number): Promise<
-    Array<{ id: number; level: number; name: string }>
-  > {
+  async listByResume(
+    resumeId: number,
+  ): Promise<Array<{ id: number; level: number; name: string }>> {
     return this.logger.timed('language.repo.listByResume', async () => {
       const rows = await this.resumeLangRepo
         .createQueryBuilder('rlan')
         .innerJoinAndSelect('rlan.language', 'lang')
-        .select(['lang.id AS id', 'rlan.language_level AS level', 'lang.name AS name'])
+        .select([
+          'lang.id AS id',
+          'rlan.language_level AS level',
+          'lang.name AS name',
+        ])
         .where('rlan.resumeId = :resumeId', { resumeId })
         .getRawMany<{ id: number; level: number; name: string }>();
       return rows.map((r) => ({
@@ -96,30 +97,34 @@ export class LanguageTypeOrmRepository implements LanguagePort {
     resumeId: number;
     languages: { id?: number; name: string; level: number }[];
   }): Promise<void> {
-    return this.logger.timed('language.repo.replaceForResume', async () => {
-      // 1. Resolver language entities (create nuevo si no existe).
-      const languages = await this.findOrCreateManyByName(
-        input.languages.map((l) => l.name),
-      );
-      const byName: Record<string, Language> = {};
-      languages.forEach((lang) => (byName[lang.name] = lang));
+    return this.logger.timed(
+      'language.repo.replaceForResume',
+      async () => {
+        // 1. Resolver language entities (create nuevo si no existe).
+        const languages = await this.findOrCreateManyByName(
+          input.languages.map((l) => l.name),
+        );
+        const byName: Record<string, Language> = {};
+        languages.forEach((lang) => (byName[lang.name] = lang));
 
-      // 2. Borrar viejas relaciones del resume.
-      await this.resumeLangRepo.delete({ resume: { id: input.resumeId } });
+        // 2. Borrar viejas relaciones del resume.
+        await this.resumeLangRepo.delete({ resume: { id: input.resumeId } });
 
-      // 3. Insertar nuevas relaciones.
-      if (input.languages.length === 0) return;
-      const values = input.languages.map((l) => ({
-        languageLevel: l.level,
-        language: { id: byName[l.name].id } as ResumeLanguage['language'],
-        resume: { id: input.resumeId } as ResumeLanguage['resume'],
-      }));
-      await this.resumeLangRepo
-        .createQueryBuilder()
-        .insert()
-        .into('resume_language')
-        .values(values)
-        .execute();
-    }, { resumeId: input.resumeId });
+        // 3. Insertar nuevas relaciones.
+        if (input.languages.length === 0) return;
+        const values = input.languages.map((l) => ({
+          languageLevel: l.level,
+          language: { id: byName[l.name].id } as ResumeLanguage['language'],
+          resume: { id: input.resumeId } as ResumeLanguage['resume'],
+        }));
+        await this.resumeLangRepo
+          .createQueryBuilder()
+          .insert()
+          .into('resume_language')
+          .values(values)
+          .execute();
+      },
+      { resumeId: input.resumeId },
+    );
   }
 }

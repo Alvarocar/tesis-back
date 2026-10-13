@@ -9,7 +9,10 @@ import { ReplaceSkillsForApplicantUseCase } from './use-cases/replace-skills.use
 import { ResumeModule } from 'src/resume/resume.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Resume, Skill]), forwardRef(() => ResumeModule)],
+  imports: [
+    TypeOrmModule.forFeature([Resume, Skill]),
+    forwardRef(() => ResumeModule),
+  ],
   providers: [
     {
       provide: SKILL_REPOSITORY,

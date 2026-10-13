@@ -1,7 +1,4 @@
 import type { Resume } from '../entities/resume.entity';
-import type { EducationDto } from '../dto/resume-detail.dto';
-import type { ExperienceDto } from '../dto/resume-detail.dto';
-import type { LanguageDto } from '../dto/resume-detail.dto';
 import type { SkillDto } from '../dto/resume-detail.dto';
 
 export interface CreateResumeData {

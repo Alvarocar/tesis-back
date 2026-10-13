@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { VacancyService } from 'src/vacancy/vacancy.service';
 import type { TokenDto } from 'src/shared/security/dto/token.dto';
 import type { ApplicationFilterDto } from './dto/application-filter.dto';

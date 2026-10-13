@@ -4,10 +4,7 @@ import { In, Repository } from 'typeorm';
 import { Skill } from 'src/shared/db/entities/skill.entity';
 import { Resume } from 'src/resume/entities/resume.entity';
 import { StructuredLogger } from 'src/shared/logging/structured-logger';
-import {
-  SKILL_REPOSITORY,
-  type SkillPort,
-} from 'src/resume/repositories/sub-resource.repositories';
+import { type SkillPort } from 'src/resume/repositories/sub-resource.repositories';
 
 /**
  * Adapter TypeORM para SkillPort. Maneja find-or-create por nombre en 1

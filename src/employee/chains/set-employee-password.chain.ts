@@ -45,9 +45,7 @@ export class ResolveTokenHandler extends BaseChainHandler<SetPasswordContext> {
 @Injectable()
 export class HashPasswordHandler extends BaseChainHandler<SetPasswordContext> {
   // bcrypt se inyecta desde el use-case para mantener el handler sin deps.
-  protected process(_ctx: SetPasswordContext): Promise<void> {
-    // El use-case pre-computa el hash. La cadena deja un slot para futuras
-    // reglas de complejidad (e.g. revelar si tiene mayúsculas, dígitos).
+  protected process(): Promise<void> {
     return Promise.resolve();
   }
 }

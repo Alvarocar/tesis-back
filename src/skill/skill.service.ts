@@ -5,9 +5,7 @@ import { ReplaceSkillsForApplicantUseCase } from './use-cases/replace-skills.use
 
 @Injectable()
 export class SkillService {
-  constructor(
-    private readonly replaceUc: ReplaceSkillsForApplicantUseCase,
-  ) {}
+  constructor(private readonly replaceUc: ReplaceSkillsForApplicantUseCase) {}
 
   createOrUpdateSkillsForApplicant(
     resumeId: number,

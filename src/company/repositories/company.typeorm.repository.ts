@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { Company } from '../entities/company.entity';
 import { StructuredLogger } from 'src/shared/logging/structured-logger';
 import {
-  COMPANY_REPOSITORY,
   type CompanyRepositoryPort,
   type CompanyWithEmployeeCount,
   type CreateCompanyData,

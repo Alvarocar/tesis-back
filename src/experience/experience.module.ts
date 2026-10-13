@@ -10,7 +10,10 @@ import { DeleteExperienceUseCase } from './use-cases/delete-experience.use-case'
 import { ResumeModule } from 'src/resume/resume.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Experience, Resume]), forwardRef(() => ResumeModule)],
+  imports: [
+    TypeOrmModule.forFeature([Experience, Resume]),
+    forwardRef(() => ResumeModule),
+  ],
   providers: [
     {
       provide: EXPERIENCE_REPOSITORY,

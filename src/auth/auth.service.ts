@@ -22,14 +22,18 @@ export class AuthService {
     const applicant = await this.applicantService.findByEmail(dto.email);
 
     if (!applicant) {
-      throw new UnauthorizedError('Credenciales inválidas', { email: dto.email });
+      throw new UnauthorizedError('Credenciales inválidas', {
+        email: dto.email,
+      });
     }
     const isPasswordValid = await this.securityService.compareHash(
       dto.password,
       applicant.password,
     );
     if (!isPasswordValid) {
-      throw new UnauthorizedError('Credenciales inválidas', { email: dto.email });
+      throw new UnauthorizedError('Credenciales inválidas', {
+        email: dto.email,
+      });
     }
 
     return applicant;
@@ -39,19 +43,26 @@ export class AuthService {
     const employee = await this.employeeService.findByEmail(dto.email);
 
     if (!employee) {
-      throw new UnauthorizedError('Credenciales inválidas', { email: dto.email });
-    }
-    if (!employee.password) {
-      throw new UnauthorizedError('La cuenta aún no tiene contraseña configurada', {
+      throw new UnauthorizedError('Credenciales inválidas', {
         email: dto.email,
       });
+    }
+    if (!employee.password) {
+      throw new UnauthorizedError(
+        'La cuenta aún no tiene contraseña configurada',
+        {
+          email: dto.email,
+        },
+      );
     }
     const isPasswordValid = await this.securityService.compareHash(
       dto.password,
       employee.password,
     );
     if (!isPasswordValid) {
-      throw new UnauthorizedError('Credenciales inválidas', { email: dto.email });
+      throw new UnauthorizedError('Credenciales inválidas', {
+        email: dto.email,
+      });
     }
 
     return employee;

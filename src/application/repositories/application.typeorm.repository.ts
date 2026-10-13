@@ -5,7 +5,6 @@ import { Application } from '../entities/application.entity';
 import { EApplicationStatus } from 'src/shared/enums/application-status.enum';
 import { StructuredLogger } from 'src/shared/logging/structured-logger';
 import {
-  APPLICATION_REPOSITORY,
   type ApplicationHydratedForAI,
   type ApplicationRepositoryPort,
   type CreateApplicationData,
@@ -202,13 +201,19 @@ export class ApplicationTypeOrmRepository implements ApplicationRepositoryPort {
           .leftJoin('rs.applicant', 'app')
           .where('a.status = :status', { status: EApplicationStatus.ANALYZED })
           .orderBy('a.creationDate', 'DESC')
-          .getRawMany();
+          .getRawMany<{
+            a_id: number;
+            a_creationDate: Date;
+            v_title: string | null;
+            app_firstName: string | null;
+            app_lastName: string | null;
+          }>();
         return rows.map((r) => ({
-          id: r['a_id'] as number,
-          creationDate: r['a_creationDate'] as Date,
-          vacancyTitle: (r['v_title'] as string) ?? '',
+          id: r.a_id,
+          creationDate: r.a_creationDate,
+          vacancyTitle: r.v_title ?? '',
           applicantName:
-            `${r['app_firstName'] ?? ''} ${r['app_lastName'] ?? ''}`.trim(),
+            `${r.app_firstName ?? ''} ${r.app_lastName ?? ''}`.trim(),
         }));
       },
       {},

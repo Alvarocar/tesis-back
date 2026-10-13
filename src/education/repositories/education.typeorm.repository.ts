@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { Education } from 'src/resume/entities/education.entity';
 import { StructuredLogger } from 'src/shared/logging/structured-logger';
 import {
-  EDUCATION_REPOSITORY,
   type EducationPort,
   type EducationUpsertInput,
 } from 'src/resume/repositories/sub-resource.repositories';

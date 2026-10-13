@@ -24,9 +24,14 @@ export abstract class DomainError extends Error {
     this.context = options?.context ?? {};
     this.cause = options?.cause;
     if ('captureStackTrace' in Error) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-      (Error as { captureStackTrace: (target: object, ctor: Function) => void })
-        .captureStackTrace(this, this.constructor);
+      (
+        Error as unknown as {
+          captureStackTrace: (
+            target: object,
+            ctor: new (...args: unknown[]) => unknown,
+          ) => void;
+        }
+      ).captureStackTrace(this, this.constructor as new (...args: unknown[]) => unknown);
     }
   }
 

@@ -1,6 +1,5 @@
 import type { Education } from '../entities/education.entity';
 import type { Experience } from '../entities/experience.entity';
-import type { ResumeLanguage } from '../entities/resume-language.entity';
 import type { Language } from 'src/language/entities/language.entity';
 import type { Skill } from 'src/shared/db/entities/skill.entity';
 
@@ -23,7 +22,10 @@ export interface ResumeMinimalPort {
 
 export interface EducationPort {
   upsert(input: EducationUpsertInput): Promise<Education>;
-  deleteOwned(input: { educationId: number; resumeId: number }): Promise<boolean>;
+  deleteOwned(input: {
+    educationId: number;
+    resumeId: number;
+  }): Promise<boolean>;
   existsOwned(input: {
     educationId: number;
     resumeId: number;
@@ -32,7 +34,10 @@ export interface EducationPort {
 
 export interface ExperiencePort {
   upsert(input: ExperienceUpsertInput): Promise<Experience>;
-  deleteOwned(input: { experienceId: number; resumeId: number }): Promise<boolean>;
+  deleteOwned(input: {
+    experienceId: number;
+    resumeId: number;
+  }): Promise<boolean>;
   existsOwned(input: {
     experienceId: number;
     resumeId: number;
@@ -42,11 +47,13 @@ export interface ExperiencePort {
 export interface LanguagePort {
   searchByTerm(term: string): Promise<Language[]>;
   listAll(): Promise<Language[]>;
-  listByResume(resumeId: number): Promise<{
-    id: number;
-    level: number;
-    name: string;
-  }[]>;
+  listByResume(resumeId: number): Promise<
+    {
+      id: number;
+      level: number;
+      name: string;
+    }[]
+  >;
   replaceForResume(input: {
     resumeId: number;
     languages: { id?: number; name: string; level: number }[];

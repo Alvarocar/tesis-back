@@ -10,7 +10,10 @@ import { DeleteEducationUseCase } from './use-cases/delete-education.use-case';
 import { ResumeModule } from 'src/resume/resume.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Resume, Education]), forwardRef(() => ResumeModule)],
+  imports: [
+    TypeOrmModule.forFeature([Resume, Education]),
+    forwardRef(() => ResumeModule),
+  ],
   providers: [
     {
       provide: EDUCATION_REPOSITORY,

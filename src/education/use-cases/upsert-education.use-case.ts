@@ -52,7 +52,9 @@ export class UpsertEducationUseCase {
           institute: entity.institute,
           title: entity.title,
           startDate: DateUtil.toString(entity.startDate),
-          endDate: entity.endDate ? DateUtil.toString(entity.endDate) : undefined,
+          endDate: entity.endDate
+            ? DateUtil.toString(entity.endDate)
+            : undefined,
           keepStudy: entity.keepStudy ?? false,
         } satisfies EducationDto;
       },

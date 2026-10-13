@@ -25,7 +25,13 @@ export class LanguageService {
     return this.listAllUc.execute();
   }
   getByResume(resumeId: number): Promise<LanguageDto[]> {
-    return this.listByResumeUc.execute(resumeId, { id: 0, firstName: '', lastName: '', email: '', role: 'applicant' as never });
+    return this.listByResumeUc.execute(resumeId, {
+      id: 0,
+      firstName: '',
+      lastName: '',
+      email: '',
+      role: 'applicant' as never,
+    });
   }
   createOrUpdateForApplicant(
     resumeId: number,

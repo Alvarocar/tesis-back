@@ -4,7 +4,6 @@ import { MoreThan, Repository } from 'typeorm';
 import { Applicant } from '../entities/applicant.entity';
 import { StructuredLogger } from 'src/shared/logging/structured-logger';
 import {
-  APPLICANT_REPOSITORY,
   type ApplicantOverview,
   type ApplicantRepositoryPort,
   type CreateApplicantData,

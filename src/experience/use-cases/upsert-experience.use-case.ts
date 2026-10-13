@@ -52,7 +52,9 @@ export class UpsertExperienceUseCase {
           id: entity.id,
           company: entity.company,
           startDate: DateUtil.toString(entity.startDate),
-          endDate: entity.endDate ? DateUtil.toString(entity.endDate) : undefined,
+          endDate: entity.endDate
+            ? DateUtil.toString(entity.endDate)
+            : undefined,
           description: entity.description,
           keepWorking: entity.keepWorking ?? false,
           rol: entity.rol,
