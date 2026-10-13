@@ -1,4 +1,4 @@
-import { AppDataSource } from '../src/typeorm-datasource';
+import { AppDataSource } from '../../src/typeorm-datasource';
 
 (async () => {
   await AppDataSource.initialize();
