@@ -7,7 +7,9 @@ import {
   Max,
   Min,
   ValidateNested,
+  IsEnum,
 } from 'class-validator';
+import { VacancyJobType } from 'src/shared/enums/vacancy-job-type.enum';
 
 export class ResumeDetailDto {
   @IsString()
@@ -31,6 +33,14 @@ export class ResumeDetailDto {
 
   @ValidateNested()
   skills: SkillDto[];
+
+  @IsOptional()
+  @IsEnum(VacancyJobType)
+  workModality?: VacancyJobType | null;
+
+  @ValidateNested()
+  @IsOptional()
+  knowledge?: KnowledgeDto[];
 }
 
 export class EducationDto {
@@ -53,6 +63,18 @@ export class EducationDto {
 
   @IsBoolean()
   keepStudy: boolean;
+
+  @IsString()
+  @IsOptional()
+  educationLevel?: string | null;
+
+  @IsString()
+  @IsOptional()
+  programName?: string | null;
+
+  @IsString()
+  @IsOptional()
+  country?: string | null;
 }
 
 export class ExperienceDto {
@@ -78,9 +100,30 @@ export class ExperienceDto {
 
   @IsBoolean()
   keepWorking: boolean;
+
+  @IsString()
+  @IsOptional()
+  country?: string | null;
+
+  @IsString()
+  @IsOptional()
+  department?: string | null;
+
+  @IsString()
+  @IsOptional()
+  city?: string | null;
 }
 
 export class SkillDto {
+  @IsInt()
+  @IsOptional()
+  id?: number;
+
+  @IsString()
+  name: string;
+}
+
+export class KnowledgeDto {
   @IsInt()
   @IsOptional()
   id?: number;

@@ -7,6 +7,11 @@ import {
   Relation,
 } from 'typeorm';
 import { Resume } from 'src/resume/entities/resume.entity';
+import { ECountry } from 'src/shared/enums/country.enum';
+import { ESex } from 'src/shared/enums/sex.enum';
+import { EGender } from 'src/shared/enums/gender.enum';
+import { ESexualOrientation } from 'src/shared/enums/sexual-orientation.enum';
+import { EEthnicGroup } from 'src/shared/enums/ethnic-group.enum';
 
 @Entity()
 @Index('idx_applicant_email', ['email'])
@@ -72,6 +77,93 @@ export class Applicant {
     length: 60,
   })
   direction: string;
+
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    name: 'country_of_birth',
+    length: 60,
+  })
+  countryOfBirth: ECountry | null;
+
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    name: 'department_of_birth',
+    length: 60,
+  })
+  departmentOfBirth: string | null;
+
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    name: 'city_of_birth',
+    length: 60,
+  })
+  cityOfBirth: string | null;
+
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    name: 'country_of_residence',
+    length: 60,
+  })
+  countryOfResidence: ECountry | null;
+
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    name: 'department_of_residence',
+    length: 60,
+  })
+  departmentOfResidence: string | null;
+
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    name: 'city_of_residence',
+    length: 60,
+  })
+  cityOfResidence: string | null;
+
+  @Column({
+    nullable: true,
+    type: 'enum',
+    name: 'sex',
+    enum: ESex,
+  })
+  sex: ESex | null;
+
+  @Column({
+    nullable: true,
+    type: 'enum',
+    name: 'genre',
+    enum: EGender,
+  })
+  genre: EGender | null;
+
+  @Column({
+    nullable: true,
+    type: 'enum',
+    name: 'sexual_orientation',
+    enum: ESexualOrientation,
+  })
+  sexualOrientation: ESexualOrientation | null;
+
+  @Column({
+    nullable: true,
+    type: 'enum',
+    name: 'ethnic_group',
+    enum: EEthnicGroup,
+  })
+  ethnicGroup: EEthnicGroup | null;
+
+  @Column({
+    nullable: true,
+    type: 'int',
+    name: 'salary_aspiration',
+  })
+  salaryAspiration: number | null;
 
   @Column({
     type: 'varchar',

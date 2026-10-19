@@ -126,6 +126,7 @@ export class ResumeTypeOrmRepository implements ResumeRepositoryPort {
           'lang.name',
         ]);
         qb.leftJoin('rs.skills', 'sk').addSelect(['sk.id', 'sk.name']);
+        qb.leftJoin('rs.knowledge', 'kn').addSelect(['kn.id', 'kn.name']);
 
         const row = await qb.getOne();
         if (!row) return null;
@@ -135,6 +136,7 @@ export class ResumeTypeOrmRepository implements ResumeRepositoryPort {
           title: row.title,
           aboutMe: row.aboutMe,
           applicantId: (row.applicant as { id: number }).id,
+          workModality: row.workModality ?? null,
           educations: (row.educations ?? []).map((ed) => ({
             id: ed.id,
             institute: ed.institute,
@@ -142,6 +144,9 @@ export class ResumeTypeOrmRepository implements ResumeRepositoryPort {
             startDate: ed.startDate,
             endDate: ed.endDate ?? null,
             title: ed.title,
+            educationLevel: ed.educationLevel ?? null,
+            programName: ed.programName ?? null,
+            country: ed.country ?? null,
           })),
           experiences: (row.experiences ?? []).map((ex) => ({
             id: ex.id,
@@ -151,6 +156,9 @@ export class ResumeTypeOrmRepository implements ResumeRepositoryPort {
             rol: ex.rol,
             startDate: ex.startDate,
             endDate: ex.endDate ?? null,
+            country: ex.country ?? null,
+            department: ex.department ?? null,
+            city: ex.city ?? null,
           })),
           languages: (row.resumeLanguage ?? [])
             .filter((rl) => rl.language)
@@ -162,6 +170,10 @@ export class ResumeTypeOrmRepository implements ResumeRepositoryPort {
           skills: (row.skills ?? []).map((sk) => ({
             id: sk.id,
             name: sk.name,
+          })),
+          knowledge: (row.knowledge ?? []).map((kn) => ({
+            id: kn.id,
+            name: kn.name,
           })),
         } satisfies ResumeDetailHydrated;
       },

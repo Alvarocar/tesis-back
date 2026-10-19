@@ -55,6 +55,30 @@ export class Experience {
   })
   description: string;
 
+  @Column({
+    type: 'varchar',
+    length: 60,
+    name: 'country',
+    nullable: true,
+  })
+  country?: string | null;
+
+  @Column({
+    type: 'varchar',
+    length: 60,
+    name: 'department',
+    nullable: true,
+  })
+  department?: string | null;
+
+  @Column({
+    type: 'varchar',
+    length: 60,
+    name: 'city',
+    nullable: true,
+  })
+  city?: string | null;
+
   @ManyToOne(() => Resume, (resume) => resume.experiences, {
     onDelete: 'CASCADE',
   })

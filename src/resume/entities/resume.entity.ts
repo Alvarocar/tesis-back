@@ -15,6 +15,8 @@ import {
 } from 'typeorm';
 import { Applicant } from 'src/applicant/entities/applicant.entity';
 import { Skill } from 'src/shared/db/entities/skill.entity';
+import { VacancyJobType } from 'src/shared/enums/vacancy-job-type.enum';
+import { Knowledge } from 'src/shared/db/entities/knowledge.entity';
 import { PersonalReference } from './personal-reference.entity';
 import { LaboralReference } from './laboral-reference.entity';
 import { ResumeLanguage } from './resume-language.entity';
@@ -39,6 +41,14 @@ export class Resume {
     type: 'int',
   })
   experience_years: number;
+
+  @Column({
+    type: 'enum',
+    name: 'work_modality',
+    enum: VacancyJobType,
+    nullable: true,
+  })
+  workModality: VacancyJobType | null;
 
   @Column({
     type: 'text',
@@ -97,6 +107,10 @@ export class Resume {
   @ManyToMany(() => Skill, { cascade: false })
   @JoinTable({ name: 'resume_skill' })
   skills: Relation<Skill>[];
+
+  @ManyToMany(() => Knowledge, { cascade: false })
+  @JoinTable({ name: 'resume_knowledge' })
+  knowledge: Relation<Knowledge>[];
 
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   public deletedAt?: Date;

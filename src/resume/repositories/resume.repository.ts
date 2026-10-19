@@ -1,5 +1,6 @@
 import type { Resume } from '../entities/resume.entity';
 import type { SkillDto } from '../dto/resume-detail.dto';
+import type { VacancyJobType } from 'src/shared/enums/vacancy-job-type.enum';
 
 export interface CreateResumeData {
   title: string;
@@ -9,6 +10,7 @@ export interface CreateResumeData {
 export interface UpdateResumeData {
   title?: string;
   aboutMe?: string;
+  workModality?: VacancyJobType | null;
 }
 
 export interface ResumeDetailHydrated {
@@ -16,6 +18,7 @@ export interface ResumeDetailHydrated {
   title: string;
   aboutMe: string;
   applicantId: number;
+  workModality: VacancyJobType | null;
   educations: {
     id: number;
     institute: string;
@@ -23,6 +26,9 @@ export interface ResumeDetailHydrated {
     startDate: Date;
     endDate: Date | null;
     title: string;
+    educationLevel?: string | null;
+    programName?: string | null;
+    country?: string | null;
   }[];
   experiences: {
     id: number;
@@ -32,9 +38,13 @@ export interface ResumeDetailHydrated {
     rol: string;
     startDate: Date;
     endDate: Date | null;
+    country?: string | null;
+    department?: string | null;
+    city?: string | null;
   }[];
   languages: { id: number; level: number; name: string }[];
   skills: SkillDto[];
+  knowledge: { id: number; name: string }[];
 }
 
 export interface ResumeOverviewRow {

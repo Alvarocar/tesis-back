@@ -7,6 +7,7 @@ import {
   type Relation,
 } from 'typeorm';
 import { Resume } from './resume.entity';
+import { EEducationLevel } from 'src/shared/enums/education-level.enum';
 
 @Entity()
 export class Education {
@@ -28,6 +29,30 @@ export class Education {
     name: 'title',
   })
   title: string;
+
+  @Column({
+    type: 'enum',
+    name: 'education_level',
+    enum: EEducationLevel,
+    nullable: true,
+  })
+  educationLevel?: EEducationLevel | null;
+
+  @Column({
+    type: 'varchar',
+    length: 120,
+    name: 'program_name',
+    nullable: true,
+  })
+  programName?: string | null;
+
+  @Column({
+    type: 'varchar',
+    length: 60,
+    name: 'country',
+    nullable: true,
+  })
+  country?: string | null;
 
   @Column({
     type: 'date',

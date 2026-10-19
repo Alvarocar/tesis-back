@@ -1,6 +1,11 @@
-import { IsString, IsNotEmpty, Length } from 'class-validator';
+import { IsString, IsNotEmpty, Length, IsOptional, IsEnum, IsInt, Min, MaxLength } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { IsDateFormat } from 'src/shared/decorators/is-date-format.decorator';
+import { ECountry } from 'src/shared/enums/country.enum';
+import { ESex } from 'src/shared/enums/sex.enum';
+import { EGender } from 'src/shared/enums/gender.enum';
+import { ESexualOrientation } from 'src/shared/enums/sexual-orientation.enum';
+import { EEthnicGroup } from 'src/shared/enums/ethnic-group.enum';
 
 export class UpdateApplicantDto {
   @IsString({ message: 'El nombre debe ser una cadena de texto' })
@@ -43,4 +48,57 @@ export class UpdateApplicantDto {
   @Length(5, 60, { message: 'La dirección debe tener entre 5 y 60 caracteres' })
   @Transform(({ value }) => (value as string)?.trim())
   direction: string;
+
+  @IsOptional()
+  @IsEnum(ECountry)
+  countryOfBirth?: ECountry | null;
+
+  @IsOptional()
+  @IsString({ message: 'El departamento de nacimiento debe ser una cadena de texto' })
+  @MaxLength(60, { message: 'El departamento de nacimiento no puede superar 60 caracteres' })
+  @Transform(({ value }) => (value as string)?.trim())
+  departmentOfBirth?: string | null;
+
+  @IsOptional()
+  @IsString({ message: 'La ciudad de nacimiento debe ser una cadena de texto' })
+  @MaxLength(60, { message: 'La ciudad de nacimiento no puede superar 60 caracteres' })
+  @Transform(({ value }) => (value as string)?.trim())
+  cityOfBirth?: string | null;
+
+  @IsOptional()
+  @IsEnum(ECountry)
+  countryOfResidence?: ECountry | null;
+
+  @IsOptional()
+  @IsString({ message: 'El departamento de residencia debe ser una cadena de texto' })
+  @MaxLength(60, { message: 'El departamento de residencia no puede superar 60 caracteres' })
+  @Transform(({ value }) => (value as string)?.trim())
+  departmentOfResidence?: string | null;
+
+  @IsOptional()
+  @IsString({ message: 'La ciudad de residencia debe ser una cadena de texto' })
+  @MaxLength(60, { message: 'La ciudad de residencia no puede superar 60 caracteres' })
+  @Transform(({ value }) => (value as string)?.trim())
+  cityOfResidence?: string | null;
+
+  @IsOptional()
+  @IsEnum(ESex)
+  sex?: ESex | null;
+
+  @IsOptional()
+  @IsEnum(EGender)
+  genre?: EGender | null;
+
+  @IsOptional()
+  @IsEnum(ESexualOrientation)
+  sexualOrientation?: ESexualOrientation | null;
+
+  @IsOptional()
+  @IsEnum(EEthnicGroup)
+  ethnicGroup?: EEthnicGroup | null;
+
+  @IsOptional()
+  @IsInt({ message: 'La aspiración salarial debe ser un número entero' })
+  @Min(0, { message: 'La aspiración salarial no puede ser negativa' })
+  salaryAspiration?: number | null;
 }

@@ -2,6 +2,7 @@ import type { Education } from '../entities/education.entity';
 import type { Experience } from '../entities/experience.entity';
 import type { Language } from 'src/language/entities/language.entity';
 import type { Skill } from 'src/shared/db/entities/skill.entity';
+import type { EEducationLevel } from 'src/shared/enums/education-level.enum';
 
 /**
  * Puerto compartido para los repos de "sub-recursos" de un resume
@@ -80,6 +81,9 @@ export interface EducationUpsertInput {
   startDate: Date;
   endDate?: Date | null;
   keepStudy?: boolean;
+  educationLevel?: EEducationLevel | null;
+  programName?: string | null;
+  country?: string | null;
 }
 
 export interface ExperienceUpsertInput {
@@ -91,6 +95,9 @@ export interface ExperienceUpsertInput {
   startDate: Date;
   endDate?: Date | null;
   keepWorking?: boolean;
+  country?: string | null;
+  department?: string | null;
+  city?: string | null;
 }
 
 /* ------------------------------- SYMBOLS -------------------------------- */

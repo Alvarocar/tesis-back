@@ -15,6 +15,7 @@ import { Vacancy } from './vacancy/entities/vacancy.entity';
 import { VacancyLanguage } from './vacancy/entities/vacancyLanguage.entity';
 import { AIModel } from './shared/db/entities/ia-model.entity';
 import { Application } from './application/entities/application.entity';
+import { Knowledge } from './shared/db/entities/knowledge.entity';
 import {
   RELATIONAL_DB_DATABASE,
   RELATIONAL_DB_HOST,
@@ -50,6 +51,7 @@ export const AppDataSource = new DataSource({
     VacancyLanguage,
     AIModel,
     Application,
+    Knowledge,
   ],
   ssl: {
     rejectUnauthorized: false,
