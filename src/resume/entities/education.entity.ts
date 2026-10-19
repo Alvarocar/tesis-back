@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Resume } from './resume.entity';
 import { EEducationLevel } from 'src/shared/enums/education-level.enum';
+import { Country } from 'src/shared/db/entities/country.entity';
 
 @Entity()
 export class Education {
@@ -46,13 +47,9 @@ export class Education {
   })
   programName?: string | null;
 
-  @Column({
-    type: 'varchar',
-    length: 60,
-    name: 'country',
-    nullable: true,
-  })
-  country?: string | null;
+  @ManyToOne(() => Country, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'country_id' })
+  country?: Relation<Country> | null;
 
   @Column({
     type: 'date',

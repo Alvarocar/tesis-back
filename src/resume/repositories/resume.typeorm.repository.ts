@@ -146,7 +146,7 @@ export class ResumeTypeOrmRepository implements ResumeRepositoryPort {
             title: ed.title,
             educationLevel: ed.educationLevel ?? null,
             programName: ed.programName ?? null,
-            country: ed.country ?? null,
+            countryId: (ed.country as { id: number } | null)?.id ?? null,
           })),
           experiences: (row.experiences ?? []).map((ex) => ({
             id: ex.id,
@@ -156,9 +156,9 @@ export class ResumeTypeOrmRepository implements ResumeRepositoryPort {
             rol: ex.rol,
             startDate: ex.startDate,
             endDate: ex.endDate ?? null,
-            country: ex.country ?? null,
-            department: ex.department ?? null,
-            city: ex.city ?? null,
+            countryId: (ex.country as { id: number } | null)?.id ?? null,
+            departmentId: (ex.department as { id: number } | null)?.id ?? null,
+            cityId: (ex.city as { id: number } | null)?.id ?? null,
           })),
           languages: (row.resumeLanguage ?? [])
             .filter((rl) => rl.language)

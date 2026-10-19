@@ -72,9 +72,9 @@ export class EducationDto {
   @IsOptional()
   programName?: string | null;
 
-  @IsString()
+  @IsNumber()
   @IsOptional()
-  country?: string | null;
+  countryId?: number | null;
 }
 
 export class ExperienceDto {
@@ -101,17 +101,17 @@ export class ExperienceDto {
   @IsBoolean()
   keepWorking: boolean;
 
-  @IsString()
+  @IsNumber()
   @IsOptional()
-  country?: string | null;
+  countryId?: number | null;
 
-  @IsString()
+  @IsNumber()
   @IsOptional()
-  department?: string | null;
+  departmentId?: number | null;
 
-  @IsString()
+  @IsNumber()
   @IsOptional()
-  city?: string | null;
+  cityId?: number | null;
 }
 
 export class SkillDto {

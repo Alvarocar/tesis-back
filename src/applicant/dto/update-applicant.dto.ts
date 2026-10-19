@@ -1,7 +1,6 @@
 import { IsString, IsNotEmpty, Length, IsOptional, IsEnum, IsInt, Min, MaxLength } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { IsDateFormat } from 'src/shared/decorators/is-date-format.decorator';
-import { ECountry } from 'src/shared/enums/country.enum';
 import { ESex } from 'src/shared/enums/sex.enum';
 import { EGender } from 'src/shared/enums/gender.enum';
 import { ESexualOrientation } from 'src/shared/enums/sexual-orientation.enum';
@@ -50,36 +49,34 @@ export class UpdateApplicantDto {
   direction: string;
 
   @IsOptional()
-  @IsEnum(ECountry)
-  countryOfBirth?: ECountry | null;
+  @IsInt()
+  @Min(1)
+  countryOfBirthId?: number | null;
 
   @IsOptional()
-  @IsString({ message: 'El departamento de nacimiento debe ser una cadena de texto' })
-  @MaxLength(60, { message: 'El departamento de nacimiento no puede superar 60 caracteres' })
-  @Transform(({ value }) => (value as string)?.trim())
-  departmentOfBirth?: string | null;
+  @IsInt()
+  @Min(1)
+  departmentOfBirthId?: number | null;
 
   @IsOptional()
-  @IsString({ message: 'La ciudad de nacimiento debe ser una cadena de texto' })
-  @MaxLength(60, { message: 'La ciudad de nacimiento no puede superar 60 caracteres' })
-  @Transform(({ value }) => (value as string)?.trim())
-  cityOfBirth?: string | null;
+  @IsInt()
+  @Min(1)
+  cityOfBirthId?: number | null;
 
   @IsOptional()
-  @IsEnum(ECountry)
-  countryOfResidence?: ECountry | null;
+  @IsInt()
+  @Min(1)
+  countryOfResidenceId?: number | null;
 
   @IsOptional()
-  @IsString({ message: 'El departamento de residencia debe ser una cadena de texto' })
-  @MaxLength(60, { message: 'El departamento de residencia no puede superar 60 caracteres' })
-  @Transform(({ value }) => (value as string)?.trim())
-  departmentOfResidence?: string | null;
+  @IsInt()
+  @Min(1)
+  departmentOfResidenceId?: number | null;
 
   @IsOptional()
-  @IsString({ message: 'La ciudad de residencia debe ser una cadena de texto' })
-  @MaxLength(60, { message: 'La ciudad de residencia no puede superar 60 caracteres' })
-  @Transform(({ value }) => (value as string)?.trim())
-  cityOfResidence?: string | null;
+  @IsInt()
+  @Min(1)
+  cityOfResidenceId?: number | null;
 
   @IsOptional()
   @IsEnum(ESex)

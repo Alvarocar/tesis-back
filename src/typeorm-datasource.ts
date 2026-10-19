@@ -15,6 +15,9 @@ import { Vacancy } from './vacancy/entities/vacancy.entity';
 import { VacancyLanguage } from './vacancy/entities/vacancyLanguage.entity';
 import { AIModel } from './shared/db/entities/ia-model.entity';
 import { Application } from './application/entities/application.entity';
+import { Country } from './geo/entities/country.entity';
+import { Department } from './geo/entities/department.entity';
+import { City } from './geo/entities/city.entity';
 import { Knowledge } from './shared/db/entities/knowledge.entity';
 import {
   RELATIONAL_DB_DATABASE,
@@ -51,6 +54,9 @@ export const AppDataSource = new DataSource({
     VacancyLanguage,
     AIModel,
     Application,
+    Country,
+    Department,
+    City,
     Knowledge,
   ],
   ssl: {

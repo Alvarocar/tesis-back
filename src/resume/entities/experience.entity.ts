@@ -7,6 +7,9 @@ import {
   type Relation,
 } from 'typeorm';
 import { Resume } from './resume.entity';
+import { Country } from 'src/shared/db/entities/country.entity';
+import { Department } from 'src/shared/db/entities/department.entity';
+import { City } from 'src/shared/db/entities/city.entity';
 
 @Entity()
 export class Experience {
@@ -55,29 +58,17 @@ export class Experience {
   })
   description: string;
 
-  @Column({
-    type: 'varchar',
-    length: 60,
-    name: 'country',
-    nullable: true,
-  })
-  country?: string | null;
+  @ManyToOne(() => Country, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'country_id' })
+  country?: Relation<Country> | null;
 
-  @Column({
-    type: 'varchar',
-    length: 60,
-    name: 'department',
-    nullable: true,
-  })
-  department?: string | null;
+  @ManyToOne(() => Department, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'department_id' })
+  department?: Relation<Department> | null;
 
-  @Column({
-    type: 'varchar',
-    length: 60,
-    name: 'city',
-    nullable: true,
-  })
-  city?: string | null;
+  @ManyToOne(() => City, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'city_id' })
+  city?: Relation<City> | null;
 
   @ManyToOne(() => Resume, (resume) => resume.experiences, {
     onDelete: 'CASCADE',

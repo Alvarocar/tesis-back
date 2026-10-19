@@ -116,6 +116,17 @@ export class ApplicantTypeOrmRepository implements ApplicantRepositoryPort {
             'applicant.phoneNumber',
             'applicant.birthDate',
             'applicant.direction',
+            'applicant.countryOfBirthId',
+            'applicant.departmentOfBirthId',
+            'applicant.cityOfBirthId',
+            'applicant.countryOfResidenceId',
+            'applicant.departmentOfResidenceId',
+            'applicant.cityOfResidenceId',
+            'applicant.sex',
+            'applicant.genre',
+            'applicant.sexualOrientation',
+            'applicant.ethnicGroup',
+            'applicant.salaryAspiration',
           ])
           .where('applicant.id = :id', { id })
           .getOne();

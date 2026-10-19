@@ -28,7 +28,7 @@ export interface ResumeDetailHydrated {
     title: string;
     educationLevel?: string | null;
     programName?: string | null;
-    country?: string | null;
+    countryId?: number | null;
   }[];
   experiences: {
     id: number;
@@ -38,9 +38,9 @@ export interface ResumeDetailHydrated {
     rol: string;
     startDate: Date;
     endDate: Date | null;
-    country?: string | null;
-    department?: string | null;
-    city?: string | null;
+    countryId?: number | null;
+    departmentId?: number | null;
+    cityId?: number | null;
   }[];
   languages: { id: number; level: number; name: string }[];
   skills: SkillDto[];

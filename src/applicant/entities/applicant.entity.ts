@@ -2,12 +2,16 @@ import {
   Column,
   Entity,
   Index,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   Relation,
 } from 'typeorm';
 import { Resume } from 'src/resume/entities/resume.entity';
-import { ECountry } from 'src/shared/enums/country.enum';
+import { Country } from 'src/shared/db/entities/country.entity';
+import { Department } from 'src/shared/db/entities/department.entity';
+import { City } from 'src/shared/db/entities/city.entity';
 import { ESex } from 'src/shared/enums/sex.enum';
 import { EGender } from 'src/shared/enums/gender.enum';
 import { ESexualOrientation } from 'src/shared/enums/sexual-orientation.enum';
@@ -78,53 +82,29 @@ export class Applicant {
   })
   direction: string;
 
-  @Column({
-    nullable: true,
-    type: 'varchar',
-    name: 'country_of_birth',
-    length: 60,
-  })
-  countryOfBirth: ECountry | null;
+  @ManyToOne(() => Country, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'country_of_birth_id' })
+  countryOfBirth?: Relation<Country> | null;
 
-  @Column({
-    nullable: true,
-    type: 'varchar',
-    name: 'department_of_birth',
-    length: 60,
-  })
-  departmentOfBirth: string | null;
+  @ManyToOne(() => Department, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'department_of_birth_id' })
+  departmentOfBirth?: Relation<Department> | null;
 
-  @Column({
-    nullable: true,
-    type: 'varchar',
-    name: 'city_of_birth',
-    length: 60,
-  })
-  cityOfBirth: string | null;
+  @ManyToOne(() => City, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'city_of_birth_id' })
+  cityOfBirth?: Relation<City> | null;
 
-  @Column({
-    nullable: true,
-    type: 'varchar',
-    name: 'country_of_residence',
-    length: 60,
-  })
-  countryOfResidence: ECountry | null;
+  @ManyToOne(() => Country, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'country_of_residence_id' })
+  countryOfResidence?: Relation<Country> | null;
 
-  @Column({
-    nullable: true,
-    type: 'varchar',
-    name: 'department_of_residence',
-    length: 60,
-  })
-  departmentOfResidence: string | null;
+  @ManyToOne(() => Department, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'department_of_residence_id' })
+  departmentOfResidence?: Relation<Department> | null;
 
-  @Column({
-    nullable: true,
-    type: 'varchar',
-    name: 'city_of_residence',
-    length: 60,
-  })
-  cityOfResidence: string | null;
+  @ManyToOne(() => City, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'city_of_residence_id' })
+  cityOfResidence?: Relation<City> | null;
 
   @Column({
     nullable: true,

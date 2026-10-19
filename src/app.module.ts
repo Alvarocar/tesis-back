@@ -16,6 +16,7 @@ import { RolesGuard } from './shared/security/guards/roles.guard';
 import { LanguageModule } from './language/language.module';
 import { MailModule } from './mail/mail.module';
 import { CompanyModule } from './company/company.module';
+import { GeoModule } from './geo/geo.module';
 import { getTypeOrmModule } from './database.setup';
 import { TokenGuard } from './shared/security/guards/token.guard';
 
@@ -42,6 +43,7 @@ import { TokenGuard } from './shared/security/guards/token.guard';
     LanguageModule,
     MailModule,
     CompanyModule,
+    GeoModule,
   ],
   providers: [
     {

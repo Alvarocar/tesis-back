@@ -36,6 +36,17 @@ export class UpdateApplicantUseCase {
             ? DateUtil.toDate(input.birthDate)
             : undefined,
           direction: input.direction,
+          countryOfBirthId: input.countryOfBirthId ?? undefined,
+          departmentOfBirthId: input.departmentOfBirthId ?? undefined,
+          cityOfBirthId: input.cityOfBirthId ?? undefined,
+          countryOfResidenceId: input.countryOfResidenceId ?? undefined,
+          departmentOfResidenceId: input.departmentOfResidenceId ?? undefined,
+          cityOfResidenceId: input.cityOfResidenceId ?? undefined,
+          sex: input.sex ?? undefined,
+          genre: input.genre ?? undefined,
+          sexualOrientation: input.sexualOrientation ?? undefined,
+          ethnicGroup: input.ethnicGroup ?? undefined,
+          salaryAspiration: input.salaryAspiration ?? undefined,
         });
 
         const updated = await this.applicantRepo.findByIdOverview(user.id);
@@ -50,6 +61,17 @@ export class UpdateApplicantUseCase {
           birthDate: updated.birthDate
             ? DateUtil.toString(updated.birthDate)
             : '',
+          countryOfBirthId: updated.countryOfBirthId ?? null,
+          departmentOfBirthId: updated.departmentOfBirthId ?? null,
+          cityOfBirthId: updated.cityOfBirthId ?? null,
+          countryOfResidenceId: updated.countryOfResidenceId ?? null,
+          departmentOfResidenceId: updated.departmentOfResidenceId ?? null,
+          cityOfResidenceId: updated.cityOfResidenceId ?? null,
+          sex: updated.sex ?? null,
+          genre: updated.genre ?? null,
+          sexualOrientation: updated.sexualOrientation ?? null,
+          ethnicGroup: updated.ethnicGroup ?? null,
+          salaryAspiration: updated.salaryAspiration ?? null,
         } satisfies UpdateApplicantDto;
       },
       { applicantId: user.id },
