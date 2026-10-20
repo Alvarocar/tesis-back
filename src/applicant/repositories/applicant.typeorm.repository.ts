@@ -129,69 +129,45 @@ export class ApplicantTypeOrmRepository implements ApplicantRepositoryPort {
             'applicant.salaryAspiration',
           ])
           .addSelect(
-            (sub) =>
-              sub
-                .select('c.id', 'id')
-                .addSelect('c.name', 'name')
-                .addSelect('c.code', 'code')
-                .from('country', 'c')
-                .where('c.id = applicant.country_of_birth_id'),
+            `(SELECT JSON_OBJECT('id', c.id, 'name', c.name, 'code', c.code)
+                FROM country c
+                WHERE c.id = applicant.country_of_birth_id
+                LIMIT 1)`,
             'country_of_birth',
           )
           .addSelect(
-            (sub) =>
-              sub
-                .select('d.id', 'id')
-                .addSelect('d.name', 'name')
-                .addSelect('d.code', 'code')
-                .addSelect('d.country_id', 'countryId')
-                .from('department', 'd')
-                .where('d.id = applicant.department_of_birth_id'),
+            `(SELECT JSON_OBJECT('id', d.id, 'name', d.name, 'code', d.code, 'countryId', d.country_id)
+                FROM department d
+                WHERE d.id = applicant.department_of_birth_id
+                LIMIT 1)`,
             'department_of_birth',
           )
           .addSelect(
-            (sub) =>
-              sub
-                .select('ct.id', 'id')
-                .addSelect('ct.name', 'name')
-                .addSelect('ct.type', 'type')
-                .addSelect('ct.country_id', 'countryId')
-                .addSelect('ct.department_id', 'departmentId')
-                .from('city', 'ct')
-                .where('ct.id = applicant.city_of_birth_id'),
+            `(SELECT JSON_OBJECT('id', ct.id, 'name', ct.name, 'type', ct.type, 'countryId', ct.country_id, 'departmentId', ct.department_id)
+                FROM city ct
+                WHERE ct.id = applicant.city_of_birth_id
+                LIMIT 1)`,
             'city_of_birth',
           )
           .addSelect(
-            (sub) =>
-              sub
-                .select('c.id', 'id')
-                .addSelect('c.name', 'name')
-                .addSelect('c.code', 'code')
-                .from('country', 'c')
-                .where('c.id = applicant.country_of_residence_id'),
+            `(SELECT JSON_OBJECT('id', c.id, 'name', c.name, 'code', c.code)
+                FROM country c
+                WHERE c.id = applicant.country_of_residence_id
+                LIMIT 1)`,
             'country_of_residence',
           )
           .addSelect(
-            (sub) =>
-              sub
-                .select('d.id', 'id')
-                .addSelect('d.name', 'name')
-                .addSelect('d.code', 'code')
-                .addSelect('d.country_id', 'countryId')
-                .from('department', 'd')
-                .where('d.id = applicant.department_of_residence_id'),
+            `(SELECT JSON_OBJECT('id', d.id, 'name', d.name, 'code', d.code, 'countryId', d.country_id)
+                FROM department d
+                WHERE d.id = applicant.department_of_residence_id
+                LIMIT 1)`,
             'department_of_residence',
           )
           .addSelect(
-            (sub) =>
-              sub
-                .select('ct.id', 'id')
-                .addSelect('ct.name', 'name')
-                .addSelect('ct.type', 'type')
-                .addSelect('ct.country_id', 'countryId')
-                .addSelect('ct.department_id', 'departmentId')
-                .from('city', 'ct')
-                .where('ct.id = applicant.city_of_residence_id'),
+            `(SELECT JSON_OBJECT('id', ct.id, 'name', ct.name, 'type', ct.type, 'countryId', ct.country_id, 'departmentId', ct.department_id)
+                FROM city ct
+                WHERE ct.id = applicant.city_of_residence_id
+                LIMIT 1)`,
             'city_of_residence',
           )
           .where('applicant.id = :id', { id })
@@ -199,12 +175,19 @@ export class ApplicantTypeOrmRepository implements ApplicantRepositoryPort {
         if (!row) return null;
 
         const toOptionOrNull = (
-          raw: Record<string, unknown> | null | undefined,
+          raw: unknown,
         ): ApplicantOverview['countryOfBirth'] => {
-          if (!raw) return null;
-          const id = raw.id as number | null | undefined;
+          if (raw == null) return null;
+          // Postgres JSON_OBJECT comes back as a stringified JSON; pg driver
+          // may also hand it back as an already-parsed object depending on
+          // type parsers, so accept both shapes.
+          const obj =
+            typeof raw === 'string'
+              ? (JSON.parse(raw) as Record<string, unknown>)
+              : (raw as Record<string, unknown>);
+          const id = obj.id as number | null | undefined;
           if (id == null) return null;
-          return raw as unknown as ApplicantOverview['countryOfBirth'];
+          return obj as unknown as ApplicantOverview['countryOfBirth'];
         };
 
         return {
