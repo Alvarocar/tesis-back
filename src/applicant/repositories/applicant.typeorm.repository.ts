@@ -109,7 +109,7 @@ export class ApplicantTypeOrmRepository implements ApplicantRepositoryPort {
     return this.logger.timed(
       'applicant.repo.findByIdOverview',
       async () => {
-        const { entities, raw } = await this.repo
+        const row = await this.repo
           .createQueryBuilder('applicant')
           .select([
             'applicant.id',
@@ -133,114 +133,80 @@ export class ApplicantTypeOrmRepository implements ApplicantRepositoryPort {
             'applicant.ethnicGroup',
             'applicant.salaryAspiration',
           ])
-          .leftJoin('country', 'cob', 'cob.id = applicant.country_of_birth_id')
-          .leftJoin(
-            'department',
-            'dob',
-            'dob.id = applicant.department_of_birth_id',
+          // Six correlated sub-queries, each returning a single JSONB value.
+          // jsonb_build_object accepts any-typed args (unlike the legacy
+          // json_object(text, text)), so department.country_id and
+          // city.country_id/department_id round-trip cleanly. The result for
+          // each alias is either a JSONB object or NULL when the FK is null.
+          .addSelect(
+            `(SELECT jsonb_build_object('id', c.id, 'name', c.name, 'code', c.code)
+                FROM country c
+                WHERE c.id = applicant.country_of_birth_id
+                LIMIT 1)`,
+            'country_of_birth',
           )
-          .leftJoin('city', 'cib', 'cib.id = applicant.city_of_birth_id')
-          .leftJoin(
-            'country',
-            'cor',
-            'cor.id = applicant.country_of_residence_id',
+          .addSelect(
+            `(SELECT jsonb_build_object('id', d.id, 'name', d.name, 'code', d.code, 'countryId', d.country_id)
+                FROM department d
+                WHERE d.id = applicant.department_of_birth_id
+                LIMIT 1)`,
+            'department_of_birth',
           )
-          .leftJoin(
-            'department',
-            'dor',
-            'dor.id = applicant.department_of_residence_id',
+          .addSelect(
+            `(SELECT jsonb_build_object('id', ct.id, 'name', ct.name, 'type', ct.type, 'countryId', ct.country_id, 'departmentId', ct.department_id)
+                FROM city ct
+                WHERE ct.id = applicant.city_of_birth_id
+                LIMIT 1)`,
+            'city_of_birth',
           )
-          .leftJoin('city', 'cir', 'cir.id = applicant.city_of_residence_id')
-          .addSelect([
-            'cob.id',
-            'cob.name',
-            'cob.code',
-            'dob.id',
-            'dob.name',
-            'dob.code',
-            'dob.country_id',
-            'cib.id',
-            'cib.name',
-            'cib.type',
-            'cib.country_id',
-            'cib.department_id',
-            'cor.id',
-            'cor.name',
-            'cor.code',
-            'dor.id',
-            'dor.name',
-            'dor.code',
-            'dor.country_id',
-            'cir.id',
-            'cir.name',
-            'cir.type',
-            'cir.country_id',
-            'cir.department_id',
-          ])
+          .addSelect(
+            `(SELECT jsonb_build_object('id', c.id, 'name', c.name, 'code', c.code)
+                FROM country c
+                WHERE c.id = applicant.country_of_residence_id
+                LIMIT 1)`,
+            'country_of_residence',
+          )
+          .addSelect(
+            `(SELECT jsonb_build_object('id', d.id, 'name', d.name, 'code', d.code, 'countryId', d.country_id)
+                FROM department d
+                WHERE d.id = applicant.department_of_residence_id
+                LIMIT 1)`,
+            'department_of_residence',
+          )
+          .addSelect(
+            `(SELECT jsonb_build_object('id', ct.id, 'name', ct.name, 'type', ct.type, 'countryId', ct.country_id, 'departmentId', ct.department_id)
+                FROM city ct
+                WHERE ct.id = applicant.city_of_residence_id
+                LIMIT 1)`,
+            'city_of_residence',
+          )
           .where('applicant.id = :id', { id })
-          .getRawAndEntities();
+          .getRawOne();
 
-        if (!entities[0] || !raw[0]) return null;
-        const entity = entities[0];
-        const row = raw[0];
+        if (!row) return null;
 
-        // TEMP DEBUG: dump the joined row to find the actual column keys
-        // returned by TypeORM's getRawAndEntities. Remove after diagnosis.
-        this.logger.debug('applicant.repo.findByIdOverview.raw', {
-          applicantId: id,
-          rawKeys: Object.keys(row),
-          raw,
-        });
-
-        // getRawAndEntities returns the raw row keys as <alias>_<column>.
-        // Country/department/city columns are flat scalars (e.g. cob_id,
-        // dob_country_id, cib_type) so we group them into per-DTO objects
-        // before mapping.
-        const countryOfBirthRaw = {
-          id: row.cob_id,
-          name: row.cob_name,
-          code: row.cob_code,
-        };
-        const departmentOfBirthRaw = {
-          id: row.dob_id,
-          name: row.dob_name,
-          code: row.dob_code,
-          country_id: row.dob_country_id,
-        };
-        const cityOfBirthRaw = {
-          id: row.cib_id,
-          name: row.cib_name,
-          type: row.cib_type,
-          country_id: row.cib_country_id,
-          department_id: row.cib_department_id,
-        };
-        const countryOfResidenceRaw = {
-          id: row.cor_id,
-          name: row.cor_name,
-          code: row.cor_code,
-        };
-        const departmentOfResidenceRaw = {
-          id: row.dor_id,
-          name: row.dor_name,
-          code: row.dor_code,
-          country_id: row.dor_country_id,
-        };
-        const cityOfResidenceRaw = {
-          id: row.cir_id,
-          name: row.cir_name,
-          type: row.cir_type,
-          country_id: row.cir_country_id,
-          department_id: row.cir_department_id,
+        const parseJsonb = (raw: unknown): Record<string, unknown> | null => {
+          if (raw == null) return null;
+          if (typeof raw === 'string') {
+            return JSON.parse(raw) as Record<string, unknown>;
+          }
+          return raw as Record<string, unknown>;
         };
 
         return {
-          ...(entity as unknown as ApplicantOverview),
-          countryOfBirth: toCountryDto(countryOfBirthRaw),
-          departmentOfBirth: toDepartmentDto(departmentOfBirthRaw),
-          cityOfBirth: toCityDto(cityOfBirthRaw),
-          countryOfResidence: toCountryDto(countryOfResidenceRaw),
-          departmentOfResidence: toDepartmentDto(departmentOfResidenceRaw),
-          cityOfResidence: toCityDto(cityOfResidenceRaw),
+          ...row,
+          countryOfBirth: toCountryDto(parseJsonb(row.country_of_birth)),
+          departmentOfBirth: toDepartmentDto(
+            parseJsonb(row.department_of_birth),
+          ),
+          cityOfBirth: toCityDto(parseJsonb(row.city_of_birth)),
+          countryOfResidence: toCountryDto(
+            parseJsonb(row.country_of_residence),
+          ),
+          departmentOfResidence: toDepartmentDto(
+            parseJsonb(row.department_of_residence),
+          ),
+          cityOfResidence: toCityDto(parseJsonb(row.city_of_residence)),
         } as unknown as ApplicantOverview;
       },
       { applicantId: id },

@@ -10,17 +10,23 @@ import type { CityDto, CountryDto, DepartmentDto } from '../dto/geo-option.dto';
  */
 type RawRow = Record<string, unknown>;
 
-const readNumber = (row: RawRow, key: string): number | null => {
-  const value = row[key];
-  if (value === null || value === undefined) return null;
-  const n = typeof value === 'string' ? Number(value) : (value as number);
-  return Number.isFinite(n) ? n : null;
+const readNumber = (row: RawRow, ...keys: string[]): number | null => {
+  for (const key of keys) {
+    const value = row[key];
+    if (value === null || value === undefined) continue;
+    const n = typeof value === 'string' ? Number(value) : (value as number);
+    if (Number.isFinite(n)) return n;
+  }
+  return null;
 };
 
-const readString = (row: RawRow, key: string): string | null => {
-  const value = row[key];
-  if (value === null || value === undefined) return null;
-  return String(value);
+const readString = (row: RawRow, ...keys: string[]): string | null => {
+  for (const key of keys) {
+    const value = row[key];
+    if (value === null || value === undefined) continue;
+    return String(value);
+  }
+  return null;
 };
 
 export const toCountryDto = (row: RawRow | null | undefined): CountryDto | null => {
@@ -39,7 +45,7 @@ export const toDepartmentDto = (
 ): DepartmentDto | null => {
   if (!row) return null;
   const id = readNumber(row, 'id');
-  const countryId = readNumber(row, 'country_id');
+  const countryId = readNumber(row, 'countryId', 'country_id');
   if (id == null || countryId == null) return null;
   return {
     id,
@@ -52,8 +58,8 @@ export const toDepartmentDto = (
 export const toCityDto = (row: RawRow | null | undefined): CityDto | null => {
   if (!row) return null;
   const id = readNumber(row, 'id');
-  const countryId = readNumber(row, 'country_id');
-  const departmentId = readNumber(row, 'department_id');
+  const countryId = readNumber(row, 'countryId', 'country_id');
+  const departmentId = readNumber(row, 'departmentId', 'department_id');
   if (id == null || countryId == null || departmentId == null) return null;
   return {
     id,
