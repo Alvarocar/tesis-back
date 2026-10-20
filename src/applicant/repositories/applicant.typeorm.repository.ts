@@ -128,10 +128,94 @@ export class ApplicantTypeOrmRepository implements ApplicantRepositoryPort {
             'applicant.ethnicGroup',
             'applicant.salaryAspiration',
           ])
+          .addSelect(
+            (sub) =>
+              sub
+                .select('c.id', 'id')
+                .addSelect('c.name', 'name')
+                .addSelect('c.code', 'code')
+                .from('country', 'c')
+                .where('c.id = applicant.country_of_birth_id'),
+            'country_of_birth',
+          )
+          .addSelect(
+            (sub) =>
+              sub
+                .select('d.id', 'id')
+                .addSelect('d.name', 'name')
+                .addSelect('d.code', 'code')
+                .addSelect('d.country_id', 'countryId')
+                .from('department', 'd')
+                .where('d.id = applicant.department_of_birth_id'),
+            'department_of_birth',
+          )
+          .addSelect(
+            (sub) =>
+              sub
+                .select('ct.id', 'id')
+                .addSelect('ct.name', 'name')
+                .addSelect('ct.type', 'type')
+                .addSelect('ct.country_id', 'countryId')
+                .addSelect('ct.department_id', 'departmentId')
+                .from('city', 'ct')
+                .where('ct.id = applicant.city_of_birth_id'),
+            'city_of_birth',
+          )
+          .addSelect(
+            (sub) =>
+              sub
+                .select('c.id', 'id')
+                .addSelect('c.name', 'name')
+                .addSelect('c.code', 'code')
+                .from('country', 'c')
+                .where('c.id = applicant.country_of_residence_id'),
+            'country_of_residence',
+          )
+          .addSelect(
+            (sub) =>
+              sub
+                .select('d.id', 'id')
+                .addSelect('d.name', 'name')
+                .addSelect('d.code', 'code')
+                .addSelect('d.country_id', 'countryId')
+                .from('department', 'd')
+                .where('d.id = applicant.department_of_residence_id'),
+            'department_of_residence',
+          )
+          .addSelect(
+            (sub) =>
+              sub
+                .select('ct.id', 'id')
+                .addSelect('ct.name', 'name')
+                .addSelect('ct.type', 'type')
+                .addSelect('ct.country_id', 'countryId')
+                .addSelect('ct.department_id', 'departmentId')
+                .from('city', 'ct')
+                .where('ct.id = applicant.city_of_residence_id'),
+            'city_of_residence',
+          )
           .where('applicant.id = :id', { id })
-          .getOne();
+          .getRawOne();
         if (!row) return null;
-        return row as unknown as ApplicantOverview;
+
+        const toOptionOrNull = (
+          raw: Record<string, unknown> | null | undefined,
+        ): ApplicantOverview['countryOfBirth'] => {
+          if (!raw) return null;
+          const id = raw.id as number | null | undefined;
+          if (id == null) return null;
+          return raw as unknown as ApplicantOverview['countryOfBirth'];
+        };
+
+        return {
+          ...row,
+          countryOfBirth: toOptionOrNull(row.country_of_birth),
+          departmentOfBirth: toOptionOrNull(row.department_of_birth),
+          cityOfBirth: toOptionOrNull(row.city_of_birth),
+          countryOfResidence: toOptionOrNull(row.country_of_residence),
+          departmentOfResidence: toOptionOrNull(row.department_of_residence),
+          cityOfResidence: toOptionOrNull(row.city_of_residence),
+        } as unknown as ApplicantOverview;
       },
       { applicantId: id },
     );

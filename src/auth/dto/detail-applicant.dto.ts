@@ -1,3 +1,9 @@
+import type {
+  CityDto,
+  CountryDto,
+  DepartmentDto,
+} from 'src/geo/dto/geo-option.dto';
+
 export class DetailApplicantDto {
   firstName: string;
 
@@ -30,6 +36,18 @@ export class DetailApplicantDto {
   departmentOfResidenceId?: number | null;
 
   cityOfResidenceId?: number | null;
+
+  countryOfBirth?: CountryDto | null;
+
+  departmentOfBirth?: DepartmentDto | null;
+
+  cityOfBirth?: CityDto | null;
+
+  countryOfResidence?: CountryDto | null;
+
+  departmentOfResidence?: DepartmentDto | null;
+
+  cityOfResidence?: CityDto | null;
 
   sex?: string | null;
 
