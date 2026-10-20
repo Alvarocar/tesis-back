@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { FRONTEND_URL } from './shared/constants/env.constant';
 import { DomainErrorFilter } from './shared/errors/domain-error.filter';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,6 +12,8 @@ async function bootstrap() {
   });
   app.useGlobalFilters(new DomainErrorFilter());
   app.setGlobalPrefix('api');
+  app.useGlobalPipes(new ValidationPipe());
+
   await app.listen(process.env.PORT ?? 3000);
 }
 void bootstrap();
