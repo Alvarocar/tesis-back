@@ -109,7 +109,7 @@ export class ApplicantTypeOrmRepository implements ApplicantRepositoryPort {
     return this.logger.timed(
       'applicant.repo.findByIdOverview',
       async () => {
-        const row = await this.repo
+        const { entities, raw } = await this.repo
           .createQueryBuilder('applicant')
           .select([
             'applicant.id',
@@ -181,9 +181,11 @@ export class ApplicantTypeOrmRepository implements ApplicantRepositoryPort {
             'city_of_residence',
           )
           .where('applicant.id = :id', { id })
-          .getRawOne();
+          .getRawAndEntities();
 
-        if (!row) return null;
+        if (!entities[0] || !raw[0]) return null;
+        const entity = entities[0];
+        const row = raw[0];
 
         const parseJsonb = (raw: unknown): Record<string, unknown> | null => {
           if (raw == null) return null;
@@ -194,7 +196,7 @@ export class ApplicantTypeOrmRepository implements ApplicantRepositoryPort {
         };
 
         return {
-          ...row,
+          ...(entity as unknown as ApplicantOverview),
           countryOfBirth: toCountryDto(parseJsonb(row.country_of_birth)),
           departmentOfBirth: toDepartmentDto(
             parseJsonb(row.department_of_birth),
