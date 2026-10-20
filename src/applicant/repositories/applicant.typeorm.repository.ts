@@ -184,6 +184,14 @@ export class ApplicantTypeOrmRepository implements ApplicantRepositoryPort {
         const entity = entities[0];
         const row = raw[0];
 
+        // TEMP DEBUG: dump the joined row to find the actual column keys
+        // returned by TypeORM's getRawAndEntities. Remove after diagnosis.
+        this.logger.debug('applicant.repo.findByIdOverview.raw', {
+          applicantId: id,
+          rawKeys: Object.keys(row),
+          raw,
+        });
+
         // getRawAndEntities returns the raw row keys as <alias>_<column>.
         // Country/department/city columns are flat scalars (e.g. cob_id,
         // dob_country_id, cib_type) so we group them into per-DTO objects
