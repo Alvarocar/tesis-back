@@ -11,7 +11,12 @@ export class ResumeFactory {
 
   private setDetailSelection(queryBuilder: SelectQueryBuilder<Resume>) {
     queryBuilder
-      .select(['rs.id', 'rs.title', 'rs.aboutMe', 'rs.modificationDate'])
+      .select([
+        'rs.id',
+        'rs.title',
+        'rs.modificationDate',
+        'rs.description AS aboutMe',
+      ])
       // experiences
       .addSelect([
         'ex.id',
@@ -71,7 +76,7 @@ export class ResumeFactory {
   getResumeOverviewQuery(applicantId: number) {
     const queryBuilder = this.resumeRepository
       .createQueryBuilder('rs')
-      .select(['rs.id', 'rs.title', 'rs.aboutMe'])
+      .select(['rs.id', 'rs.title', 'rs.description AS aboutMe'])
       .addSelect(['app.id'])
       .leftJoin('rs.applicant', 'app');
 

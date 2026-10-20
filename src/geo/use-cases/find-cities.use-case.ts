@@ -8,4 +8,12 @@ export class FindCitiesUseCase {
   execute(departmentId?: number) {
     return this.geoRepo.findCities(departmentId);
   }
+
+  findById(id: number) {
+    return this.geoRepo.findCityById(id);
+  }
+
+  executeByCountry(countryId: number) {
+    return this.geoRepo.findCitiesByCountry(countryId);
+  }
 }

@@ -8,4 +8,8 @@ export class FindDepartmentsUseCase {
   execute(countryId?: number) {
     return this.geoRepo.findDepartments(countryId);
   }
+
+  findById(id: number) {
+    return this.geoRepo.findDepartmentById(id);
+  }
 }

@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm';
 import { Employee } from './employee/entities/employee.entity';
 import { Company } from './company/entities/company.entity';
 import { Skill } from './shared/db/entities/skill.entity';
+import { Knowledge } from './shared/db/entities/knowledge.entity';
 import { Resume } from './resume/entities/resume.entity';
 import { Education } from './resume/entities/education.entity';
 import { Experience } from './resume/entities/experience.entity';
@@ -18,7 +19,6 @@ import { Application } from './application/entities/application.entity';
 import { Country } from './geo/entities/country.entity';
 import { Department } from './geo/entities/department.entity';
 import { City } from './geo/entities/city.entity';
-import { Knowledge } from './shared/db/entities/knowledge.entity';
 import {
   RELATIONAL_DB_DATABASE,
   RELATIONAL_DB_HOST,

@@ -62,7 +62,7 @@ export class ApplicationTypeOrmRepository implements ApplicationRepositoryPort {
             'a.creationDate',
           ])
           .leftJoin('a.resume', 'rs')
-          .addSelect(['rs.id', 'rs.aboutMe', 'rs.title'])
+          .addSelect(['rs.id', 'rs.description AS aboutMe', 'rs.title'])
           .leftJoin('rs.applicant', 'app')
           .addSelect([
             'app.id',

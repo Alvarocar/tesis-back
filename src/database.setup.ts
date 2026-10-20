@@ -2,6 +2,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Employee } from './employee/entities/employee.entity';
 import { Company } from './company/entities/company.entity';
 import { Skill } from './shared/db/entities/skill.entity';
+import { Knowledge } from './shared/db/entities/knowledge.entity';
 import { Resume } from './resume/entities/resume.entity';
 import { Education } from './resume/entities/education.entity';
 import { Experience } from './resume/entities/experience.entity';
@@ -15,6 +16,9 @@ import { VacancyLanguage } from './vacancy/entities/vacancyLanguage.entity';
 import { AIModel } from './shared/db/entities/ia-model.entity';
 import { Application } from './application/entities/application.entity';
 import { BenchmarkRun } from './application/entities/benchmark-run.entity';
+import { Country } from './geo/entities/country.entity';
+import { Department } from './geo/entities/department.entity';
+import { City } from './geo/entities/city.entity';
 import {
   RELATIONAL_DB_DATABASE,
   RELATIONAL_DB_HOST,
@@ -41,6 +45,7 @@ export const getTypeOrmModule = () => {
       Employee,
       Company,
       Skill,
+      Knowledge,
       Resume,
       Education,
       Experience,
@@ -54,6 +59,9 @@ export const getTypeOrmModule = () => {
       AIModel,
       Application,
       BenchmarkRun,
+      Country,
+      Department,
+      City,
     ],
   });
 };

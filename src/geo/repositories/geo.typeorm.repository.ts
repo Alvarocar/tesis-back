@@ -27,6 +27,13 @@ export class GeoTypeOrmRepository implements GeoRepositoryPort {
     });
   }
 
+  async findCountryById(id: number) {
+    return this.logger.timed('geo.findCountryById', async () => {
+      const row = await this.countryRepo.findOne({ where: { id } });
+      return row ? { id: row.id, name: row.name, code: row.code } : null;
+    });
+  }
+
   async findDepartments(countryId?: number) {
     return this.logger.timed('geo.findDepartments', async () => {
       const rows = await this.departmentRepo.find({
@@ -43,10 +50,57 @@ export class GeoTypeOrmRepository implements GeoRepositoryPort {
     });
   }
 
+  async findDepartmentById(id: number) {
+    return this.logger.timed('geo.findDepartmentById', async () => {
+      const row = await this.departmentRepo.findOne({
+        where: { id },
+        relations: { country: true },
+      });
+      return row
+        ? { id: row.id, name: row.name, code: row.code, countryId: row.country.id }
+        : null;
+    });
+  }
+
   async findCities(departmentId?: number) {
     return this.logger.timed('geo.findCities', async () => {
       const rows = await this.cityRepo.find({
         where: departmentId ? ({ department: { id: departmentId } } as never) : undefined,
+        relations: { country: true, department: true },
+        order: { name: 'ASC' },
+      });
+      return rows.map((row) => ({
+        id: row.id,
+        name: row.name,
+        type: row.type ?? null,
+        countryId: row.country.id,
+        departmentId: row.department.id,
+      }));
+    });
+  }
+
+  async findCityById(id: number) {
+    return this.logger.timed('geo.findCityById', async () => {
+      const row = await this.cityRepo.findOne({
+        where: { id },
+        relations: { country: true, department: true },
+      });
+      return row
+        ? {
+            id: row.id,
+            name: row.name,
+            type: row.type ?? null,
+            countryId: row.country.id,
+            departmentId: row.department.id,
+          }
+        : null;
+    });
+  }
+
+  async findCitiesByCountry(countryId: number) {
+    return this.logger.timed('geo.findCitiesByCountry', async () => {
+      const rows = await this.cityRepo.find({
+        where: { country: { id: countryId } } as never,
         relations: { country: true, department: true },
         order: { name: 'ASC' },
       });

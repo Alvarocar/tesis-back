@@ -81,7 +81,15 @@ export class ResumeTypeOrmRepository implements ResumeRepositoryPort {
       async () => {
         const qb = this.repo
           .createQueryBuilder('rs')
-          .select(['rs.id', 'rs.title', 'rs.aboutMe', 'rs.modificationDate'])
+          .select([
+            'rs.id',
+            'rs.title',
+            'rs.modificationDate',
+            // La columna física es `description`; TypeORM infiere
+            // `about_me` desde el nombre JS y rompe la query. Por eso
+            // seleccionamos la columna explícita y le damos un alias.
+            'rs.aboutMe',
+          ])
           .leftJoin('rs.applicant', 'app')
           .addSelect(['app.id'])
           .where('rs.id = :id', { id })
@@ -146,7 +154,7 @@ export class ResumeTypeOrmRepository implements ResumeRepositoryPort {
             title: ed.title,
             educationLevel: ed.educationLevel ?? null,
             programName: ed.programName ?? null,
-            countryId: (ed.country as { id: number } | null)?.id ?? null,
+            countryId: ed.countryId ?? null,
           })),
           experiences: (row.experiences ?? []).map((ex) => ({
             id: ex.id,
@@ -156,9 +164,9 @@ export class ResumeTypeOrmRepository implements ResumeRepositoryPort {
             rol: ex.rol,
             startDate: ex.startDate,
             endDate: ex.endDate ?? null,
-            countryId: (ex.country as { id: number } | null)?.id ?? null,
-            departmentId: (ex.department as { id: number } | null)?.id ?? null,
-            cityId: (ex.city as { id: number } | null)?.id ?? null,
+            countryId: ex.countryId ?? null,
+            departmentId: ex.departmentId ?? null,
+            cityId: ex.cityId ?? null,
           })),
           languages: (row.resumeLanguage ?? [])
             .filter((rl) => rl.language)
@@ -189,7 +197,12 @@ export class ResumeTypeOrmRepository implements ResumeRepositoryPort {
       async () => {
         return this.repo
           .createQueryBuilder('rs')
-          .select(['rs.id', 'rs.title', 'rs.aboutMe', 'rs.modificationDate'])
+          .select([
+            'rs.id',
+            'rs.title',
+            'rs.modificationDate',
+            'rs.description AS aboutMe',
+          ])
           .leftJoin('rs.applicant', 'app')
           .addSelect(['app.id'])
           .where('app.id = :applicantId', { applicantId })

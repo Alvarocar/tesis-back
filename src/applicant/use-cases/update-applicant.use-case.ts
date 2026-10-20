@@ -16,7 +16,7 @@ import {
 export class UpdateApplicantUseCase {
   constructor(
     @Inject(APPLICANT_REPOSITORY)
-    private readonly applicantRepo: ApplicantRepositoryPort,
+    private readonly applicantRepo: ApplicantRepositoryPort, 
     private readonly logger: StructuredLogger,
   ) {}
 
@@ -27,27 +27,31 @@ export class UpdateApplicantUseCase {
     return this.logger.timed(
       'applicant.update',
       async () => {
-        await this.applicantRepo.update(user.id, {
-          firstName: input.firstName,
-          lastName: input.lastName,
-          identification: input.identification,
-          phoneNumber: input.phoneNumber,
-          birthDate: input.birthDate
-            ? DateUtil.toDate(input.birthDate)
-            : undefined,
-          direction: input.direction,
-          countryOfBirthId: input.countryOfBirthId ?? undefined,
-          departmentOfBirthId: input.departmentOfBirthId ?? undefined,
-          cityOfBirthId: input.cityOfBirthId ?? undefined,
-          countryOfResidenceId: input.countryOfResidenceId ?? undefined,
-          departmentOfResidenceId: input.departmentOfResidenceId ?? undefined,
-          cityOfResidenceId: input.cityOfResidenceId ?? undefined,
-          sex: input.sex ?? undefined,
-          genre: input.genre ?? undefined,
-          sexualOrientation: input.sexualOrientation ?? undefined,
-          ethnicGroup: input.ethnicGroup ?? undefined,
-          salaryAspiration: input.salaryAspiration ?? undefined,
-        });
+        try {
+          await this.applicantRepo.update(user.id, {
+            firstName: input.firstName,
+            lastName: input.lastName,
+            identification: input.identification,
+            phoneNumber: input.phoneNumber,
+            birthDate: input.birthDate
+              ? DateUtil.toDate(input.birthDate)
+              : undefined,
+            countryOfBirthId: input.countryOfBirthId ?? undefined,
+            departmentOfBirthId: input.departmentOfBirthId ?? undefined,
+            cityOfBirthId: input.cityOfBirthId ?? undefined,
+            countryOfResidenceId: input.countryOfResidenceId ?? undefined,
+            departmentOfResidenceId: input.departmentOfResidenceId ?? undefined,
+            cityOfResidenceId: input.cityOfResidenceId ?? undefined,
+            sex: input.sex ?? undefined,
+            genre: input.genre ?? undefined,
+            sexualOrientation: input.sexualOrientation ?? undefined,
+            ethnicGroup: input.ethnicGroup ?? undefined,
+            salaryAspiration: input.salaryAspiration ?? undefined,
+          });
+        } catch (error) {
+          this.logger.error('Failed to update applicant', { error });
+          throw error;
+        }
 
         const updated = await this.applicantRepo.findByIdOverview(user.id);
         if (!updated) throw new NotFoundError('Applicant', user.id);
@@ -57,7 +61,6 @@ export class UpdateApplicantUseCase {
           lastName: updated.lastName ?? '',
           identification: updated.identification ?? '',
           phoneNumber: updated.phoneNumber ?? '',
-          direction: updated.direction ?? '',
           birthDate: updated.birthDate
             ? DateUtil.toString(updated.birthDate)
             : '',

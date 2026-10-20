@@ -109,7 +109,11 @@ export class Resume {
   skills: Relation<Skill>[];
 
   @ManyToMany(() => Knowledge, { cascade: false })
-  @JoinTable({ name: 'resume_knowledge' })
+  @JoinTable({
+    name: 'resume_knowledge',
+    joinColumn: { name: 'resume_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'knowledge_id', referencedColumnName: 'id' },
+  })
   knowledge: Relation<Knowledge>[];
 
   @DeleteDateColumn({ name: 'deleted_at', nullable: true })

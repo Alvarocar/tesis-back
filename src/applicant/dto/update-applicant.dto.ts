@@ -1,4 +1,12 @@
-import { IsString, IsNotEmpty, Length, IsOptional, IsEnum, IsInt, Min, MaxLength } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  Length,
+  IsOptional,
+  IsEnum,
+  IsInt,
+  Min,
+} from 'class-validator';
 import { Transform } from 'class-transformer';
 import { IsDateFormat } from 'src/shared/decorators/is-date-format.decorator';
 import { ESex } from 'src/shared/enums/sex.enum';
@@ -43,10 +51,10 @@ export class UpdateApplicantDto {
   @Transform(({ value }) => (value as string)?.trim())
   birthDate: string;
 
-  @IsString({ message: 'La dirección debe ser una cadena de texto' })
+  /*   @IsString({ message: 'La dirección debe ser una cadena de texto' })
   @Length(5, 60, { message: 'La dirección debe tener entre 5 y 60 caracteres' })
   @Transform(({ value }) => (value as string)?.trim())
-  direction: string;
+  direction: string; */
 
   @IsOptional()
   @IsInt()
