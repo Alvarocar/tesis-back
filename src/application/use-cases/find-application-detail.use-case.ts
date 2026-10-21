@@ -84,6 +84,8 @@ export class FindApplicationDetailUseCase {
             id: a.vacancy.id,
             title: a.vacancy.title,
             description: a.vacancy.description,
+            // El front (`TJob` / `VacancyContext`) lee `salaryOffer`.
+            salaryOffer: a.vacancy.salaryOffer ?? 0,
             salary: a.vacancy.salaryOffer ?? 0,
             jobType: a.vacancy.jobType as never,
             experienceYears: a.vacancy.experienceYears ?? 0,

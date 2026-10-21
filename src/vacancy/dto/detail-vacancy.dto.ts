@@ -28,6 +28,14 @@ export class VacancyDetailDto {
   @IsPositive()
   salary: number;
 
+  /**
+   * Mismo valor que `salary`. El front (`TJob` / `VacancyContext`) lee
+   * `salaryOffer`, así que el detalle de postulación lo expone con ese nombre.
+   */
+  @IsNumber()
+  @IsOptional()
+  salaryOffer?: number;
+
   @IsEnum(VacancyJobType)
   jobType: VacancyJobType;
 
