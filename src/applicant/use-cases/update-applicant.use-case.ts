@@ -16,7 +16,7 @@ import {
 export class UpdateApplicantUseCase {
   constructor(
     @Inject(APPLICANT_REPOSITORY)
-    private readonly applicantRepo: ApplicantRepositoryPort, 
+    private readonly applicantRepo: ApplicantRepositoryPort,
     private readonly logger: StructuredLogger,
   ) {}
 

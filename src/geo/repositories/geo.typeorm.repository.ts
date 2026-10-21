@@ -23,7 +23,11 @@ export class GeoTypeOrmRepository implements GeoRepositoryPort {
   async findCountries() {
     return this.logger.timed('geo.findCountries', async () => {
       const rows = await this.countryRepo.find({ order: { name: 'ASC' } });
-      return rows.map((row) => ({ id: row.id, name: row.name, code: row.code }));
+      return rows.map((row) => ({
+        id: row.id,
+        name: row.name,
+        code: row.code,
+      }));
     });
   }
 
@@ -37,7 +41,9 @@ export class GeoTypeOrmRepository implements GeoRepositoryPort {
   async findDepartments(countryId?: number) {
     return this.logger.timed('geo.findDepartments', async () => {
       const rows = await this.departmentRepo.find({
-        where: countryId ? ({ country: { id: countryId } } as never) : undefined,
+        where: countryId
+          ? ({ country: { id: countryId } } as never)
+          : undefined,
         relations: { country: true },
         order: { name: 'ASC' },
       });
@@ -57,7 +63,12 @@ export class GeoTypeOrmRepository implements GeoRepositoryPort {
         relations: { country: true },
       });
       return row
-        ? { id: row.id, name: row.name, code: row.code, countryId: row.country.id }
+        ? {
+            id: row.id,
+            name: row.name,
+            code: row.code,
+            countryId: row.country.id,
+          }
         : null;
     });
   }
@@ -65,7 +76,9 @@ export class GeoTypeOrmRepository implements GeoRepositoryPort {
   async findCities(departmentId?: number) {
     return this.logger.timed('geo.findCities', async () => {
       const rows = await this.cityRepo.find({
-        where: departmentId ? ({ department: { id: departmentId } } as never) : undefined,
+        where: departmentId
+          ? ({ department: { id: departmentId } } as never)
+          : undefined,
         relations: { country: true, department: true },
         order: { name: 'ASC' },
       });

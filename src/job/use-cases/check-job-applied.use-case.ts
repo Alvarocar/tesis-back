@@ -27,7 +27,8 @@ export class CheckJobAppliedUseCase {
       'job.isApplied',
       async () => {
         const vacancy = await this.vacancyRepo.existsById(vacancyId);
-        if (!vacancy) throw new NotFoundError('Empleo no encontrado', { vacancyId });
+        if (!vacancy)
+          throw new NotFoundError('Empleo no encontrado', { vacancyId });
 
         const resumes = await this.dataSource.query(
           'SELECT id FROM resume WHERE applicant_id = $1',

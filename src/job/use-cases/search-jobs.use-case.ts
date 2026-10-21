@@ -60,7 +60,10 @@ export class SearchJobsUseCase {
 
             if (!editable) {
               // Visitante o applicant -> nunca editable.
-              return { ...base, editable: false } satisfies JobOverviewPublicDto;
+              return {
+                ...base,
+                editable: false,
+              } satisfies JobOverviewPublicDto;
             }
             return { ...base, editable: true } satisfies JobOverviewDto;
           },

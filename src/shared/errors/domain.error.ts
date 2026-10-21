@@ -31,7 +31,10 @@ export abstract class DomainError extends Error {
             ctor: new (...args: unknown[]) => unknown,
           ) => void;
         }
-      ).captureStackTrace(this, this.constructor as new (...args: unknown[]) => unknown);
+      ).captureStackTrace(
+        this,
+        this.constructor as new (...args: unknown[]) => unknown,
+      );
     }
   }
 

@@ -9,11 +9,7 @@ import {
   toCountryDto,
   toDepartmentDto,
 } from '../mappers/geo-row.mapper';
-import type {
-  CityDto,
-  CountryDto,
-  DepartmentDto,
-} from '../dto/geo-option.dto';
+import type { CityDto, CountryDto, DepartmentDto } from '../dto/geo-option.dto';
 
 /**
  * Resolutor de refs geo para los write paths (`PATCH /resume/education`,

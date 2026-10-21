@@ -6,7 +6,11 @@ import { StructuredLogger } from 'src/shared/logging/structured-logger';
 import { Country } from 'src/geo/entities/country.entity';
 import { Department } from 'src/geo/entities/department.entity';
 import { City } from 'src/geo/entities/city.entity';
-import type { CityDto, CountryDto, DepartmentDto } from 'src/geo/dto/geo-option.dto';
+import type {
+  CityDto,
+  CountryDto,
+  DepartmentDto,
+} from 'src/geo/dto/geo-option.dto';
 import {
   toCityDto,
   toCountryDto,
@@ -113,7 +117,10 @@ export class ResumeTypeOrmRepository implements ResumeRepositoryPort {
 
     return {
       countries: new Map(
-        countries.map((c) => [c.id, toCountryDto({ id: c.id, name: c.name, code: c.code })]),
+        countries.map((c) => [
+          c.id,
+          toCountryDto({ id: c.id, name: c.name, code: c.code }),
+        ]),
       ),
       departments: new Map(
         departments.map((d) => [

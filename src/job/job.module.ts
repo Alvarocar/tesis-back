@@ -9,7 +9,10 @@ import { FindJobDetailUseCase } from './use-cases/find-job-detail.use-case';
 import { CheckJobAppliedUseCase } from './use-cases/check-job-applied.use-case';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Vacancy]), forwardRef(() => VacancyModule)],
+  imports: [
+    TypeOrmModule.forFeature([Vacancy]),
+    forwardRef(() => VacancyModule),
+  ],
   controllers: [JobController],
   providers: [
     SearchJobsUseCase,

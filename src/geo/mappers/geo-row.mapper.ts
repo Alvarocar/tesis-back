@@ -29,7 +29,9 @@ const readString = (row: RawRow, ...keys: string[]): string | null => {
   return null;
 };
 
-export const toCountryDto = (row: RawRow | null | undefined): CountryDto | null => {
+export const toCountryDto = (
+  row: RawRow | null | undefined,
+): CountryDto | null => {
   if (!row) return null;
   const id = readNumber(row, 'id');
   if (id == null) return null;

@@ -117,13 +117,12 @@ export class LanguageTypeOrmRepository implements LanguagePort {
         //         insert crudo exige que le pasemos los nombres de columna
         //         exactos, y `save` los resuelve desde el `@JoinColumn`.
         if (input.languages.length === 0) return;
-        const entities = input.languages.map(
-          (l) =>
-            this.resumeLangRepo.create({
-              languageLevel: l.level,
-              language: { id: byName[l.name].id } as ResumeLanguage['language'],
-              resume: { id: input.resumeId } as ResumeLanguage['resume'],
-            }),
+        const entities = input.languages.map((l) =>
+          this.resumeLangRepo.create({
+            languageLevel: l.level,
+            language: { id: byName[l.name].id } as ResumeLanguage['language'],
+            resume: { id: input.resumeId } as ResumeLanguage['resume'],
+          }),
         );
         await this.resumeLangRepo.save(entities);
       },

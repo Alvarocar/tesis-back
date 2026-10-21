@@ -24,7 +24,9 @@ export class GeoController {
 
   @Get('departments')
   findDepartments(@Query('countryId') countryId?: string) {
-    return this.findDepartmentsUseCase.execute(countryId ? Number(countryId) : undefined);
+    return this.findDepartmentsUseCase.execute(
+      countryId ? Number(countryId) : undefined,
+    );
   }
 
   @Get('departments/:id')
@@ -33,9 +35,15 @@ export class GeoController {
   }
 
   @Get('cities')
-  findCities(@Query('departmentId') departmentId?: string, @Query('countryId') countryId?: string) {
-    if (countryId) return this.findCitiesUseCase.executeByCountry(Number(countryId));
-    return this.findCitiesUseCase.execute(departmentId ? Number(departmentId) : undefined);
+  findCities(
+    @Query('departmentId') departmentId?: string,
+    @Query('countryId') countryId?: string,
+  ) {
+    if (countryId)
+      return this.findCitiesUseCase.executeByCountry(Number(countryId));
+    return this.findCitiesUseCase.execute(
+      departmentId ? Number(departmentId) : undefined,
+    );
   }
 
   @Get('cities/:id')

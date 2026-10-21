@@ -5,7 +5,9 @@ import { ReplaceKnowledgeForApplicantUseCase } from './use-cases/replace-knowled
 
 @Injectable()
 export class KnowledgeService {
-  constructor(private readonly replaceUc: ReplaceKnowledgeForApplicantUseCase) {}
+  constructor(
+    private readonly replaceUc: ReplaceKnowledgeForApplicantUseCase,
+  ) {}
 
   createOrUpdateForApplicant(
     resumeId: number,
