@@ -23,6 +23,7 @@ import { EducationModule } from 'src/education/education.module';
 import { ExperienceModule } from 'src/experience/experience.module';
 import { LanguageModule } from 'src/language/language.module';
 import { SkillModule } from 'src/skill/skill.module';
+import { KnowledgeModule } from 'src/shared/db/knowledge.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { SkillModule } from 'src/skill/skill.module';
     ExperienceModule,
     LanguageModule,
     SkillModule,
+    KnowledgeModule,
   ],
   controllers: [ResumeController],
   providers: [

@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { Role } from 'src/shared/enums/role.enum';
 import { SkillService } from 'src/skill/skill.service';
+import { KnowledgeService } from 'src/shared/db/knowledge.service';
 import { TokenDto } from 'src/shared/security/dto/token.dto';
 import { Roles } from 'src/shared/constants/metadata.constant';
 import { LanguageService } from 'src/language/language.service';
@@ -25,6 +26,7 @@ import { ResumeService } from './resume.service';
 import {
   EducationDto,
   ExperienceDto,
+  KnowledgeDto,
   LanguageDto,
   SkillDto,
 } from './dto/resume-detail.dto';
@@ -38,6 +40,7 @@ export class ResumeController {
     private readonly educationService: EducationService,
     private readonly experienceService: ExperienceService,
     private readonly skillService: SkillService,
+    private readonly knowledgeService: KnowledgeService,
   ) {}
 
   @Post()
@@ -152,6 +155,20 @@ export class ResumeController {
     return this.skillService.createOrUpdateSkillsForApplicant(
       resumeId,
       skills,
+      user,
+    );
+  }
+
+  @Patch('/knowledge/:resumeId')
+  @HttpCode(200)
+  updateKnowledge(
+    @Body() knowledge: KnowledgeDto[],
+    @Param('resumeId', ParseIntPipe) resumeId: number,
+    @CurrentUser() user: TokenDto,
+  ) {
+    return this.knowledgeService.createOrUpdateForApplicant(
+      resumeId,
+      knowledge,
       user,
     );
   }

@@ -2,6 +2,7 @@ import type { Education } from '../entities/education.entity';
 import type { Experience } from '../entities/experience.entity';
 import type { Language } from 'src/language/entities/language.entity';
 import type { Skill } from 'src/shared/db/entities/skill.entity';
+import type { Knowledge } from 'src/shared/db/entities/knowledge.entity';
 import type { EEducationLevel } from 'src/shared/enums/education-level.enum';
 
 /**
@@ -71,6 +72,15 @@ export interface SkillPort {
   listByResume(resumeId: number): Promise<Skill[]>;
 }
 
+export interface KnowledgePort {
+  replaceForResume(input: {
+    resumeId: number;
+    knowledge: { id?: number; name: string }[];
+  }): Promise<void>;
+  findOrCreateManyByName(names: string[]): Promise<Knowledge[]>;
+  listByResume(resumeId: number): Promise<Knowledge[]>;
+}
+
 /* ------------------------------- Inputs ------------------------------- */
 
 export interface EducationUpsertInput {
@@ -108,4 +118,5 @@ export const EDUCATION_REPOSITORY = Symbol('EDUCATION_REPOSITORY');
 export const EXPERIENCE_REPOSITORY = Symbol('EXPERIENCE_REPOSITORY');
 export const LANGUAGE_REPOSITORY = Symbol('LANGUAGE_REPOSITORY');
 export const SKILL_REPOSITORY = Symbol('SKILL_REPOSITORY');
+export const KNOWLEDGE_REPOSITORY = Symbol('KNOWLEDGE_REPOSITORY');
 export const RESUME_REPOSITORY_MIN = Symbol('RESUME_REPOSITORY_MIN');
