@@ -8,10 +8,15 @@ import {
 } from '../repositories/resume.repository';
 
 /**
- * Use-case: actualizar el título de un resume (fast path; sin tx porque es 1 update).
+ * Use-case: actualizar los campos escalares de un resume (titulo y
+ * modalidad de trabajo). Es el handler de `PATCH /v1/resume`.
+ *
+ * Arma el patch solo con los campos presentes: `repo.update` recibe el
+ * objeto tal cual, asi que mandar `undefined` explicito lo haria un SET
+ * a NULL en vez de "no tocar este campo".
  */
 @Injectable()
-export class UpdateResumeTitleUseCase {
+export class UpdateResumeUseCase {
   constructor(
     @Inject(RESUME_REPOSITORY)
     private readonly resumeRepo: ResumeRepositoryPort,
@@ -23,11 +28,19 @@ export class UpdateResumeTitleUseCase {
     user: TokenDto,
   ): Promise<{ title: string }> {
     return this.logger.timed(
-      'resume.updateTitle',
+      'resume.update',
       async () => {
-        await this.resumeRepo.update(input.id, user.id, {
-          title: input.title,
-        });
+        const patch: {
+          title?: string;
+          workModality?: UpdateResumeDto['workModality'];
+        } = {};
+
+        if (input.title !== undefined) patch.title = input.title;
+        if (input.workModality !== undefined) {
+          patch.workModality = input.workModality;
+        }
+
+        await this.resumeRepo.update(input.id, user.id, patch);
         return { title: input.title ?? '' };
       },
       { resumeId: input.id, applicantId: user.id },

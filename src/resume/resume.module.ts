@@ -10,7 +10,7 @@ import { RESUME_REPOSITORY } from './repositories/resume.repository';
 import { ResumeTypeOrmRepository } from './repositories/resume.typeorm.repository';
 import { CreateResumeUseCase } from './use-cases/create-resume.use-case';
 import { FindResumeUseCase } from './use-cases/find-resume.use-case';
-import { UpdateResumeTitleUseCase } from './use-cases/update-resume-title.use-case';
+import { UpdateResumeUseCase } from './use-cases/update-resume.use-case';
 import { UpdateResumeAboutMeUseCase } from './use-cases/update-about-me.use-case';
 import { ListResumesUseCase } from './use-cases/list-resumes.use-case';
 import { DeleteResumeUseCase } from './use-cases/delete-resume.use-case';
@@ -43,7 +43,7 @@ import { KnowledgeModule } from 'src/shared/db/knowledge.module';
     // Use-cases
     CreateResumeUseCase,
     FindResumeUseCase,
-    UpdateResumeTitleUseCase,
+    UpdateResumeUseCase,
     UpdateResumeAboutMeUseCase,
     ListResumesUseCase,
     DeleteResumeUseCase,

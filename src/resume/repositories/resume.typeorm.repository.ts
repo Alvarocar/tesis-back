@@ -151,6 +151,7 @@ export class ResumeTypeOrmRepository implements ResumeRepositoryPort {
           title: data.title,
           experience_years: 0,
           aboutMe: '',
+          workModality: data.workModality ?? null,
           createDate: data.creationDate,
           modificationDate: data.creationDate,
           applicant: { id: data.applicantId } as Resume['applicant'],
@@ -158,7 +159,11 @@ export class ResumeTypeOrmRepository implements ResumeRepositoryPort {
         await this.repo.insert(entity);
         return entity;
       },
-      { title: data.title, applicantId: data.applicantId },
+      {
+        title: data.title,
+        applicantId: data.applicantId,
+        workModality: data.workModality ?? null,
+      },
     );
   }
 

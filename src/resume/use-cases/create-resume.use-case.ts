@@ -29,10 +29,15 @@ export class CreateResumeUseCase {
           title: input.title,
           applicantId: user.id,
           creationDate: new Date(),
+          workModality: input.workModality ?? null,
         });
         return { id: resume.id };
       },
-      { applicantId: user.id, title: input.title },
+      {
+        applicantId: user.id,
+        title: input.title,
+        workModality: input.workModality ?? null,
+      },
     );
   }
 }

@@ -11,6 +11,8 @@ import type {
 export interface CreateResumeData {
   title: string;
   applicantId: number;
+  /** Opcional: se puede definir al crear o despues via update. */
+  workModality?: VacancyJobType | null;
 }
 
 export interface UpdateResumeData {

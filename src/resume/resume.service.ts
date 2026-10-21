@@ -5,7 +5,7 @@ import type { UpdateResumeDto } from './dto/update-resume.dto';
 import type { UpdateAboutMeDto } from './dto/update-about-me-resume.dto';
 import { CreateResumeUseCase } from './use-cases/create-resume.use-case';
 import { FindResumeUseCase } from './use-cases/find-resume.use-case';
-import { UpdateResumeTitleUseCase } from './use-cases/update-resume-title.use-case';
+import { UpdateResumeUseCase } from './use-cases/update-resume.use-case';
 import { UpdateResumeAboutMeUseCase } from './use-cases/update-about-me.use-case';
 import { ListResumesUseCase } from './use-cases/list-resumes.use-case';
 import { DeleteResumeUseCase } from './use-cases/delete-resume.use-case';
@@ -18,7 +18,7 @@ export class ResumeService {
   constructor(
     private readonly createUc: CreateResumeUseCase,
     private readonly findUc: FindResumeUseCase,
-    private readonly updateTitleUc: UpdateResumeTitleUseCase,
+    private readonly updateUc: UpdateResumeUseCase,
     private readonly updateAboutMeUc: UpdateResumeAboutMeUseCase,
     private readonly listUc: ListResumesUseCase,
     private readonly deleteUc: DeleteResumeUseCase,
@@ -32,8 +32,8 @@ export class ResumeService {
     return this.findUc.execute(id, user);
   }
 
-  updateTitle(input: UpdateResumeDto, user: TokenDto) {
-    return this.updateTitleUc.execute(input, user);
+  update(input: UpdateResumeDto, user: TokenDto) {
+    return this.updateUc.execute(input, user);
   }
 
   updateAboutMe(input: UpdateAboutMeDto, user: TokenDto) {

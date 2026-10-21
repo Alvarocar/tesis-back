@@ -54,11 +54,11 @@ export class ResumeController {
 
   @Patch()
   @HttpCode(200)
-  updateTitle(
+  update(
     @Body() updateResumeDto: UpdateResumeDto,
     @CurrentUser() user: TokenDto,
   ) {
-    return this.resumeService.updateTitle(updateResumeDto, user);
+    return this.resumeService.update(updateResumeDto, user);
   }
 
   @Patch('/about_me')
