@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Resume } from './entities/resume.entity';
+import { Country } from 'src/geo/entities/country.entity';
+import { Department } from 'src/geo/entities/department.entity';
+import { City } from 'src/geo/entities/city.entity';
 import { ResumeController } from './resume.controller';
 import { ResumeService } from './resume.service';
 import { RESUME_REPOSITORY } from './repositories/resume.repository';
@@ -23,7 +26,7 @@ import { SkillModule } from 'src/skill/skill.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Resume]),
+    TypeOrmModule.forFeature([Resume, Country, Department, City]),
     EducationModule,
     ExperienceModule,
     LanguageModule,

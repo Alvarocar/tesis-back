@@ -10,6 +10,7 @@ import {
   EXPERIENCE_REPOSITORY,
   type ExperiencePort,
 } from 'src/resume/repositories/sub-resource.repositories';
+import { GeoResolver } from 'src/geo/services/geo-resolver.service';
 import type { ExperienceDto } from 'src/resume/dto/resume-detail.dto';
 import type { TokenDto } from 'src/shared/security/dto/token.dto';
 
@@ -20,6 +21,7 @@ export class UpsertExperienceUseCase {
     private readonly experienceRepo: ExperiencePort,
     @Inject(RESUME_REPOSITORY)
     private readonly resumeRepo: ResumeRepositoryPort,
+    private readonly geoResolver: GeoResolver,
     private readonly logger: StructuredLogger,
   ) {}
 
@@ -46,7 +48,16 @@ export class UpsertExperienceUseCase {
           startDate: DateUtil.toDate(input.startDate),
           endDate: input.endDate ? DateUtil.toDate(input.endDate) : null,
           keepWorking: input.keepWorking,
+          countryId: input.countryId ?? null,
+          departmentId: input.departmentId ?? null,
+          cityId: input.cityId ?? null,
         });
+
+        const [country, department, city] = await Promise.all([
+          this.geoResolver.country(entity.countryId),
+          this.geoResolver.department(entity.departmentId),
+          this.geoResolver.city(entity.cityId),
+        ]);
 
         return {
           id: entity.id,
@@ -58,6 +69,12 @@ export class UpsertExperienceUseCase {
           description: entity.description,
           keepWorking: entity.keepWorking ?? false,
           rol: entity.rol,
+          countryId: entity.countryId ?? null,
+          departmentId: entity.departmentId ?? null,
+          cityId: entity.cityId ?? null,
+          country,
+          department,
+          city,
         } satisfies ExperienceDto;
       },
       { resumeId, experienceId: input.id },

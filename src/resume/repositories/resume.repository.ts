@@ -1,6 +1,12 @@
 import type { Resume } from '../entities/resume.entity';
 import type { SkillDto } from '../dto/resume-detail.dto';
 import type { VacancyJobType } from 'src/shared/enums/vacancy-job-type.enum';
+import type { EEducationLevel } from 'src/shared/enums/education-level.enum';
+import type {
+  CityDto,
+  CountryDto,
+  DepartmentDto,
+} from 'src/geo/dto/geo-option.dto';
 
 export interface CreateResumeData {
   title: string;
@@ -26,9 +32,10 @@ export interface ResumeDetailHydrated {
     startDate: Date;
     endDate: Date | null;
     title: string;
-    educationLevel?: string | null;
+    educationLevel?: EEducationLevel | null;
     programName?: string | null;
     countryId?: number | null;
+    country?: CountryDto | null;
   }[];
   experiences: {
     id: number;
@@ -41,6 +48,9 @@ export interface ResumeDetailHydrated {
     countryId?: number | null;
     departmentId?: number | null;
     cityId?: number | null;
+    country?: CountryDto | null;
+    department?: DepartmentDto | null;
+    city?: CityDto | null;
   }[];
   languages: { id: number; level: number; name: string }[];
   skills: SkillDto[];

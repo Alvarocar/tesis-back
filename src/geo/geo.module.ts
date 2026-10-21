@@ -9,6 +9,7 @@ import { GeoTypeOrmRepository } from './repositories/geo.typeorm.repository';
 import { FindCountriesUseCase } from './use-cases/find-countries.use-case';
 import { FindDepartmentsUseCase } from './use-cases/find-departments.use-case';
 import { FindCitiesUseCase } from './use-cases/find-cities.use-case';
+import { GeoResolver } from './services/geo-resolver.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Country, Department, City])],
@@ -18,7 +19,8 @@ import { FindCitiesUseCase } from './use-cases/find-cities.use-case';
     FindCountriesUseCase,
     FindDepartmentsUseCase,
     FindCitiesUseCase,
+    GeoResolver,
   ],
-  exports: [GEO_REPOSITORY],
+  exports: [GEO_REPOSITORY, GeoResolver],
 })
 export class GeoModule {}

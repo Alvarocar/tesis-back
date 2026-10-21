@@ -29,6 +29,9 @@ export class ExperienceTypeOrmRepository implements ExperiencePort {
           startDate: input.startDate,
           endDate: input.endDate ?? null,
           keepWorking: input.keepWorking ?? null,
+          countryId: input.countryId ?? null,
+          departmentId: input.departmentId ?? null,
+          cityId: input.cityId ?? null,
           resume: { id: input.resumeId } as Experience['resume'],
         } as unknown as Experience);
         await this.repo.save(entity);

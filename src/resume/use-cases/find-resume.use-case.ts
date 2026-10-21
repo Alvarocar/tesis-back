@@ -45,6 +45,10 @@ export class FindResumeUseCase {
             startDate: DateUtil.toString(ed.startDate),
             endDate: ed.endDate ? DateUtil.toString(ed.endDate) : undefined,
             title: ed.title,
+            educationLevel: ed.educationLevel ?? null,
+            programName: ed.programName ?? null,
+            countryId: ed.countryId ?? null,
+            country: ed.country ?? null,
           })),
           experiences: resume.experiences.map<ExperienceDto>((ex) => ({
             id: ex.id,
@@ -54,6 +58,12 @@ export class FindResumeUseCase {
             rol: ex.rol,
             startDate: DateUtil.toString(ex.startDate),
             endDate: ex.endDate ? DateUtil.toString(ex.endDate) : undefined,
+            countryId: ex.countryId ?? null,
+            departmentId: ex.departmentId ?? null,
+            cityId: ex.cityId ?? null,
+            country: ex.country ?? null,
+            department: ex.department ?? null,
+            city: ex.city ?? null,
           })),
           skills: resume.skills.map<SkillDto>((sk) => ({
             id: sk.id,
@@ -61,6 +71,11 @@ export class FindResumeUseCase {
           })),
           title: resume.title,
           applicantId: resume.applicantId,
+          workModality: resume.workModality,
+          knowledge: resume.knowledge.map((kn) => ({
+            id: kn.id,
+            name: kn.name,
+          })),
           languages: resume.languages.map<LanguageDto>((lang) => ({
             id: lang.id,
             level: lang.level,

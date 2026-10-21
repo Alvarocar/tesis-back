@@ -83,7 +83,8 @@ export interface EducationUpsertInput {
   keepStudy?: boolean;
   educationLevel?: EEducationLevel | null;
   programName?: string | null;
-  country?: string | null;
+  /** FK a `country.id`.-education usa solo pais (sin departamento/ciudad). */
+  countryId?: number | null;
 }
 
 export interface ExperienceUpsertInput {
@@ -95,9 +96,10 @@ export interface ExperienceUpsertInput {
   startDate: Date;
   endDate?: Date | null;
   keepWorking?: boolean;
-  country?: string | null;
-  department?: string | null;
-  city?: string | null;
+  /** FKs a `country.id` / `department.id` / `city.id`. */
+  countryId?: number | null;
+  departmentId?: number | null;
+  cityId?: number | null;
 }
 
 /* ------------------------------- SYMBOLS -------------------------------- */

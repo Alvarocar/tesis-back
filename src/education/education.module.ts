@@ -8,11 +8,13 @@ import { EDUCATION_REPOSITORY } from 'src/resume/repositories/sub-resource.repos
 import { UpsertEducationUseCase } from './use-cases/upsert-education.use-case';
 import { DeleteEducationUseCase } from './use-cases/delete-education.use-case';
 import { ResumeModule } from 'src/resume/resume.module';
+import { GeoModule } from 'src/geo/geo.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Resume, Education]),
     forwardRef(() => ResumeModule),
+    GeoModule,
   ],
   providers: [
     {

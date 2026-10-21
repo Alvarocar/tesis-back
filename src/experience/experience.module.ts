@@ -8,11 +8,13 @@ import { EXPERIENCE_REPOSITORY } from 'src/resume/repositories/sub-resource.repo
 import { UpsertExperienceUseCase } from './use-cases/upsert-experience.use-case';
 import { DeleteExperienceUseCase } from './use-cases/delete-experience.use-case';
 import { ResumeModule } from 'src/resume/resume.module';
+import { GeoModule } from 'src/geo/geo.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Experience, Resume]),
     forwardRef(() => ResumeModule),
+    GeoModule,
   ],
   providers: [
     {

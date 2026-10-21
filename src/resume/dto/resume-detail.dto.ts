@@ -10,6 +10,12 @@ import {
   IsEnum,
 } from 'class-validator';
 import { VacancyJobType } from 'src/shared/enums/vacancy-job-type.enum';
+import { EEducationLevel } from 'src/shared/enums/education-level.enum';
+import type {
+  CityDto,
+  CountryDto,
+  DepartmentDto,
+} from 'src/geo/dto/geo-option.dto';
 
 export class ResumeDetailDto {
   @IsString()
@@ -66,15 +72,23 @@ export class EducationDto {
 
   @IsString()
   @IsOptional()
-  educationLevel?: string | null;
-
-  @IsString()
-  @IsOptional()
   programName?: string | null;
 
+  @IsEnum(EEducationLevel)
+  @IsOptional()
+  educationLevel?: EEducationLevel | null;
+
+  /**
+   * Entrada: FK plana (lo que viaja al guardar).
+   * Salida (detalle): objeto geo hydrated (ver `ResumeDetailDto.educations`).
+   */
   @IsNumber()
   @IsOptional()
   countryId?: number | null;
+
+  /** Presente solo en la respuesta de detalle. */
+  @IsOptional()
+  country?: CountryDto | null;
 }
 
 export class ExperienceDto {
@@ -101,6 +115,10 @@ export class ExperienceDto {
   @IsBoolean()
   keepWorking: boolean;
 
+  /**
+   * Entrada: FKs planas (lo que viaja al guardar).
+   * Salida (detalle): objetos geo hydrated (ver `ResumeDetailDto.experiences`).
+   */
   @IsNumber()
   @IsOptional()
   countryId?: number | null;
@@ -112,6 +130,16 @@ export class ExperienceDto {
   @IsNumber()
   @IsOptional()
   cityId?: number | null;
+
+  /** Presentes solo en la respuesta de detalle. */
+  @IsOptional()
+  country?: CountryDto | null;
+
+  @IsOptional()
+  department?: DepartmentDto | null;
+
+  @IsOptional()
+  city?: CityDto | null;
 }
 
 export class SkillDto {

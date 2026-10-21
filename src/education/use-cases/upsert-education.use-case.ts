@@ -10,6 +10,7 @@ import {
   EDUCATION_REPOSITORY,
   type EducationPort,
 } from 'src/resume/repositories/sub-resource.repositories';
+import { GeoResolver } from 'src/geo/services/geo-resolver.service';
 import type { EducationDto } from 'src/resume/dto/resume-detail.dto';
 import type { TokenDto } from 'src/shared/security/dto/token.dto';
 
@@ -20,6 +21,7 @@ export class UpsertEducationUseCase {
     private readonly educationRepo: EducationPort,
     @Inject(RESUME_REPOSITORY)
     private readonly resumeRepo: ResumeRepositoryPort,
+    private readonly geoResolver: GeoResolver,
     private readonly logger: StructuredLogger,
   ) {}
 
@@ -45,7 +47,12 @@ export class UpsertEducationUseCase {
           startDate: DateUtil.toDate(input.startDate),
           endDate: input.endDate ? DateUtil.toDate(input.endDate) : null,
           keepStudy: input.keepStudy,
+          educationLevel: input.educationLevel ?? null,
+          programName: input.programName ?? null,
+          countryId: input.countryId ?? null,
         });
+
+        const country = await this.geoResolver.country(entity.countryId);
 
         return {
           id: entity.id,
@@ -56,6 +63,10 @@ export class UpsertEducationUseCase {
             ? DateUtil.toString(entity.endDate)
             : undefined,
           keepStudy: entity.keepStudy ?? false,
+          educationLevel: entity.educationLevel ?? null,
+          programName: entity.programName ?? null,
+          countryId: entity.countryId ?? null,
+          country,
         } satisfies EducationDto;
       },
       { resumeId, educationId: input.id },

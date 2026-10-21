@@ -32,6 +32,9 @@ export class EducationTypeOrmRepository implements EducationPort {
           startDate: input.startDate,
           endDate: input.endDate ?? null,
           keepStudy: input.keepStudy ?? null,
+          educationLevel: input.educationLevel ?? null,
+          programName: input.programName ?? null,
+          countryId: input.countryId ?? null,
           resume: { id: input.resumeId } as Education['resume'],
         } as unknown as Education);
         await this.repo.save(entity);
