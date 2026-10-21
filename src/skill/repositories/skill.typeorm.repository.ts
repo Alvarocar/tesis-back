@@ -47,12 +47,11 @@ export class SkillTypeOrmRepository implements SkillPort {
 
   async listByResume(resumeId: number): Promise<Skill[]> {
     return this.logger.timed('skill.repo.listByResume', async () => {
-      return this.skillRepo
-        .createQueryBuilder('skill')
-        .innerJoin('resume_skill', 'rs', 'rs.skillId = skill.id')
-        .where('rs.resumeId = :resumeId', { resumeId })
-        .select(['skill.id', 'skill.name'])
-        .getMany();
+      const resume = await this.resumeRepo.findOne({
+        where: { id: resumeId },
+        relations: { skills: true },
+      });
+      return resume?.skills ?? [];
     });
   }
 
@@ -66,27 +65,19 @@ export class SkillTypeOrmRepository implements SkillPort {
         const names = input.skills.map((s) => s.name);
         const skills = await this.findOrCreateManyByName(names);
 
-        // Vaciar relaciones existentes.
-        await this.resumeRepo
-          .createQueryBuilder()
-          .delete()
-          .from('resume_skill')
-          .where('resumeId = :resumeId', { resumeId: input.resumeId })
-          .execute();
+        // Reemplazar la lista completa de skills del resume.
+        //
+        // Cargamos el resume con la relacion `skills` ya resuelta y la
+        // sobreescribimos. Asi TypeORM usa la metadata del `@JoinTable` para
+        // calcular las columnas de la tabla junction, en vez de inferirlas
+        // desde un id suelto (que es lo que rompia con `resumeId`/`skillId`).
+        const resume = await this.resumeRepo.findOne({
+          where: { id: input.resumeId },
+        });
+        if (!resume) return;
 
-        // Insertar nuevas relaciones (Many-to-Many via join table).
-        if (input.skills.length === 0) return;
-        await this.resumeRepo
-          .createQueryBuilder()
-          .insert()
-          .into('resume_skill')
-          .values(
-            skills.map((sk) => ({
-              skillId: sk.id,
-              resumeId: input.resumeId,
-            })),
-          )
-          .execute();
+        resume.skills = skills;
+        await this.resumeRepo.save(resume);
       },
       { resumeId: input.resumeId },
     );

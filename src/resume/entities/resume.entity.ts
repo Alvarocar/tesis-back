@@ -105,7 +105,11 @@ export class Resume {
   laboral_references: Relation<LaboralReference>[];
 
   @ManyToMany(() => Skill, { cascade: false })
-  @JoinTable({ name: 'resume_skill' })
+  @JoinTable({
+    name: 'resume_skill',
+    joinColumn: { name: 'resume_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'skill_id', referencedColumnName: 'id' },
+  })
   skills: Relation<Skill>[];
 
   @ManyToMany(() => Knowledge, { cascade: false })

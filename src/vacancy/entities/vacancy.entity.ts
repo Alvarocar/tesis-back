@@ -93,7 +93,11 @@ export class Vacancy {
   jobType: VacancyJobType;
 
   @ManyToMany(() => Skill, { cascade: false })
-  @JoinTable({ name: 'vacancy_skill' })
+  @JoinTable({
+    name: 'vacancy_skill',
+    joinColumn: { name: 'vacancy_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'skill_id', referencedColumnName: 'id' },
+  })
   skills: Relation<Skill>[];
 
   @OneToMany(() => VacancyLanguage, (vacancyLanguage) => vacancyLanguage.vacant)

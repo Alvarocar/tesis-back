@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   type Relation,
@@ -24,8 +25,10 @@ export class ResumeLanguage {
   @ManyToOne(() => Resume, (resume) => resume.resumeLanguage, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn({ name: 'resume_id' })
   resume: Relation<Resume>;
 
   @ManyToOne(() => Language, (language) => language.resumeLanguage)
+  @JoinColumn({ name: 'language_id' })
   language: Relation<Language>;
 }

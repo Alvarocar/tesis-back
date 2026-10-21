@@ -52,7 +52,7 @@ export class LanguageTypeOrmRepository implements LanguagePort {
           'rlan.language_level AS level',
           'lang.name AS name',
         ])
-        .where('rlan.resumeId = :resumeId', { resumeId })
+        .where('rlan.resume_id = :resumeId', { resumeId })
         .getRawMany<{ id: number; level: number; name: string }>();
       return rows.map((r) => ({
         id: Number(r.id),
@@ -107,22 +107,25 @@ export class LanguageTypeOrmRepository implements LanguagePort {
         const byName: Record<string, Language> = {};
         languages.forEach((lang) => (byName[lang.name] = lang));
 
-        // 2. Borrar viejas relaciones del resume.
+        // 2. Borrar viejas relaciones del resume. `delete` por la entidad
+        // `ResumeLanguage` hace que TypeORM resuelva la columna desde el
+        // `@JoinColumn` (`resume_id`), no desde un nombre inferido.
         await this.resumeLangRepo.delete({ resume: { id: input.resumeId } });
 
-        // 3. Insertar nuevas relaciones.
+        // 3. Insertar nuevas relaciones. Usamos `save` con las relaciones
+        //         cargadas en vez de `insert().into('resume_language')`: el
+        //         insert crudo exige que le pasemos los nombres de columna
+        //         exactos, y `save` los resuelve desde el `@JoinColumn`.
         if (input.languages.length === 0) return;
-        const values = input.languages.map((l) => ({
-          languageLevel: l.level,
-          language: { id: byName[l.name].id } as ResumeLanguage['language'],
-          resume: { id: input.resumeId } as ResumeLanguage['resume'],
-        }));
-        await this.resumeLangRepo
-          .createQueryBuilder()
-          .insert()
-          .into('resume_language')
-          .values(values)
-          .execute();
+        const entities = input.languages.map(
+          (l) =>
+            this.resumeLangRepo.create({
+              languageLevel: l.level,
+              language: { id: byName[l.name].id } as ResumeLanguage['language'],
+              resume: { id: input.resumeId } as ResumeLanguage['resume'],
+            }),
+        );
+        await this.resumeLangRepo.save(entities);
       },
       { resumeId: input.resumeId },
     );
