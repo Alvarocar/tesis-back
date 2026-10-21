@@ -1,39 +1,80 @@
 import type { Application } from '../entities/application.entity';
 import type { EApplicationStatus } from 'src/shared/enums/application-status.enum';
+import type { VacancyJobType } from 'src/shared/enums/vacancy-job-type.enum';
+import type { EEducationLevel } from 'src/shared/enums/education-level.enum';
+import type { ESex } from 'src/shared/enums/sex.enum';
+import type { EGender } from 'src/shared/enums/gender.enum';
+import type { ESexualOrientation } from 'src/shared/enums/sexual-orientation.enum';
+import type { EEthnicGroup } from 'src/shared/enums/ethnic-group.enum';
+
+export interface GeoHydratedForAI {
+  id: number;
+  name: string;
+}
+
+export interface ApplicantHydratedForAI {
+  id: number;
+  firstName: string;
+  lastName: string | null;
+  email: string;
+  phoneNumber: string | null;
+  direction: string | null;
+  identification: string | null;
+  birthDate: Date | null;
+  sex: ESex | null;
+  genre: EGender | null;
+  sexualOrientation: ESexualOrientation | null;
+  ethnicGroup: EEthnicGroup | null;
+  salaryAspiration: number | null;
+  countryOfBirth: GeoHydratedForAI | null;
+  departmentOfBirth: GeoHydratedForAI | null;
+  cityOfBirth: GeoHydratedForAI | null;
+  countryOfResidence: GeoHydratedForAI | null;
+  departmentOfResidence: GeoHydratedForAI | null;
+  cityOfResidence: GeoHydratedForAI | null;
+}
+
+export interface EducationHydratedForAI {
+  id: number;
+  title: string;
+  institute: string;
+  educationLevel: EEducationLevel | null;
+  programName: string | null;
+  keepStudy: boolean | null;
+  startDate: Date;
+  endDate: Date | null;
+  country: GeoHydratedForAI | null;
+}
+
+export interface ExperienceHydratedForAI {
+  id: number;
+  rol: string;
+  company: string;
+  startDate: Date;
+  endDate: Date | null;
+  description: string;
+  keepWorking: boolean | null;
+  country: GeoHydratedForAI | null;
+  department: GeoHydratedForAI | null;
+  city: GeoHydratedForAI | null;
+}
 
 export interface ResumeHydratedForAI {
   id: number;
   aboutMe: string;
   title: string;
-  applicant: {
-    id: number;
-    firstName: string;
-    lastName: string | null;
-    phoneNumber: string | null;
-  };
-  educations: {
-    id: number;
-    title: string;
-    institute: string;
-    keepStudy: boolean | null;
-    startDate: Date;
-    endDate: Date | null;
-  }[];
-  experiences: {
-    id: number;
-    rol: string;
-    company: string;
-    startDate: Date;
-    endDate: Date | null;
-    description: string;
-    keepWorking: boolean | null;
-  }[];
+  modificationDate: Date;
+  workModality: VacancyJobType | null;
+  applicant: ApplicantHydratedForAI;
+  educations: EducationHydratedForAI[];
+  experiences: ExperienceHydratedForAI[];
   languages: {
     id: number;
     level: number;
     language: { id: number; name: string };
   }[];
   skills: { id: number; name: string }[];
+  knowledge: { id: number; name: string }[];
 }
 
 export interface VacancyHydratedForAI {
@@ -43,6 +84,8 @@ export interface VacancyHydratedForAI {
   salaryOffer: number | null;
   jobType: string;
   experienceYears: number | null;
+  modificationDate: Date;
+  company: string | null;
 }
 
 export interface ApplicationHydratedForAI {

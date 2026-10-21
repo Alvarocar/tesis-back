@@ -11,11 +11,16 @@ import {
 } from 'class-validator';
 import { VacancyJobType } from 'src/shared/enums/vacancy-job-type.enum';
 import { EEducationLevel } from 'src/shared/enums/education-level.enum';
-import type {
-  CityDto,
-  CountryDto,
-  DepartmentDto,
-} from 'src/geo/dto/geo-option.dto';
+
+/**
+ * Geo mínimo para mostrar en pantalla (solo id + nombre). No se proyecta
+ * `code`/`countryId`/`departmentId` de `geo-option.dto` porque la vista de
+ * detalle no los renderiza y se evita el over-fetch en la query.
+ */
+export class GeoNameDto {
+  id: number;
+  name: string;
+}
 
 export class ResumeDetailDto {
   @IsString()
@@ -88,7 +93,7 @@ export class EducationDto {
 
   /** Presente solo en la respuesta de detalle. */
   @IsOptional()
-  country?: CountryDto | null;
+  country?: GeoNameDto | null;
 }
 
 export class ExperienceDto {
@@ -133,13 +138,13 @@ export class ExperienceDto {
 
   /** Presentes solo en la respuesta de detalle. */
   @IsOptional()
-  country?: CountryDto | null;
+  country?: GeoNameDto | null;
 
   @IsOptional()
-  department?: DepartmentDto | null;
+  department?: GeoNameDto | null;
 
   @IsOptional()
-  city?: CityDto | null;
+  city?: GeoNameDto | null;
 }
 
 export class SkillDto {

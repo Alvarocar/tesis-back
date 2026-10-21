@@ -34,4 +34,17 @@ export class VacancyDetailDto {
   @IsNumber()
   @IsOptional()
   experienceYears: number;
+
+  /**
+   * Nombre de la empresa dueña de la vacante. Opcional porque el módulo de
+   * vacancy lo resuelve por separado; el detalle de application sí lo expone.
+   */
+  @IsString()
+  @IsOptional()
+  company?: string | null;
+
+  /** Fecha de última modificación de la vacante. */
+  @IsString()
+  @IsOptional()
+  modificationDate?: string;
 }

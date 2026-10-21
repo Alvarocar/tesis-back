@@ -4,6 +4,9 @@ import { Application } from './entities/application.entity';
 import { BenchmarkRun } from './entities/benchmark-run.entity';
 import { Vacancy } from '../vacancy/entities/vacancy.entity';
 import { Resume } from '../resume/entities/resume.entity';
+import { Country } from 'src/geo/entities/country.entity';
+import { Department } from 'src/geo/entities/department.entity';
+import { City } from 'src/geo/entities/city.entity';
 import { ApplicationController } from './application.controller';
 import { ApplicationService } from './application.service';
 import { ApplicationListener } from './application.listener';
@@ -21,7 +24,15 @@ import { WasApplicationDoneUseCase } from './use-cases/was-application-done.use-
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Application, BenchmarkRun, Resume, Vacancy]),
+    TypeOrmModule.forFeature([
+      Application,
+      BenchmarkRun,
+      Resume,
+      Vacancy,
+      Country,
+      Department,
+      City,
+    ]),
     LlmClientModule,
     VacancyModule,
     ResumeModule,
