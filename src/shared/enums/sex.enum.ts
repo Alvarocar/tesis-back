@@ -1,6 +1,6 @@
 export enum ESex {
-  MASCULINO = 'MASCULINO',
-  FEMENINO = 'FEMENINO',
-  INTERSEXUAL = 'INTERSEXUAL',
-  PREFIERO_NO_DECIRLO = 'PREFIERO_NO_DECIRLO',
+  MASCULINO = 'Masculino',
+  FEMENINO = 'Femenino',
+  OTRO = 'Otros',
+  PREFIERO_NO_DECIRLO = 'Prefiero no decirlo',
 }

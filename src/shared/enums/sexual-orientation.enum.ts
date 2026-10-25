@@ -1,9 +1,9 @@
 export enum ESexualOrientation {
-  HETEROSEXUAL = 'HETEROSEXUAL',
-  HOMOSEXUAL = 'HOMOSEXUAL',
-  BISEXUAL = 'BISEXUAL',
-  PANSEXUAL = 'PANSEXUAL',
-  ASEXUAL = 'ASEXUAL',
-  OTRO = 'OTRO',
-  PREFIERO_NO_DECIRLO = 'PREFIERO_NO_DECIRLO',
+  HETEROSEXUAL = 'Heterosexual',
+  HOMOSEXUAL = 'Homosexual',
+  BISEXUAL = 'Bisexual',
+  PANSEXUAL = 'Pansexual',
+  ASEXUAL = 'Asexual',
+  OTRO = 'Otro',
+  PREFIERO_NO_DECIRLO = 'Prefiero no decirlo',
 }

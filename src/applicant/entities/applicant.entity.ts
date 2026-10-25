@@ -97,33 +97,41 @@ export class Applicant {
 
   @Column({
     nullable: true,
-    type: 'enum',
+    type: 'varchar',
     name: 'sex',
+    length: 30,
     enum: ESex,
+    enumName: 'applicant_sex_enum',
   })
   sex: ESex | null;
 
   @Column({
     nullable: true,
-    type: 'enum',
+    type: 'varchar',
     name: 'genre',
+    length: 30,
     enum: EGender,
+    enumName: 'applicant_genre_enum',
   })
   genre: EGender | null;
 
   @Column({
     nullable: true,
-    type: 'enum',
+    type: 'varchar',
     name: 'sexual_orientation',
+    length: 40,
     enum: ESexualOrientation,
+    enumName: 'applicant_sexual_orientation_enum',
   })
   sexualOrientation: ESexualOrientation | null;
 
   @Column({
     nullable: true,
-    type: 'enum',
+    type: 'varchar',
     name: 'ethnic_group',
+    length: 100,
     enum: EEthnicGroup,
+    enumName: 'applicant_ethnic_group_enum',
   })
   ethnicGroup: EEthnicGroup | null;
 

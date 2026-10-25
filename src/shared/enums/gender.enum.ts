@@ -1,8 +1,7 @@
 export enum EGender {
-  MUJER_TRANS = 'MUJER_TRANS',
-  HOMBRE_TRANS = 'HOMBRE_TRANS',
-  NO_BINARIO = 'NO_BINARIO',
-  OTRO = 'OTRO',
-  NINGUNO = 'NINGUNO',
-  PREFIERO_NO_DECIRLO = 'PREFIERO_NO_DECIRLO',
+  HOMBRE = 'Hombre',
+  MUJER = 'Mujer',
+  TRANSGENERO = 'Transgénero',
+  OTRO = 'Otro',
+  PREFIERO_NO_DECIRLO = 'Prefiero no decirlo',
 }
