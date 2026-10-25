@@ -49,7 +49,7 @@ export class ResetPasswordUseCase {
 
         if (!ctx.applicant || !ctx.hashedPassword) {
           throw new ValidationError(
-            'No se completó la cadena de reset (estado inválido)',
+            'No se completó la operación, comunicar al soporte',
           );
         }
 
